@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>斜率计算器</title>
+    <style>
+        /* 全局样式 */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #fff3e0; /* 浅橙色背景 */
+            color: #333;
+        }
+
+        h2 {
+            color: #ff8a65; /* 橙色标题 */
+            text-align: center;
+        }
+
+        /* 输入表格样式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+        }
+
+        th, td {
+            border: 1px solid #ffab91; /* 橙色边框 */
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #ff9800; /* 橙色表头 */
+            color: white;
+            cursor: grab;
+            user-select: none;
+        }
+
+        th:hover {
+            background-color: #f57c00; /* 悬停时更深的橙色 */
+        }
+
+        th:active {
+            cursor: grabbing;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ffab91;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #ff9800;
+            box-shadow: 0 0 5px rgba(255, 152, 0, 0.5);
+        }
+
+        /* 按钮样式 */
+        .button-group {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #ff9800; /* 橙色按钮 */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin: 0 10px;
+        }
+
+        button:hover {
+            background-color: #f57c00; /* 悬停时更深的橙色 */
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        /* 结果表格样式 */
+        .result-table {
+            margin-top: 30px;
+        }
+
+        .result-table h3 {
+            color: #ff8a65;
+            text-align: center;
+        }
+
+        /* 隐藏列 */
+        .hidden {
+            display: none;
+        }
+
+        /* 错误信息样式 */
+        .error {
+            color: #d32f2f;
+            font-size: 0.9em;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        /* 拖拽样式 */
+        .dragging {
+            opacity: 0.5;
+            background-color: #ffb74d !important;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>斜率区间计算公式</h2>
+
+    <!-- 输入表格 -->
+    <table id="inputTable">
+        <thead>
+            <tr>
+                <th>租期</th>
+                <th data-days="3" draggable="true">3天</th>
+                <th data-days="7" draggable="true">7天</th>
+                <th data-days="15" draggable="true">15天</th>
+                <th data-days="30" draggable="true">30天</th>
+                <th data-days="90" draggable="true">90天</th>
+                <th data-days="180" draggable="true">180天</th>
+                <th data-days="365" draggable="true">365天</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>租金</td>
+                <td><input type="number" id="rent3" value=""></td>
+                <td><input type="number" id="rent7" value=""></td>
+                <td><input type="number" id="rent15" value=""></td>
+                <td><input type="number" id="rent30" value=""></td>
+                <td><input type="number" id="rent90" value=""></td>
+                <td><input type="number" id="rent180" value=""></td>
+                <td><input type="number" id="rent365" value=""></td>
+            </tr>
+            <tr>
+                <td colspan="8" id="errorMessage" class="error"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 按钮组 -->
+    <div class="button-group">
+        <button onclick="calculate()">计算</button>
+        <button onclick="toggleSlopeColumns()">展开公式</button>
+    </div>
+
+    <!-- 结果表格 -->
+    <div class="result-table">
+        <h3>计算结果</h3>
+        <table id="resultTable">
+            <thead>
+                <tr>
+                    <th>天数</th>
+                    <th>总租金</th>
+                    <th>日租金</th>
+                    <th id="formulaHeader" class="hidden">斜率公式</th>
+                    <th id="slopeHeader" class="hidden">斜率值</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 动态生成的行 -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // 向下取整到小数点后两位（直接舍弃第三位）
+        function truncateToTwoDecimals(num) {
+            return Math.floor(num * 100) / 100;
+        }
+
+        // 拖拽功能
+        document.addEventListener('DOMContentLoaded', () => {
+            const headers = document.querySelectorAll('#inputTable th[draggable]');
+            let draggedColumn = null;
+
+            headers.forEach(header => {
+                // 开始拖拽
+                header.addEventListener('dragstart', function (e) {
+                    draggedColumn = this;
+                    e.dataTransfer.effectAllowed = 'move';
+                    this.classList.add('dragging');
+                });
+
+                // 拖拽进入
+                header.addEventListener('dragover', function (e) {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                });
+
+                // 拖拽释放
+                header.addEventListener('drop', function (e) {
+                    e.preventDefault();
+                    if (draggedColumn !== this && this.hasAttribute('data-days')) {
+                        const table = document.getElementById('inputTable');
+                        const cells = Array.from(table.querySelectorAll('tr')).map(row => row.cells);
+                        const fromIndex = Array.from(this.parentNode.children).indexOf(draggedColumn);
+                        const toIndex = Array.from(this.parentNode.children).indexOf(this);
+
+                        // 移动列
+                        cells.forEach(row => {
+                            const children = Array.from(row);
+                            const movedCell = children[fromIndex];
+                            row.removeChild(movedCell);
+                            row.insertBefore(movedCell, children[toIndex]);
+                        });
+                    }
+                });
+
+                // 拖拽结束
+                header.addEventListener('dragend', function () {
+                    this.classList.remove('dragging');
+                    draggedColumn = null;
+                });
+            });
+        });
+
+        // 计算函数
+        function calculate() {
+            // 获取输入的租金值
+            const rentValues = [];
+            const headers = document.querySelectorAll('#inputTable thead th[data-days]');
+            headers.forEach(header => {
+                const days = parseInt(header.getAttribute('data-days'));
+                const value = parseFloat(document.getElementById(`rent${days}`).value);
+                if (!isNaN(value) && value !== 0) {
+                    rentValues.push({ days, value });
+                }
+            });
+
+            // 排序（按天数升序）
+            rentValues.sort((a, b) => a.days - b.days);
+
+            // 清空错误信息
+            document.getElementById("errorMessage").textContent = "";
+
+            // 检查是否有足够的有效数据
+            if (rentValues.length < 2) {
+                document.getElementById("errorMessage").textContent = "至少需要两个有效的非零租金值才能计算！";
+                return;
+            }
+
+            // 清空结果表格
+            const resultTableBody = document.querySelector("#resultTable tbody");
+            resultTableBody.innerHTML = "";
+
+            // 计算斜率和日租金
+            for (let i = 0; i < rentValues.length - 1; i++) {
+                const start = rentValues[i];
+                const end = rentValues[i + 1];
+
+                // 计算斜率
+                const slope = (end.value - start.value) / (end.days - start.days);
+
+                // 动态生成结果表格行
+                for (let day = start.days + 1; day < end.days; day++) {
+                    const totalRent = start.value + (day - start.days) * slope;
+                    const dailyRent = totalRent / day;
+
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${day}天</td>
+                        <td>${truncateToTwoDecimals(totalRent)}</td>
+                        <td>${truncateToTwoDecimals(dailyRent)}</td>
+                        <td class="hidden">等于${start.days}天租金+(${day}天-${start.days}天)斜率</td>
+                        <td class="hidden">${truncateToTwoDecimals(slope)}</td>
+                    `;
+                    resultTableBody.appendChild(row);
+                }
+
+                // 特殊处理固定值
+                const fixedRow = document.createElement("tr");
+                fixedRow.innerHTML = `
+                    <td>${end.days}天</td>
+                    <td>${truncateToTwoDecimals(end.value)}</td>
+                    <td>${truncateToTwoDecimals(end.value / end.days)}</td>
+                    <td class="hidden">有固定值</td>
+                    <td class="hidden">无需计算</td>
+                `;
+                resultTableBody.appendChild(fixedRow);
+            }
+        }
+
+        // 切换斜率列显示/隐藏
+        function toggleSlopeColumns() {
+            const formulaHeader = document.getElementById("formulaHeader");
+            const slopeHeader = document.getElementById("slopeHeader");
+            const formulaCells = document.querySelectorAll("#resultTable .hidden:nth-child(4)");
+            const slopeCells = document.querySelectorAll("#resultTable .hidden:nth-child(5)");
+            const button = document.querySelector(".button-group button:last-child");
+
+            if (formulaHeader.classList.contains("hidden")) {
+                // 显示列
+                formulaHeader.classList.remove("hidden");
+                slopeHeader.classList.remove("hidden");
+                formulaCells.forEach(cell => cell.classList.remove("hidden"));
+                slopeCells.forEach(cell => cell.classList.remove("hidden"));
+                button.textContent = "收起";
+            } else {
+                // 隐藏列
+                formulaHeader.classList.add("hidden");
+                slopeHeader.classList.add("hidden");
+                formulaCells.forEach(cell => cell.classList.add("hidden"));
+                slopeCells.forEach(cell => cell.classList.add("hidden"));
+                button.textContent = "展开公式";
+            }
+        }
+    </script>
+
+</body>
+</html>
