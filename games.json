@@ -8,5 +8,10 @@
     "name": "黑暗之魂3",
     "image": "https://example.com/dark-souls.jpg",
     "format": "数字版&光盘"
+  },
+  {
+    "name": "生化危机4",
+    "image": "https://image.api.playstation.com/vulcan/ap/rnd/202207/2509/85p2Dwh5iDhUzRKe40QeNYh3.png?w=440&thumb=false",
+    "format": "仅数字版"
   }
 ]
