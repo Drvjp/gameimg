@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>我的游戏收藏</title>
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -63,7 +62,7 @@
       color: #555;
     }
 
-    input, select {
+    input, select, textarea {
       width: 100%;
       padding: 10px;
       border: 1px solid #ccc;
@@ -140,10 +139,8 @@
       <input type="text" id="gameName" placeholder="请输入名称" />
     </div>
     <div class="form-group">
-      <label>图片链接 或 上传图片</label>
-      <input type="url" id="gameImageUrl" placeholder="图片URL（可选）" />
-      <small>或</small>
-      <input type="file" id="gameImageFile" accept="image/*" />
+      <label>图片链接</label>
+      <input type="url" id="gameImageUrl" placeholder="请输入图片URL" />
     </div>
     <div class="form-group">
       <label>内容形式</label>
@@ -159,9 +156,37 @@
 
   <div class="games-container" id="gamesContainer"></div>
 
+  <!-- 编辑弹窗 -->
+  <div id="editModal" style="display:none; position:fixed; z-index:1000; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center;">
+    <div style="background:white; padding:30px; border-radius:10px; width:90%; max-width:400px; text-align:center;">
+      <h3>编辑游戏</h3>
+      <div class="form-group">
+        <label>名称</label>
+        <input type="text" id="editName" />
+      </div>
+      <div class="form-group">
+        <label>图片链接</label>
+        <input type="url" id="editImage" />
+      </div>
+      <div class="form-group">
+        <label>内容形式</label>
+        <select id="editFormat">
+          <option value="仅数字版">仅数字版</option>
+          <option value="数字版&光盘">数字版&光盘</option>
+          <option value="仅光盘">仅光盘</option>
+        </select>
+      </div>
+      <div>
+        <button class="btn" onclick="saveEdit()">保存</button>
+        <button class="btn" onclick="closeEditModal()">取消</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     let games = [];
     let isAdmin = false;
+    let editingIndex = null;
     const ADMIN_PASSWORD = '123456';
 
     // 自动加载
@@ -169,7 +194,7 @@
       loadData();
     };
 
-    // 从 GitHub 加载 games.json（加时间戳避免缓存）
+    // 加载 games.json
     async function loadData() {
       const status = document.getElementById("status");
       const container = document.getElementById("gamesContainer");
@@ -179,6 +204,7 @@
       try {
         const response = await fetch('games.json?' + new Date().getTime());
         games = await response.json();
+        if (!Array.isArray(games)) games = [];
         status.textContent = `✅ 成功加载 ${games.length} 个游戏`;
         renderGames();
       } catch (err) {
@@ -201,34 +227,58 @@
       }
     }
 
-    // 查重
+    // 查重逻辑：去噪归一化 + 核心词匹配
     function isDuplicate(newName, existingGames) {
+      const noiseWords = [
+        'v', 'ver', 'version', '加强版', '豪华版', '终极版', '重制版', '典藏版', '特别版', '限定版', '年度版',
+        '数字版', '光盘版', '实体版', '中文版', '英文版', '日版', '美版', '欧版',
+        'pc', 'ns', 'switch', 'ps4', 'ps5', 'xbox', 'epic', 'steam',
+        '第?\\d+[部集]', '第?[一二三四五六七八九十]+[部集]',
+        '[【】\\[\\](){}<>«»]',
+        '\\s+'
+      ];
+
       function normalize(str) {
-        return str
-          .toLowerCase()
-          .replace(/\s+/g, '')
-          .replace(/【.*】| |\(|\)|\[|\]/g, '')
-          .replace(/v|ver|版本|加强版|豪华版|终极版|重制版/g, '')
-          .replace(/4/g, '四').replace(/v/g, '五')
-          .replace(/危机|传说|物语|编年史|历代记/g, '');
+        let s = str.trim().toLowerCase();
+        noiseWords.forEach(pattern => {
+          const regex = new RegExp(pattern, 'gi');
+          s = s.replace(regex, '');
+        });
+        // 数字转中文
+        s = s.replace(/(\d+)/g, (_, num) => {
+          const map = { '1':'一','2':'二','3':'三','4':'四','5':'五','6':'六','7':'七','8':'八','9':'九','0':'零' };
+          return num.split('').map(d => map[d] || d).join('');
+        });
+        return s.replace(/[^a-z\u4e00-\u9fa5]/g, '');
+      }
+
+      function getCoreWords(str) {
+        const words = str.match(/[\u4e00-\u9fa5]+|[a-z]+/gi) || [];
+        return words.sort((a, b) => b.length - a.length).slice(0, 2);
       }
 
       const normNew = normalize(newName);
+      const coreNew = getCoreWords(normNew);
+
       return existingGames.some(game => {
         const normExist = normalize(game.name);
-        return normNew.includes(normExist) || normExist.includes(normNew);
+        const coreExist = getCoreWords(normExist);
+        const byNorm = (normNew.includes(normExist) && normExist.length > 3) || 
+                       (normExist.includes(normNew) && normNew.length > 3);
+        const byCore = coreNew.some(w => normExist.includes(w)) || 
+                       coreExist.some(w => normNew.includes(w));
+        return byNorm || byCore;
       });
     }
 
     // 添加游戏
-    async function addGame() {
+    function addGame() {
       const name = document.getElementById("gameName").value.trim();
-      const imageUrl = document.getElementById("gameImageUrl").value.trim();
-      const file = document.getElementById("gameImageFile").files[0];
+      const image = document.getElementById("gameImageUrl").value.trim();
       const format = document.getElementById("gameFormat").value;
 
-      if (!name) {
-        alert("请输入游戏名称！");
+      if (!name || !image || !format) {
+        alert("请填写所有字段！");
         return;
       }
 
@@ -236,35 +286,44 @@
         if (!confirm(`⚠️ 检测到可能重复：“${name}”\n确定要继续添加吗？`)) return;
       }
 
-      let image = imageUrl;
-      if (file && !image) {
-        try {
-          image = await getBase64(file);
-        } catch (e) {
-          alert("图片读取失败");
-          return;
-        }
-      }
+      games.push({ name, image, format });
+      renderGames();
+      clearAddForm();
+    }
 
-      if (!image) {
-        alert("请提供图片链接或上传图片！");
+    // 打开编辑弹窗
+    function openEditModal(index) {
+      editingIndex = index;
+      const game = games[index];
+      document.getElementById("editName").value = game.name;
+      document.getElementById("editImage").value = game.image;
+      document.getElementById("editFormat").value = game.format;
+      document.getElementById("editModal").style.display = "flex";
+    }
+
+    // 保存编辑
+    function saveEdit() {
+      const name = document.getElementById("editName").value.trim();
+      const image = document.getElementById("editImage").value.trim();
+      const format = document.getElementById("editFormat").value;
+
+      if (!name || !image || !format) {
+        alert("请填写所有字段！");
         return;
       }
 
-      games.push({ name, image, format });
+      games[editingIndex] = { name, image, format };
       renderGames();
+      closeEditModal();
     }
 
-    // 编辑
-    function editGame(index) {
-      const newName = prompt("修改名称：", games[index].name);
-      if (newName && newName.trim()) {
-        games[index].name = newName.trim();
-        renderGames();
-      }
+    // 关闭编辑弹窗
+    function closeEditModal() {
+      document.getElementById("editModal").style.display = "none";
+      editingIndex = null;
     }
 
-    // 删除
+    // 删除游戏
     function deleteGame(index) {
       if (confirm(`确定删除《${games[index].name}》？`)) {
         games.splice(index, 1);
@@ -272,17 +331,7 @@
       }
     }
 
-    // 转 Base64
-    function getBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
-
-    // 导出为 games.json（供你下载后上传到 GitHub）
+    // 导出为 games.json
     function exportData() {
       if (games.length === 0) {
         alert("当前没有数据可导出！");
@@ -301,7 +350,14 @@
       alert("✅ 文件已生成，请将 games.json 上传到 GitHub 仓库覆盖原文件");
     }
 
-    // 渲染
+    // 清空添加表单
+    function clearAddForm() {
+      document.getElementById("gameName").value = "";
+      document.getElementById("gameImageUrl").value = "";
+      document.getElementById("gameFormat").value = "仅数字版";
+    }
+
+    // 渲染游戏卡片
     function renderGames() {
       const container = document.getElementById("gamesContainer");
       container.innerHTML = "";
@@ -314,7 +370,7 @@
         if (isAdmin) {
           actionsHtml = `
             <div class="card-actions">
-              <button class="btn-edit" onclick="editGame(${index})">编辑</button>
+              <button class="btn-edit" onclick="openEditModal(${index})">编辑</button>
               <button class="btn-delete" onclick="deleteGame(${index})">删除</button>
             </div>
           `;
@@ -331,23 +387,6 @@
 
         container.appendChild(card);
       });
-
-      if (isAdmin && games.length > 0) {
-        new Sortable(container, {
-          animation: 150,
-          onEnd: () => {
-            const newGames = [];
-            container.querySelectorAll('.game-card').forEach(card => {
-              const name = card.querySelector('.game-title').textContent;
-              const format = card.querySelector('.game-format').textContent;
-              const match = games.find(g => g.name === name && g.format === format);
-              if (match) newGames.push(match);
-            });
-            games = newGames.filter(Boolean);
-            renderGames();
-          }
-        });
-      }
     }
   </script>
 </body>
