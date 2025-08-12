@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>我的游戏收藏</title>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -24,6 +25,7 @@
 
     .btn {
       padding: 10px 15px;
+      margin: 5px;
       background-color: #007bff;
       color: white;
       border: none;
@@ -36,11 +38,44 @@
       background-color: #0056b3;
     }
 
+    .btn-edit { background-color: #ffc107; }
+    .btn-delete { background-color: #dc3545; }
+    .btn-admin { background-color: #28a745; }
+
+    #adminPanel {
+      display: none;
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
     #status {
+      text-align: center;
       margin: 10px;
       font-size: 14px;
       color: #d97706;
-      text-align: center;
     }
 
     .games-container {
@@ -79,6 +114,12 @@
       font-size: 12px;
       color: #666;
     }
+
+    .card-actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
   </style>
 </head>
 <body>
@@ -86,15 +127,44 @@
   <h1>🎮 我的游戏收藏</h1>
 
   <div class="header">
-    <button class="btn" onclick="loadData()">🔄 重新加载 games.json</button>
+    <button class="btn" onclick="loadData()">🔄 重新加载</button>
+    <button class="btn btn-admin" onclick="enterAdminMode()">🔑 管理员登录</button>
   </div>
 
   <p id="status">正在加载数据...</p>
 
+  <!-- 管理员功能面板 -->
+  <div id="adminPanel">
+    <div class="form-group">
+      <label>游戏名称</label>
+      <input type="text" id="gameName" placeholder="请输入名称" />
+    </div>
+    <div class="form-group">
+      <label>图片链接 或 上传图片</label>
+      <input type="url" id="gameImageUrl" placeholder="图片URL（可选）" />
+      <small>或</small>
+      <input type="file" id="gameImageFile" accept="image/*" />
+    </div>
+    <div class="form-group">
+      <label>内容形式</label>
+      <select id="gameFormat">
+        <option value="仅数字版">仅数字版</option>
+        <option value="数字版&光盘">数字版&光盘</option>
+        <option value="仅光盘">仅光盘</option>
+      </select>
+    </div>
+    <button class="btn" onclick="addGame()">➕ 添加游戏</button>
+    <button class="btn" onclick="exportData()">💾 导出为 games.json</button>
+  </div>
+
   <div class="games-container" id="gamesContainer"></div>
 
   <script>
-    // 自动加载数据
+    let games = [];
+    let isAdmin = false;
+    const ADMIN_PASSWORD = '123456'; // 管理员密码
+
+    // 自动加载
     window.onload = function() {
       loadData();
     };
@@ -103,55 +173,196 @@
     async function loadData() {
       const status = document.getElementById("status");
       const container = document.getElementById("gamesContainer");
-
+      container.innerHTML = "";
       status.textContent = "加载中...";
-      container.innerHTML = ""; // 清空旧内容
 
       try {
-        // 添加时间戳防止缓存
         const response = await fetch('games.json?' + new Date().getTime());
-        if (!response.ok) {
-          throw new Error('文件未找到（请确保 games.json 与网页在同一目录）');
-        }
-        const games = await response.json();
-
-        if (!Array.isArray(games) || games.length === 0) {
-          status.textContent = "⚠️ 数据为空";
-          return;
-        }
-
-        // 成功加载
+        if (!response.ok) throw new Error('文件未找到');
+        games = await response.json();
         status.textContent = `✅ 成功加载 ${games.length} 个游戏`;
-        renderGames(games);
+        renderGames();
       } catch (err) {
         status.textContent = `❌ 加载失败：${err.message}`;
-        console.error("加载 games.json 失败：", err);
+        games = [];
+        renderGames();
       }
     }
 
+    // 进入管理员模式
+    function enterAdminMode() {
+      const pwd = prompt("请输入管理员密码：");
+      if (pwd === ADMIN_PASSWORD) {
+        isAdmin = true;
+        document.getElementById("adminPanel").style.display = "block";
+        alert("✅ 已进入管理员模式");
+        renderGames(); // 重新渲染以显示按钮
+      } else {
+        alert("❌ 密码错误！");
+      }
+    }
+
+    // 模糊匹配查重（支持“生化危机4” ≈ “生化4”）
+    function isDuplicate(newName, existingGames) {
+      // 简化名称：去空格、转小写、去常见符号
+      function normalize(str) {
+        return str
+          .toLowerCase()
+          .replace(/\s+/g, '')
+          .replace(/【.*】|【.*】|\(.*\)|\(.*\)|\[.*\]|\[.*\]/g, '') // 去括号
+          .replace(/v|ver|版本|加强版|豪华版|终极版|重制版/g, '')
+          .replace(/4/g, '四').replace(/v/g, '五') // 可选：数字统一
+          .replace(/危机|传说|物语|编年史|编年史|历代记/g, '') // 去通用词
+          ;
+      }
+
+      const normNew = normalize(newName);
+
+      return existingGames.some(game => {
+        const normExist = normalize(game.name);
+        // 包含关系或高度相似
+        return normNew.includes(normExist) || normExist.includes(normNew);
+      });
+    }
+
+    // 添加游戏
+    async function addGame() {
+      const nameInput = document.getElementById("gameName");
+      const name = nameInput.value.trim();
+      const imageUrl = document.getElementById("gameImageUrl").value.trim();
+      const file = document.getElementById("gameImageFile").files[0];
+      const format = document.getElementById("gameFormat").value;
+
+      if (!name) {
+        alert("请输入游戏名称！");
+        return;
+      }
+
+      // 查重
+      if (isDuplicate(name, games)) {
+        const confirm = window.confirm(`⚠️ 检测到可能重复：“${name}”\n确定要继续添加吗？`);
+        if (!confirm) return;
+      }
+
+      let image = imageUrl;
+      if (file && !image) {
+        try {
+          image = await getBase64(file);
+        } catch (e) {
+          alert("图片读取失败");
+          return;
+        }
+      }
+
+      if (!image) {
+        alert("请提供图片链接或上传图片！");
+        return;
+      }
+
+      games.push({ name, image, format });
+      alert(`✅ 已添加：${name}`);
+      saveAndReload();
+    }
+
+    // 编辑游戏
+    function editGame(index) {
+      const game = games[index];
+      const newName = prompt("修改名称：", game.name);
+      if (newName && newName.trim()) {
+        games[index].name = newName.trim();
+        saveAndReload();
+      }
+    }
+
+    // 删除游戏
+    function deleteGame(index) {
+      if (confirm(`确定删除《${games[index].name}》？`)) {
+        games.splice(index, 1);
+        saveAndReload();
+      }
+    }
+
+    // 转 Base64
+    function getBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // 保存并重新渲染
+    function saveAndReload() {
+      exportData(); // 直接导出覆盖
+      renderGames();
+    }
+
+    // 导出为 games.json
+    function exportData() {
+      if (games.length === 0) {
+        alert("当前没有数据可导出！");
+        return;
+      }
+
+      const dataStr = JSON.stringify(games, null, 2);
+      const blob = new Blob([dataStr], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "games.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
     // 渲染游戏卡片
-    function renderGames(games) {
+    function renderGames() {
       const container = document.getElementById("gamesContainer");
+      container.innerHTML = "";
 
-      games.forEach(game => {
-        // 验证必要字段
-        const name = game.name || "未知游戏";
-        const image = game.image || "https://via.placeholder.com/200x150?text=No+Image";
-        const format = game.format || "未知";
-
+      games.forEach((game, index) => {
         const card = document.createElement("div");
         card.className = "game-card";
 
+        let actionsHtml = '';
+        if (isAdmin) {
+          actionsHtml = `
+            <div class="card-actions">
+              <button class="btn-edit" onclick="editGame(${index})">编辑</button>
+              <button class="btn-delete" onclick="deleteGame(${index})">删除</button>
+            </div>
+          `;
+        }
+
         card.innerHTML = `
-          <img src="${image}" alt="${name}" class="game-image" onerror="this.src='https://via.placeholder.com/200x150?text=No+Image'">
+          <img src="${game.image}" alt="${game.name}" class="game-image" onerror="this.src='https://via.placeholder.com/200x150?text=No+Image'">
           <div class="game-info">
-            <h3 class="game-title">${name}</h3>
-            <p class="game-format">${format}</p>
+            <h3 class="game-title">${game.name}</h3>
+            <p class="game-format">${game.format}</p>
+            ${actionsHtml}
           </div>
         `;
 
         container.appendChild(card);
       });
+
+      // 管理员模式下启用拖拽排序
+      if (isAdmin && games.length > 0) {
+        new Sortable(container, {
+          animation: 150,
+          onEnd: () => {
+            const newGames = [];
+            container.querySelectorAll('.game-card').forEach(card => {
+              const name = card.querySelector('.game-title').textContent;
+              const format = card.querySelector('.game-format').textContent;
+              const match = games.find(g => g.name === name && g.format === format);
+              if (match) newGames.push(match);
+            });
+            games = newGames.filter(Boolean);
+            saveAndReload();
+          }
+        });
+      }
     }
   </script>
 </body>
