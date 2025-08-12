@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>游戏图库 - 管理员模式</title>
+  <title>我的游戏收藏</title>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <style>
     body {
@@ -11,60 +11,42 @@
       background-color: #f4f7f9;
       margin: 0;
       padding: 20px;
+      text-align: center;
     }
 
     h1 {
-      text-align: center;
       color: #333;
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.2s;
     }
 
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
+    h1:hover {
+      color: #007bff;
+    }
+
+    .secret-panel {
+      display: none;
+      margin: 20px auto;
+      max-width: 600px;
+      padding: 15px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
     .btn {
       padding: 10px 15px;
-      margin: 0 10px;
+      margin: 10px;
       background-color: #007bff;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      font-size: 14px;
     }
 
     .btn:hover {
       background-color: #0056b3;
-    }
-
-    .admin-panel {
-      display: none;
-      max-width: 600px;
-      margin: 20px auto;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-      color: #555;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      box-sizing: border-box;
     }
 
     .games-container {
@@ -103,102 +85,18 @@
       font-size: 12px;
       color: #666;
     }
-
-    .card-actions {
-      margin-top: 10px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .btn-edit {
-      background-color: #ffc107;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 3px;
-      font-size: 12px;
-    }
-
-    .btn-delete {
-      background-color: #dc3545;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 3px;
-      font-size: 12px;
-    }
-
-    #passwordModal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.5);
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-content {
-      background-color: white;
-      padding: 30px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
-    }
-
-    .modal-content input {
-      margin: 10px 0;
-    }
   </style>
 </head>
 <body>
 
-  <h1>🎮 我的游戏收藏</h1>
+  <!-- 点击这里触发隐藏功能 -->
+  <h1 id="title">🎮 我的游戏收藏</h1>
 
-  <!-- 顶部按钮栏 -->
-  <div class="header">
-    <button class="btn" onclick="showPasswordPrompt()">🔑 管理员登录</button>
-    <button class="btn" onclick="exitAdminMode()" id="exitBtn" style="display:none;">🚪 退出管理</button>
-  </div>
-
-  <!-- 密码输入弹窗 -->
-  <div id="passwordModal">
-    <div class="modal-content">
-      <h3>请输入管理员密码</h3>
-      <input type="password" id="adminPassword" placeholder="密码" />
-      <div>
-        <button class="btn" onclick="checkPassword()">确认</button>
-        <button class="btn" onclick="closeModal()">取消</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 管理员功能面板（默认隐藏） -->
-  <div class="admin-panel" id="adminPanel">
-    <div class="form-group">
-      <label>游戏名称</label>
-      <input type="text" id="gameName" placeholder="请输入名称" />
-    </div>
-    <div class="form-group">
-      <label>图片链接 或 上传图片</label>
-      <input type="url" id="gameImageUrl" placeholder="图片URL（可选）" />
-      <small>或</small>
-      <input type="file" id="gameImageFile" accept="image/*" />
-    </div>
-    <div class="form-group">
-      <label>内容形式</label>
-      <select id="gameFormat">
-        <option value="仅数字版">仅数字版</option>
-        <option value="数字版&光盘">数字版&光盘</option>
-        <option value="仅光盘">仅光盘</option>
-      </select>
-    </div>
-    <button class="btn" onclick="addGame()">➕ 添加游戏</button>
-    <button class="btn" onclick="exportData()">💾 导出数据为 games.json</button>
+  <!-- 隐藏面板（触发后显示） -->
+  <div class="secret-panel" id="secretPanel">
+    <p>✅ 已进入管理模式</p>
+    <button class="btn" onclick="loadData()">📥 加载 games.json</button>
+    <button class="btn" onclick="exportData()">💾 导出当前数据</button>
   </div>
 
   <!-- 游戏展示区 -->
@@ -206,136 +104,35 @@
 
   <script>
     let games = [];
-    let isAdmin = false;
-    const ADMIN_PASSWORD = '123456'; // ✅ 修改为你自己的密码
+    let clickCount = 0;
+    const title = document.getElementById("title");
+    const secretPanel = document.getElementById("secretPanel");
 
-    // 页面加载时尝试从 games.json 加载数据
-    window.onload = async function() {
-      await loadData();
-      updateUI();
+    // 设置：点击标题 5 次显示隐藏功能
+    title.onclick = function() {
+      clickCount++;
+      if (clickCount >= 5) {
+        secretPanel.style.display = "block";
+        title.textContent = "✅ 已激活管理功能";
+        clickCount = 0; // 重置计数
+      }
     };
 
     // 加载 games.json
     async function loadData() {
       try {
         const response = await fetch('games.json?' + new Date().getTime());
-        if (response.ok) {
-          games = await response.json();
-        } else {
-          games = [];
-          console.warn("games.json 不存在或为空");
-        }
+        if (!response.ok) throw new Error('文件未找到');
+        games = await response.json();
+        alert(`✅ 成功加载 ${games.length} 个游戏`);
+        renderGames();
       } catch (err) {
-        console.warn("无法加载 games.json，使用空数据");
-        games = [];
-      }
-      renderGames();
-    }
-
-    // 显示密码弹窗
-    function showPasswordPrompt() {
-      document.getElementById("passwordModal").style.display = "flex";
-      document.getElementById("adminPassword").value = "";
-    }
-
-    // 关闭弹窗
-    function closeModal() {
-      document.getElementById("passwordModal").style.display = "none";
-    }
-
-    // 验证密码
-    function checkPassword() {
-      const pwdInput = document.getElementById("adminPassword").value;
-      if (pwdInput === ADMIN_PASSWORD) {
-        isAdmin = true;
-        closeModal();
-        updateUI();
-      } else {
-        alert("❌ 密码错误！");
+        alert(`❌ 加载失败：${err.message}\n请确保 games.json 与网页在同一目录`);
+        console.error(err);
       }
     }
 
-    // 更新 UI 状态
-    function updateUI() {
-      document.getElementById("exitBtn").style.display = isAdmin ? "inline" : "none";
-      document.getElementById("adminPanel").style.display = isAdmin ? "block" : "none";
-      renderGames(); // 重新渲染以显示/隐藏操作按钮
-    }
-
-    // 退出管理员模式
-    function exitAdminMode() {
-      isAdmin = false;
-      updateUI();
-    }
-
-    // 添加游戏
-    async function addGame() {
-      const name = document.getElementById("gameName").value.trim();
-      const imageUrl = document.getElementById("gameImageUrl").value.trim();
-      const file = document.getElementById("gameImageFile").files[0];
-      const format = document.getElementById("gameFormat").value;
-
-      if (!name || !format) {
-        alert("请填写名称和形式！");
-        return;
-      }
-
-      let image = imageUrl;
-      if (file && !image) {
-        try {
-          image = await getBase64(file);
-        } catch (e) {
-          alert("图片读取失败");
-          return;
-        }
-      }
-
-      if (!image) {
-        alert("请提供图片链接或上传图片！");
-        return;
-      }
-
-      games.push({ name, image, format });
-      saveData();
-      renderGames();
-      clearForm();
-    }
-
-    // 删除游戏
-    function deleteGame(index) {
-      if (confirm("确定删除？")) {
-        games.splice(index, 1);
-        saveData();
-        renderGames();
-      }
-    }
-
-    // 编辑游戏名称
-    function editGame(index) {
-      const newName = prompt("修改名称：", games[index].name);
-      if (newName && newName.trim()) {
-        games[index].name = newName.trim();
-        saveData();
-        renderGames();
-      }
-    }
-
-    // 转 Base64
-    function getBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
-
-    // 保存数据到 games.json（需导出）
-    function saveData() {
-      // 实际保存通过导出实现
-    }
-
-    // 导出为 games.json
+    // 导出数据为 games.json
     function exportData() {
       if (games.length === 0) {
         alert("当前没有数据可导出！");
@@ -352,47 +149,26 @@
       URL.revokeObjectURL(url);
     }
 
-    // 清空表单
-    function clearForm() {
-      document.getElementById("gameName").value = "";
-      document.getElementById("gameImageUrl").value = "";
-      document.getElementById("gameImageFile").value = "";
-    }
-
     // 渲染游戏卡片
     function renderGames() {
       const container = document.getElementById("gamesContainer");
       container.innerHTML = "";
 
-      games.forEach((game, index) => {
+      games.forEach(game => {
         const card = document.createElement("div");
         card.className = "game-card";
-
-        let imgHtml = `<img src="${game.image}" alt="${game.name}" class="game-image" onerror="this.src='https://via.placeholder.com/200x150?text=No+Image'">`;
-
-        let actionsHtml = '';
-        if (isAdmin) {
-          actionsHtml = `
-            <div class="card-actions">
-              <button class="btn-edit" onclick="editGame(${index})">编辑</button>
-              <button class="btn-delete" onclick="deleteGame(${index})">删除</button>
-            </div>
-          `;
-        }
-
-        card.innerHTML = imgHtml + `
+        card.innerHTML = `
+          <img src="${game.image}" alt="${game.name}" class="game-image" onerror="this.src='https://via.placeholder.com/200x150?text=No+Image'">
           <div class="game-info">
             <h3 class="game-title">${game.name}</h3>
             <p class="game-format">${game.format}</p>
-            ${actionsHtml}
           </div>
         `;
-
         container.appendChild(card);
       });
 
-      // 管理员模式下启用拖拽排序
-      if (isAdmin && games.length > 0) {
+      // 启用拖拽排序（可选：仅管理模式）
+      if (games.length > 0) {
         new Sortable(container, {
           animation: 150,
           onEnd: () => {
@@ -404,7 +180,6 @@
               if (match) newGames.push(match);
             });
             games = newGames.filter(Boolean);
-            saveData();
           }
         });
       }
