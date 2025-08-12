@@ -10,6 +10,7 @@
       background-color: #f4f7f9;
       margin: 0;
       padding: 20px;
+      overflow: hidden;
     }
 
     h1 {
@@ -26,7 +27,7 @@
 
     /* 双行滚动 Banner */
     .banner-container {
-      display: none; /* 默认隐藏 */
+      display: none;
       background-color: #000;
       padding: 15px 0;
       margin: 10px 0 20px 0;
@@ -78,6 +79,12 @@
       text-overflow: ellipsis;
     }
 
+    .top-badge {
+      font-size: 10px;
+      color: #ffcc00;
+      font-weight: bold;
+    }
+
     @keyframes scroll-left {
       0% { transform: translateX(100%); }
       100% { transform: translateX(-100%); }
@@ -112,7 +119,7 @@
       box-sizing: border-box;
     }
 
-    /* 管理员面板（默认隐藏） */
+    /* 管理员面板 */
     #adminPanel {
       display: none;
       max-width: 600px;
@@ -156,6 +163,7 @@
       gap: 20px;
       margin-top: 10px;
       justify-content: center;
+      margin-left: 80px; /* 避开左侧已选列表 */
     }
 
     .game-card {
@@ -187,22 +195,132 @@
       color: #666;
     }
 
-    .card-actions {
-      margin-top: 10px;
-      display: flex;
-      justify-content: space-between;
-    }
-
     .btn {
-      padding: 8px 12px;
+      padding: 6px 10px;
+      margin: 5px 0;
       border: none;
       border-radius: 3px;
       cursor: pointer;
+      font-size: 12px;
+    }
+
+    .btn-add {
+      width: 100%;
+      background-color: #28a745;
+      color: white;
+    }
+
+    .btn-remove {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .btn-edit {
+      background-color: #ffc107;
+      color: white;
+    }
+
+    .btn-delete {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    /* 已选列表 */
+    #selectedSidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 280px;
+      height: 100%;
+      background-color: #fff;
+      box-shadow: 3px 0 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+      transform: translateX(-280px);
+      transition: transform 0.3s ease;
+      overflow-y: auto;
+    }
+
+    #selectedSidebar.active {
+      transform: translateX(0);
+    }
+
+    #selectedList {
+      padding: 20px;
+    }
+
+    .selected-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    .selected-item img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    .selected-item-info {
+      flex: 1;
+    }
+
+    .selected-item-title {
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .selected-item-format {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .selected-item-remove {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    #selectedFooter {
+      padding: 15px;
+      text-align: center;
+      border-top: 1px solid #eee;
+      position: sticky;
+      bottom: 0;
+      background-color: #fff;
+    }
+
+    #selectedFooter button {
+      margin: 0 5px;
+      padding: 10px 15px;
       font-size: 14px;
     }
 
-    .btn-edit { background-color: #ffc107; color: white; }
-    .btn-delete { background-color: #dc3545; color: white; }
+    #sidebarThumb {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 30px;
+      height: 80px;
+      background-color: #007bff;
+      color: white;
+      writing-mode: vertical-lr;
+      text-align: center;
+      padding: 10px;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+      z-index: 999;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -287,18 +405,29 @@
     </div>
   </div>
 
+  <!-- 已选列表侧边栏 -->
+  <div id="selectedSidebar">
+    <div id="selectedList"></div>
+    <div id="selectedFooter">
+      <button class="btn" onclick="copySelected()">📋 一键复制</button>
+      <button class="btn" onclick="clearSelected()">🗑️ 清空</button>
+    </div>
+  </div>
+
+  <!-- 侧边栏缩略图 -->
+  <div id="sidebarThumb" onclick="showSidebar()">选单</div>
+
   <script>
     let games = [];
     let isAdmin = false;
     let editingIndex = null;
+    let selectedGames = []; // 已选清单
     const ADMIN_PASSWORD = '123456';
     let clickCount = 0;
     const title = document.getElementById("title");
 
-    // 自动加载
     window.onload = function() {
       loadData();
-      // 设置标题点击触发管理员模式
       title.onclick = function() {
         clickCount++;
         if (clickCount >= 5) {
@@ -316,7 +445,6 @@
       };
     };
 
-    // 加载 games.json
     async function loadData() {
       const status = document.getElementById("status");
       const container = document.getElementById("gamesContainer");
@@ -337,7 +465,6 @@
       }
     }
 
-    // 查重逻辑
     function isDuplicate(newName, existingGames) {
       const noiseWords = [
         'v', 'ver', 'version', '加强版', '豪华版', '终极版', '重制版', '典藏版', '特别版', '限定版', '年度版',
@@ -380,7 +507,6 @@
       });
     }
 
-    // 添加游戏
     function addGame() {
       const name = document.getElementById("gameName").value.trim();
       const image = document.getElementById("gameImageUrl").value.trim();
@@ -400,7 +526,6 @@
       clearAddForm();
     }
 
-    // 打开编辑弹窗
     function openEditModal(index) {
       editingIndex = index;
       const game = games[index];
@@ -411,7 +536,6 @@
       document.getElementById("editModal").style.display = "flex";
     }
 
-    // 保存编辑
     function saveEdit() {
       const name = document.getElementById("editName").value.trim();
       const image = document.getElementById("editImage").value.trim();
@@ -428,13 +552,11 @@
       closeEditModal();
     }
 
-    // 关闭编辑弹窗
     function closeEditModal() {
       document.getElementById("editModal").style.display = "none";
       editingIndex = null;
     }
 
-    // 删除游戏
     function deleteGame(index) {
       if (confirm(`确定删除《${games[index].name}》？`)) {
         games.splice(index, 1);
@@ -442,7 +564,6 @@
       }
     }
 
-    // 导出为 games.json
     function exportData() {
       if (games.length === 0) {
         alert("当前没有数据可导出！");
@@ -457,23 +578,23 @@
       a.download = "games.json";
       a.click();
       URL.revokeObjectURL(url);
-
       alert("✅ 文件已生成，请将 games.json 上传到 GitHub 仓库覆盖原文件");
     }
 
-    // 清空添加表单
     function clearAddForm() {
       document.getElementById("gameName").value = "";
       document.getElementById("gameImageUrl").value = "";
       document.getElementById("gameFormat").value = "仅数字版";
     }
 
-    // 搜索与排序并渲染
     function filterAndSort() {
       const query = document.getElementById("searchInput").value.trim().toLowerCase();
       const sort = document.getElementById("sortSelect").value;
 
       let filtered = [...games];
+
+      // 排除已选中的游戏
+      filtered = filtered.filter(g => !selectedGames.some(s => s.name === g.name));
 
       if (query) {
         filtered = filtered.filter(g => g.name.toLowerCase().includes(query));
@@ -487,20 +608,19 @@
 
       renderGames(filtered);
       renderBanner();
+      updateSelectedList();
     }
 
-    // 创建 Banner 项
     function createBannerItem(game) {
       const item = document.createElement("div");
       item.className = "banner-item";
       item.innerHTML = `
         <img src="${game.image}" alt="${game.name}" class="banner-image" onerror="this.src='https://via.placeholder.com/100x70?text=No+Image'">
-        <div class="banner-title">${game.name}</div>
+        <div class="banner-title">${game.name} <span class="top-badge">TOP</span></div>
       `;
       return item;
     }
 
-    // 渲染双行 Banner
     function renderBanner() {
       const forward = document.getElementById("bannerForward");
       const backward = document.getElementById("bannerBackward");
@@ -539,7 +659,6 @@
       }
     }
 
-    // 渲染游戏列表
     function renderGames(filteredGames) {
       const container = document.getElementById("gamesContainer");
       container.innerHTML = "";
@@ -561,14 +680,93 @@
         card.innerHTML = `
           <img src="${game.image}" alt="${game.name}" class="game-image" onerror="this.src='https://via.placeholder.com/140x100?text=No+Image'">
           <div class="game-info">
-            <h3 class="game-title">${game.name}</h3>
+            <h3 class="game-title">${game.name}${game.banner ? ' <span style="color:#ffcc00;font-size:12px;">TOP</span>' : ''}</h3>
             <p class="game-format">${game.format}</p>
             ${actionsHtml}
+            <button class="btn btn-add" onclick="addToSelected(${games.indexOf(game)})">➕ 加入清单</button>
           </div>
         `;
 
         container.appendChild(card);
       });
+    }
+
+    function addToSelected(index) {
+      const game = games[index];
+      if (selectedGames.some(g => g.name === game.name)) {
+        alert("该游戏已在清单中");
+        return;
+      }
+
+      if (selectedGames.length >= 4) {
+        const proceed = confirm("亲亲，当前订单一般最多四款游戏哦，是否继续加入供你呢最后挑选决策呢？");
+        if (!proceed) return;
+      }
+
+      selectedGames.push(game);
+      filterAndSort(); // 重新渲染，移除该游戏
+      updateSelectedList();
+      showSidebar();
+      autoHideSidebar();
+    }
+
+    function updateSelectedList() {
+      const list = document.getElementById("selectedList");
+      list.innerHTML = "";
+
+      selectedGames.forEach((game, i) => {
+        const item = document.createElement("div");
+        item.className = "selected-item";
+        item.innerHTML = `
+          <img src="${game.image}" alt="${game.name}">
+          <div class="selected-item-info">
+            <p class="selected-item-title">${game.name}</p>
+            <p class="selected-item-format">${game.format}</p>
+          </div>
+          <button class="selected-item-remove" onclick="removeFromSelected(${i})">×</button>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function removeFromSelected(index) {
+      selectedGames.splice(index, 1);
+      filterAndSort();
+      updateSelectedList();
+    }
+
+    function clearSelected() {
+      if (confirm("确定清空已选列表？")) {
+        selectedGames = [];
+        filterAndSort();
+        updateSelectedList();
+      }
+    }
+
+    function copySelected() {
+      if (selectedGames.length === 0) {
+        alert("当前没有选中游戏");
+        return;
+      }
+      const names = selectedGames.map(g => g.name).join('\n');
+      navigator.clipboard.writeText(names).then(() => {
+        alert("✅ 已复制选中游戏名称：\n\n" + names);
+      });
+    }
+
+    function showSidebar() {
+      document.getElementById("selectedSidebar").classList.add("active");
+      document.getElementById("sidebarThumb").style.display = "none";
+      autoHideSidebar();
+    }
+
+    function autoHideSidebar() {
+      setTimeout(() => {
+        if (document.getElementById("selectedSidebar").classList.contains("active") && selectedGames.length > 0) {
+          document.getElementById("selectedSidebar").classList.remove("active");
+          document.getElementById("sidebarThumb").style.display = "block";
+        }
+      }, 5000);
     }
   </script>
 </body>
