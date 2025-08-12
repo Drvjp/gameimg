@@ -2,16 +2,49 @@
   {
     "name": "塞尔达传说：旷野之息",
     "image": "https://example.com/zelda.jpg",
-    "format": "仅数字版"
+    "format": "仅数字版",
+    "banner": true
   },
   {
     "name": "黑暗之魂3",
     "image": "https://example.com/dark-souls.jpg",
-    "format": "数字版&光盘"
+    "format": "数字版&光盘",
+    "banner": true
   },
   {
     "name": "生化危机4",
     "image": "https://image.api.playstation.com/vulcan/ap/rnd/202207/2509/85p2Dwh5iDhUzRKe40QeNYh3.png?w=440&thumb=false",
-    "format": "仅数字版"
+    "format": "仅数字版",
+    "banner": true
+  },
+  {
+    "name": "测试",
+    "image": "q",
+    "format": "仅数字版",
+    "banner": false
+  },
+  {
+    "name": "哈哈哈",
+    "image": "q",
+    "format": "仅数字版",
+    "banner": true
+  },
+  {
+    "name": "快快快",
+    "image": "w",
+    "format": "仅数字版",
+    "banner": true
+  },
+  {
+    "name": "订单",
+    "image": "去",
+    "format": "仅数字版",
+    "banner": true
+  },
+  {
+    "name": "来了",
+    "image": "g",
+    "format": "仅数字版",
+    "banner": true
   }
 ]
