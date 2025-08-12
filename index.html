@@ -154,7 +154,6 @@
       </select>
     </div>
     <button class="btn" onclick="addGame()">➕ 添加游戏</button>
-    <button class="btn" onclick="exportData()">💾 导出为 games.json</button>
   </div>
 
   <div class="games-container" id="gamesContainer"></div>
@@ -162,14 +161,14 @@
   <script>
     let games = [];
     let isAdmin = false;
-    const ADMIN_PASSWORD = '123456'; // 管理员密码
+    const ADMIN_PASSWORD = '123456';
 
     // 自动加载
     window.onload = function() {
       loadData();
     };
 
-    // 加载 games.json
+    // 从服务器加载
     async function loadData() {
       const status = document.getElementById("status");
       const container = document.getElementById("gamesContainer");
@@ -177,8 +176,7 @@
       status.textContent = "加载中...";
 
       try {
-        const response = await fetch('games.json?' + new Date().getTime());
-        if (!response.ok) throw new Error('文件未找到');
+        const response = await fetch('/data');
         games = await response.json();
         status.textContent = `✅ 成功加载 ${games.length} 个游戏`;
         renderGames();
@@ -196,39 +194,34 @@
         isAdmin = true;
         document.getElementById("adminPanel").style.display = "block";
         alert("✅ 已进入管理员模式");
-        renderGames(); // 重新渲染以显示按钮
+        renderGames();
       } else {
         alert("❌ 密码错误！");
       }
     }
 
-    // 模糊匹配查重（支持“生化危机4” ≈ “生化4”）
+    // 查重（模糊匹配）
     function isDuplicate(newName, existingGames) {
-      // 简化名称：去空格、转小写、去常见符号
       function normalize(str) {
         return str
           .toLowerCase()
           .replace(/\s+/g, '')
-          .replace(/【.*】|【.*】|\(.*\)|\(.*\)|\[.*\]|\[.*\]/g, '') // 去括号
+          .replace(/【.*】|【.*】|\(.*\)|\(.*\)|\[.*\]|\[.*\]/g, '')
           .replace(/v|ver|版本|加强版|豪华版|终极版|重制版/g, '')
-          .replace(/4/g, '四').replace(/v/g, '五') // 可选：数字统一
-          .replace(/危机|传说|物语|编年史|编年史|历代记/g, '') // 去通用词
-          ;
+          .replace(/4/g, '四').replace(/v/g, '五')
+          .replace(/危机|传说|物语|编年史|历代记/g, '');
       }
 
       const normNew = normalize(newName);
-
       return existingGames.some(game => {
         const normExist = normalize(game.name);
-        // 包含关系或高度相似
         return normNew.includes(normExist) || normExist.includes(normNew);
       });
     }
 
     // 添加游戏
     async function addGame() {
-      const nameInput = document.getElementById("gameName");
-      const name = nameInput.value.trim();
+      const name = document.getElementById("gameName").value.trim();
       const imageUrl = document.getElementById("gameImageUrl").value.trim();
       const file = document.getElementById("gameImageFile").files[0];
       const format = document.getElementById("gameFormat").value;
@@ -238,10 +231,8 @@
         return;
       }
 
-      // 查重
       if (isDuplicate(name, games)) {
-        const confirm = window.confirm(`⚠️ 检测到可能重复：“${name}”\n确定要继续添加吗？`);
-        if (!confirm) return;
+        if (!confirm(`⚠️ 检测到可能重复：“${name}”\n确定要继续添加吗？`)) return;
       }
 
       let image = imageUrl;
@@ -260,25 +251,26 @@
       }
 
       games.push({ name, image, format });
-      alert(`✅ 已添加：${name}`);
-      saveAndReload();
+      saveToServer();
+      renderGames();
     }
 
-    // 编辑游戏
+    // 编辑
     function editGame(index) {
-      const game = games[index];
-      const newName = prompt("修改名称：", game.name);
+      const newName = prompt("修改名称：", games[index].name);
       if (newName && newName.trim()) {
         games[index].name = newName.trim();
-        saveAndReload();
+        saveToServer();
+        renderGames();
       }
     }
 
-    // 删除游戏
+    // 删除
     function deleteGame(index) {
       if (confirm(`确定删除《${games[index].name}》？`)) {
         games.splice(index, 1);
-        saveAndReload();
+        saveToServer();
+        renderGames();
       }
     }
 
@@ -292,30 +284,22 @@
       });
     }
 
-    // 保存并重新渲染
-    function saveAndReload() {
-      exportData(); // 直接导出覆盖
-      renderGames();
+    // 保存到服务器
+    function saveToServer() {
+      fetch('/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(games)
+      })
+      .then(res => res.text())
+      .then(msg => console.log('💾 保存成功:', msg))
+      .catch(err => {
+        console.error("保存失败：", err);
+        alert("❌ 无法保存，请检查是否已启动服务器！");
+      });
     }
 
-    // 导出为 games.json
-    function exportData() {
-      if (games.length === 0) {
-        alert("当前没有数据可导出！");
-        return;
-      }
-
-      const dataStr = JSON.stringify(games, null, 2);
-      const blob = new Blob([dataStr], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "games.json";
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    // 渲染游戏卡片
+    // 渲染
     function renderGames() {
       const container = document.getElementById("gamesContainer");
       container.innerHTML = "";
@@ -346,7 +330,6 @@
         container.appendChild(card);
       });
 
-      // 管理员模式下启用拖拽排序
       if (isAdmin && games.length > 0) {
         new Sortable(container, {
           animation: 150,
@@ -359,7 +342,8 @@
               if (match) newGames.push(match);
             });
             games = newGames.filter(Boolean);
-            saveAndReload();
+            saveToServer();
+            renderGames();
           }
         });
       }
