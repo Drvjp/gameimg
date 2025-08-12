@@ -77,11 +77,78 @@
       color: #d97706;
     }
 
+    /* 滚动 Banner */
+    .banner-container {
+      overflow: hidden;
+      white-space: nowrap;
+      background-color: #000;
+      padding: 10px 0;
+      margin: 10px 0 20px 0;
+      border-radius: 8px;
+      position: relative;
+    }
+
+    .banner {
+      display: flex;
+      animation: scroll-left 30s linear infinite;
+      gap: 15px;
+      padding-left: 20px;
+    }
+
+    .banner-item {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      width: 120px;
+    }
+
+    .banner-image {
+      width: 100px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 5px;
+      border: 2px solid #fff;
+    }
+
+    .banner-title {
+      color: white;
+      font-size: 12px;
+      margin-top: 5px;
+      text-align: center;
+      max-width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @keyframes scroll-left {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* 搜索与排序 */
+    .filter-sort {
+      display: flex;
+      max-width: 600px;
+      margin: 10px auto;
+      gap: 10px;
+    }
+
+    #searchInput {
+      flex: 1;
+      padding: 10px;
+    }
+
+    #sortSelect {
+      width: 150px;
+      padding: 10px;
+    }
+
+    /* 游戏列表 */
     .games-container {
       display: flex;
       flex-wrap: wrap;
       gap: 20px;
-      margin-top: 20px;
+      margin-top: 10px;
       justify-content: center;
     }
 
@@ -125,7 +192,21 @@
 
   <h1>🎮 我的游戏收藏</h1>
 
+  <!-- 滚动 Banner -->
+  <div class="banner-container">
+    <div class="banner" id="banner"></div>
+  </div>
+
+  <!-- 搜索与排序 -->
   <div class="header">
+    <div class="filter-sort">
+      <input type="text" id="searchInput" placeholder="🔍 搜索游戏名称" oninput="filterAndSort()" />
+      <select id="sortSelect" onchange="filterAndSort()">
+        <option value="default">按添加顺序</option>
+        <option value="name-asc">名称 A-Z</option>
+        <option value="name-desc">名称 Z-A</option>
+      </select>
+    </div>
     <button class="btn" onclick="loadData()">🔄 刷新数据</button>
     <button class="btn btn-admin" onclick="enterAdminMode()">🔑 管理员登录</button>
   </div>
@@ -176,6 +257,11 @@
           <option value="仅光盘">仅光盘</option>
         </select>
       </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" id="editBanner"> 加入顶部推荐 Banner
+        </label>
+      </div>
       <div>
         <button class="btn" onclick="saveEdit()">保存</button>
         <button class="btn" onclick="closeEditModal()">取消</button>
@@ -205,12 +291,14 @@
         const response = await fetch('games.json?' + new Date().getTime());
         games = await response.json();
         if (!Array.isArray(games)) games = [];
+        // 初始化 banner 状态
+        games.forEach(g => { if (g.banner === undefined) g.banner = false; });
         status.textContent = `✅ 成功加载 ${games.length} 个游戏`;
-        renderGames();
+        filterAndSort();
       } catch (err) {
         status.textContent = `❌ 加载失败：${err.message}`;
         games = [];
-        renderGames();
+        renderGames([]);
       }
     }
 
@@ -221,13 +309,13 @@
         isAdmin = true;
         document.getElementById("adminPanel").style.display = "block";
         alert("✅ 已进入管理员模式");
-        renderGames();
+        filterAndSort();
       } else {
         alert("❌ 密码错误！");
       }
     }
 
-    // 查重逻辑：去噪归一化 + 核心词匹配
+    // 查重逻辑
     function isDuplicate(newName, existingGames) {
       const noiseWords = [
         'v', 'ver', 'version', '加强版', '豪华版', '终极版', '重制版', '典藏版', '特别版', '限定版', '年度版',
@@ -244,7 +332,6 @@
           const regex = new RegExp(pattern, 'gi');
           s = s.replace(regex, '');
         });
-        // 数字转中文
         s = s.replace(/(\d+)/g, (_, num) => {
           const map = { '1':'一','2':'二','3':'三','4':'四','5':'五','6':'六','7':'七','8':'八','9':'九','0':'零' };
           return num.split('').map(d => map[d] || d).join('');
@@ -286,8 +373,8 @@
         if (!confirm(`⚠️ 检测到可能重复：“${name}”\n确定要继续添加吗？`)) return;
       }
 
-      games.push({ name, image, format });
-      renderGames();
+      games.push({ name, image, format, banner: false });
+      filterAndSort();
       clearAddForm();
     }
 
@@ -298,6 +385,7 @@
       document.getElementById("editName").value = game.name;
       document.getElementById("editImage").value = game.image;
       document.getElementById("editFormat").value = game.format;
+      document.getElementById("editBanner").checked = game.banner || false;
       document.getElementById("editModal").style.display = "flex";
     }
 
@@ -306,14 +394,15 @@
       const name = document.getElementById("editName").value.trim();
       const image = document.getElementById("editImage").value.trim();
       const format = document.getElementById("editFormat").value;
+      const banner = document.getElementById("editBanner").checked;
 
       if (!name || !image || !format) {
         alert("请填写所有字段！");
         return;
       }
 
-      games[editingIndex] = { name, image, format };
-      renderGames();
+      games[editingIndex] = { name, image, format, banner };
+      filterAndSort();
       closeEditModal();
     }
 
@@ -327,7 +416,7 @@
     function deleteGame(index) {
       if (confirm(`确定删除《${games[index].name}》？`)) {
         games.splice(index, 1);
-        renderGames();
+        filterAndSort();
       }
     }
 
@@ -357,12 +446,57 @@
       document.getElementById("gameFormat").value = "仅数字版";
     }
 
-    // 渲染游戏卡片
-    function renderGames() {
+    // 搜索与排序并渲染
+    function filterAndSort() {
+      const query = document.getElementById("searchInput").value.trim().toLowerCase();
+      const sort = document.getElementById("sortSelect").value;
+
+      let filtered = games.filter(g => !g.banner); // 排除 banner 游戏
+
+      if (query) {
+        filtered = filtered.filter(g => g.name.toLowerCase().includes(query));
+      }
+
+      // 排序
+      if (sort === 'name-asc') {
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (sort === 'name-desc') {
+        filtered.sort((a, b) => b.name.localeCompare(a.name));
+      }
+
+      renderGames(filtered);
+      renderBanner();
+    }
+
+    // 渲染 Banner
+    function renderBanner() {
+      const banner = document.getElementById("banner");
+      banner.innerHTML = "";
+
+      const bannerGames = games.filter(g => g.banner);
+      if (bannerGames.length === 0) {
+        banner.parentElement.style.display = "none";
+        return;
+      }
+
+      banner.parentElement.style.display = "block";
+      bannerGames.forEach(game => {
+        const item = document.createElement("div");
+        item.className = "banner-item";
+        item.innerHTML = `
+          <img src="${game.image}" alt="${game.name}" class="banner-image" onerror="this.src='https://via.placeholder.com/100x70?text=No+Image'">
+          <div class="banner-title">${game.name}</div>
+        `;
+        banner.appendChild(item);
+      });
+    }
+
+    // 渲染游戏列表
+    function renderGames(filteredGames) {
       const container = document.getElementById("gamesContainer");
       container.innerHTML = "";
 
-      games.forEach((game, index) => {
+      filteredGames.forEach((game, index) => {
         const card = document.createElement("div");
         card.className = "game-card";
 
@@ -370,14 +504,14 @@
         if (isAdmin) {
           actionsHtml = `
             <div class="card-actions">
-              <button class="btn-edit" onclick="openEditModal(${index})">编辑</button>
-              <button class="btn-delete" onclick="deleteGame(${index})">删除</button>
+              <button class="btn-edit" onclick="openEditModal(${games.indexOf(game)})">编辑</button>
+              <button class="btn-delete" onclick="deleteGame(${games.indexOf(game)})">删除</button>
             </div>
           `;
         }
 
         card.innerHTML = `
-          <img src="${game.image}" alt="${game.name}" class="game-image" onerror="this.src='https://via.placeholder.com/200x150?text=No+Image'">
+          <img src="${game.image}" alt="${game.name}" class="game-image" onerror="this.src='https://via.placeholder.com/140x100?text=No+Image'">
           <div class="game-info">
             <h3 class="game-title">${game.name}</h3>
             <p class="game-format">${game.format}</p>
