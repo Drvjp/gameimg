@@ -127,7 +127,7 @@
   <h1>🎮 我的游戏收藏</h1>
 
   <div class="header">
-    <button class="btn" onclick="loadData()">🔄 重新加载</button>
+    <button class="btn" onclick="loadData()">🔄 刷新数据</button>
     <button class="btn btn-admin" onclick="enterAdminMode()">🔑 管理员登录</button>
   </div>
 
@@ -154,6 +154,7 @@
       </select>
     </div>
     <button class="btn" onclick="addGame()">➕ 添加游戏</button>
+    <button class="btn" onclick="exportData()">💾 导出 games.json</button>
   </div>
 
   <div class="games-container" id="gamesContainer"></div>
@@ -168,7 +169,7 @@
       loadData();
     };
 
-    // 从服务器加载
+    // 从 GitHub 加载 games.json（加时间戳避免缓存）
     async function loadData() {
       const status = document.getElementById("status");
       const container = document.getElementById("gamesContainer");
@@ -176,7 +177,7 @@
       status.textContent = "加载中...";
 
       try {
-        const response = await fetch('/data');
+        const response = await fetch('games.json?' + new Date().getTime());
         games = await response.json();
         status.textContent = `✅ 成功加载 ${games.length} 个游戏`;
         renderGames();
@@ -187,7 +188,7 @@
       }
     }
 
-    // 进入管理员模式
+    // 管理员登录
     function enterAdminMode() {
       const pwd = prompt("请输入管理员密码：");
       if (pwd === ADMIN_PASSWORD) {
@@ -200,13 +201,13 @@
       }
     }
 
-    // 查重（模糊匹配）
+    // 查重
     function isDuplicate(newName, existingGames) {
       function normalize(str) {
         return str
           .toLowerCase()
           .replace(/\s+/g, '')
-          .replace(/【.*】|【.*】|\(.*\)|\(.*\)|\[.*\]|\[.*\]/g, '')
+          .replace(/【.*】| |\(|\)|\[|\]/g, '')
           .replace(/v|ver|版本|加强版|豪华版|终极版|重制版/g, '')
           .replace(/4/g, '四').replace(/v/g, '五')
           .replace(/危机|传说|物语|编年史|历代记/g, '');
@@ -251,7 +252,6 @@
       }
 
       games.push({ name, image, format });
-      saveToServer();
       renderGames();
     }
 
@@ -260,7 +260,6 @@
       const newName = prompt("修改名称：", games[index].name);
       if (newName && newName.trim()) {
         games[index].name = newName.trim();
-        saveToServer();
         renderGames();
       }
     }
@@ -269,7 +268,6 @@
     function deleteGame(index) {
       if (confirm(`确定删除《${games[index].name}》？`)) {
         games.splice(index, 1);
-        saveToServer();
         renderGames();
       }
     }
@@ -284,19 +282,23 @@
       });
     }
 
-    // 保存到服务器
-    function saveToServer() {
-      fetch('/save', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(games)
-      })
-      .then(res => res.text())
-      .then(msg => console.log('💾 保存成功:', msg))
-      .catch(err => {
-        console.error("保存失败：", err);
-        alert("❌ 无法保存，请检查是否已启动服务器！");
-      });
+    // 导出为 games.json（供你下载后上传到 GitHub）
+    function exportData() {
+      if (games.length === 0) {
+        alert("当前没有数据可导出！");
+        return;
+      }
+
+      const dataStr = JSON.stringify(games, null, 2);
+      const blob = new Blob([dataStr], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "games.json";
+      a.click();
+      URL.revokeObjectURL(url);
+
+      alert("✅ 文件已生成，请将 games.json 上传到 GitHub 仓库覆盖原文件");
     }
 
     // 渲染
@@ -342,7 +344,6 @@
               if (match) newGames.push(match);
             });
             games = newGames.filter(Boolean);
-            saveToServer();
             renderGames();
           }
         });
