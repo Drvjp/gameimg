@@ -15,70 +15,18 @@
     h1 {
       text-align: center;
       color: #333;
-    }
-
-    .header {
-      text-align: center;
-      margin: 20px 0;
-    }
-
-    .btn {
-      padding: 10px 15px;
-      margin: 5px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
       cursor: pointer;
-      font-size: 16px;
+      user-select: none;
+      transition: color 0.2s;
     }
 
-    .btn:hover {
-      background-color: #0056b3;
-    }
-
-    .btn-edit { background-color: #ffc107; }
-    .btn-delete { background-color: #dc3545; }
-    .btn-admin { background-color: #28a745; }
-
-    #adminPanel {
-      display: none;
-      max-width: 600px;
-      margin: 20px auto;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-      color: #555;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      box-sizing: border-box;
-    }
-
-    #status {
-      text-align: center;
-      margin: 10px;
-      font-size: 14px;
-      color: #d97706;
+    h1:hover {
+      color: #007bff;
     }
 
     /* 双行滚动 Banner */
     .banner-container {
+      display: none; /* 默认隐藏 */
       background-color: #000;
       padding: 15px 0;
       margin: 10px 0 20px 0;
@@ -97,12 +45,10 @@
       padding-left: 20px;
     }
 
-    /* 上行：从右向左 */
     .banner.forward {
       animation: scroll-left 40s linear infinite;
     }
 
-    /* 下行：从左向右 */
     .banner.backward {
       animation: scroll-right 45s linear infinite reverse;
     }
@@ -153,11 +99,54 @@
     #searchInput {
       flex: 1;
       padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
     }
 
     #sortSelect {
       width: 150px;
       padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    /* 管理员面板（默认隐藏） */
+    #adminPanel {
+      display: none;
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    #status {
+      text-align: center;
+      margin: 10px;
+      font-size: 14px;
+      color: #d97706;
     }
 
     /* 游戏列表 */
@@ -203,36 +192,41 @@
       display: flex;
       justify-content: space-between;
     }
+
+    .btn {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn-edit { background-color: #ffc107; color: white; }
+    .btn-delete { background-color: #dc3545; color: white; }
   </style>
 </head>
 <body>
 
-  <h1>🎮 我的游戏收藏</h1>
+  <h1 id="title">🎮 我的游戏收藏</h1>
 
   <!-- 双行滚动 Banner -->
-  <div class="banner-container">
-    <!-- 上行：右 → 左 -->
+  <div class="banner-container" id="bannerContainer">
     <div class="banner-row">
       <div class="banner forward" id="bannerForward"></div>
     </div>
-    <!-- 下行：左 ← 右 -->
     <div class="banner-row">
       <div class="banner backward" id="bannerBackward"></div>
     </div>
   </div>
 
   <!-- 搜索与排序 -->
-  <div class="header">
-    <div class="filter-sort">
-      <input type="text" id="searchInput" placeholder="🔍 搜索游戏名称" oninput="filterAndSort()" />
-      <select id="sortSelect" onchange="filterAndSort()">
-        <option value="default">按添加顺序</option>
-        <option value="name-asc">名称 A-Z</option>
-        <option value="name-desc">名称 Z-A</option>
-      </select>
-    </div>
-    <button class="btn" onclick="loadData()">🔄 刷新数据</button>
-    <button class="btn btn-admin" onclick="enterAdminMode()">🔑 管理员登录</button>
+  <div class="filter-sort">
+    <input type="text" id="searchInput" placeholder="🔍 搜索游戏名称" oninput="filterAndSort()" />
+    <select id="sortSelect" onchange="filterAndSort()">
+      <option value="default">按添加顺序</option>
+      <option value="name-asc">名称 A-Z</option>
+      <option value="name-desc">名称 Z-A</option>
+    </select>
   </div>
 
   <p id="status">正在加载数据...</p>
@@ -298,10 +292,28 @@
     let isAdmin = false;
     let editingIndex = null;
     const ADMIN_PASSWORD = '123456';
+    let clickCount = 0;
+    const title = document.getElementById("title");
 
     // 自动加载
     window.onload = function() {
       loadData();
+      // 设置标题点击触发管理员模式
+      title.onclick = function() {
+        clickCount++;
+        if (clickCount >= 5) {
+          clickCount = 0;
+          const pwd = prompt("请输入管理员密码：");
+          if (pwd === ADMIN_PASSWORD) {
+            isAdmin = true;
+            document.getElementById("adminPanel").style.display = "block";
+            alert("✅ 已进入管理员模式");
+            filterAndSort();
+          } else {
+            alert("❌ 密码错误！");
+          }
+        }
+      };
     };
 
     // 加载 games.json
@@ -315,7 +327,6 @@
         const response = await fetch('games.json?' + new Date().getTime());
         games = await response.json();
         if (!Array.isArray(games)) games = [];
-        // 初始化 banner 字段
         games.forEach(g => { if (g.banner === undefined) g.banner = false; });
         status.textContent = `✅ 成功加载 ${games.length} 个游戏`;
         filterAndSort();
@@ -326,20 +337,7 @@
       }
     }
 
-    // 管理员登录
-    function enterAdminMode() {
-      const pwd = prompt("请输入管理员密码：");
-      if (pwd === ADMIN_PASSWORD) {
-        isAdmin = true;
-        document.getElementById("adminPanel").style.display = "block";
-        alert("✅ 已进入管理员模式");
-        filterAndSort();
-      } else {
-        alert("❌ 密码错误！");
-      }
-    }
-
-    // 查重逻辑（保持不变）
+    // 查重逻辑
     function isDuplicate(newName, existingGames) {
       const noiseWords = [
         'v', 'ver', 'version', '加强版', '豪华版', '终极版', '重制版', '典藏版', '特别版', '限定版', '年度版',
@@ -475,13 +473,12 @@
       const query = document.getElementById("searchInput").value.trim().toLowerCase();
       const sort = document.getElementById("sortSelect").value;
 
-      let filtered = [...games]; // 所有游戏都参与列表显示
+      let filtered = [...games];
 
       if (query) {
         filtered = filtered.filter(g => g.name.toLowerCase().includes(query));
       }
 
-      // 排序
       if (sort === 'name-asc') {
         filtered.sort((a, b) => a.name.localeCompare(b.name));
       } else if (sort === 'name-desc') {
@@ -490,6 +487,17 @@
 
       renderGames(filtered);
       renderBanner();
+    }
+
+    // 创建 Banner 项
+    function createBannerItem(game) {
+      const item = document.createElement("div");
+      item.className = "banner-item";
+      item.innerHTML = `
+        <img src="${game.image}" alt="${game.name}" class="banner-image" onerror="this.src='https://via.placeholder.com/100x70?text=No+Image'">
+        <div class="banner-title">${game.name}</div>
+      `;
+      return item;
     }
 
     // 渲染双行 Banner
@@ -501,36 +509,37 @@
 
       const bannerGames = games.filter(g => g.banner);
       if (bannerGames.length === 0) {
-        forward.parentElement.parentElement.style.display = "none";
+        document.getElementById("bannerContainer").style.display = "none";
         return;
       }
 
-      forward.parentElement.parentElement.style.display = "block";
+      document.getElementById("bannerContainer").style.display = "block";
 
-      // 上行：正常顺序
-      bannerGames.forEach(game => {
-        const item = document.createElement("div");
-        item.className = "banner-item";
-        item.innerHTML = `
-          <img src="${game.image}" alt="${game.name}" class="banner-image" onerror="this.src='https://via.placeholder.com/100x70?text=No+Image'">
-          <div class="banner-title">${game.name}</div>
-        `;
-        forward.appendChild(item);
-      });
+      if (bannerGames.length <= 2) {
+        backward.parentElement.style.display = "none";
+        bannerGames.forEach(game => {
+          const item = createBannerItem(game);
+          forward.appendChild(item);
+        });
+      } else {
+        backward.parentElement.style.display = "block";
+        const mid = Math.ceil(bannerGames.length / 2);
+        const topRow = bannerGames.slice(0, mid);
+        const bottomRow = bannerGames.slice(mid).reverse();
 
-      // 下行：反向顺序（增强错位感）
-      [...bannerGames].reverse().forEach(game => {
-        const item = document.createElement("div");
-        item.className = "banner-item";
-        item.innerHTML = `
-          <img src="${game.image}" alt="${game.name}" class="banner-image" onerror="this.src='https://via.placeholder.com/100x70?text=No+Image'">
-          <div class="banner-title">${game.name}</div>
-        `;
-        backward.appendChild(item);
-      });
+        topRow.forEach(game => {
+          const item = createBannerItem(game);
+          forward.appendChild(item);
+        });
+
+        bottomRow.forEach(game => {
+          const item = createBannerItem(game);
+          backward.appendChild(item);
+        });
+      }
     }
 
-    // 渲染游戏列表（所有游戏都显示）
+    // 渲染游戏列表
     function renderGames(filteredGames) {
       const container = document.getElementById("gamesContainer");
       container.innerHTML = "";
@@ -543,8 +552,8 @@
         if (isAdmin) {
           actionsHtml = `
             <div class="card-actions">
-              <button class="btn-edit" onclick="openEditModal(${games.indexOf(game)})">编辑</button>
-              <button class="btn-delete" onclick="deleteGame(${games.indexOf(game)})">删除</button>
+              <button class="btn btn-edit" onclick="openEditModal(${games.indexOf(game)})">编辑</button>
+              <button class="btn btn-delete" onclick="deleteGame(${games.indexOf(game)})">删除</button>
             </div>
           `;
         }
