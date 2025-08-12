@@ -77,22 +77,34 @@
       color: #d97706;
     }
 
-    /* 滚动 Banner */
+    /* 双行滚动 Banner */
     .banner-container {
-      overflow: hidden;
-      white-space: nowrap;
       background-color: #000;
-      padding: 10px 0;
+      padding: 15px 0;
       margin: 10px 0 20px 0;
       border-radius: 8px;
-      position: relative;
+      overflow: hidden;
+    }
+
+    .banner-row {
+      white-space: nowrap;
+      margin: 10px 0;
     }
 
     .banner {
       display: flex;
-      animation: scroll-left 30s linear infinite;
       gap: 15px;
       padding-left: 20px;
+    }
+
+    /* 上行：从右向左 */
+    .banner.forward {
+      animation: scroll-left 40s linear infinite;
+    }
+
+    /* 下行：从左向右 */
+    .banner.backward {
+      animation: scroll-right 45s linear infinite reverse;
     }
 
     .banner-item {
@@ -123,6 +135,11 @@
     @keyframes scroll-left {
       0% { transform: translateX(100%); }
       100% { transform: translateX(-100%); }
+    }
+
+    @keyframes scroll-right {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
     }
 
     /* 搜索与排序 */
@@ -192,9 +209,16 @@
 
   <h1>🎮 我的游戏收藏</h1>
 
-  <!-- 滚动 Banner -->
+  <!-- 双行滚动 Banner -->
   <div class="banner-container">
-    <div class="banner" id="banner"></div>
+    <!-- 上行：右 → 左 -->
+    <div class="banner-row">
+      <div class="banner forward" id="bannerForward"></div>
+    </div>
+    <!-- 下行：左 ← 右 -->
+    <div class="banner-row">
+      <div class="banner backward" id="bannerBackward"></div>
+    </div>
   </div>
 
   <!-- 搜索与排序 -->
@@ -291,7 +315,7 @@
         const response = await fetch('games.json?' + new Date().getTime());
         games = await response.json();
         if (!Array.isArray(games)) games = [];
-        // 初始化 banner 状态
+        // 初始化 banner 字段
         games.forEach(g => { if (g.banner === undefined) g.banner = false; });
         status.textContent = `✅ 成功加载 ${games.length} 个游戏`;
         filterAndSort();
@@ -315,7 +339,7 @@
       }
     }
 
-    // 查重逻辑
+    // 查重逻辑（保持不变）
     function isDuplicate(newName, existingGames) {
       const noiseWords = [
         'v', 'ver', 'version', '加强版', '豪华版', '终极版', '重制版', '典藏版', '特别版', '限定版', '年度版',
@@ -451,7 +475,7 @@
       const query = document.getElementById("searchInput").value.trim().toLowerCase();
       const sort = document.getElementById("sortSelect").value;
 
-      let filtered = games.filter(g => !g.banner); // 排除 banner 游戏
+      let filtered = [...games]; // 所有游戏都参与列表显示
 
       if (query) {
         filtered = filtered.filter(g => g.name.toLowerCase().includes(query));
@@ -468,18 +492,22 @@
       renderBanner();
     }
 
-    // 渲染 Banner
+    // 渲染双行 Banner
     function renderBanner() {
-      const banner = document.getElementById("banner");
-      banner.innerHTML = "";
+      const forward = document.getElementById("bannerForward");
+      const backward = document.getElementById("bannerBackward");
+      forward.innerHTML = "";
+      backward.innerHTML = "";
 
       const bannerGames = games.filter(g => g.banner);
       if (bannerGames.length === 0) {
-        banner.parentElement.style.display = "none";
+        forward.parentElement.parentElement.style.display = "none";
         return;
       }
 
-      banner.parentElement.style.display = "block";
+      forward.parentElement.parentElement.style.display = "block";
+
+      // 上行：正常顺序
       bannerGames.forEach(game => {
         const item = document.createElement("div");
         item.className = "banner-item";
@@ -487,11 +515,22 @@
           <img src="${game.image}" alt="${game.name}" class="banner-image" onerror="this.src='https://via.placeholder.com/100x70?text=No+Image'">
           <div class="banner-title">${game.name}</div>
         `;
-        banner.appendChild(item);
+        forward.appendChild(item);
+      });
+
+      // 下行：反向顺序（增强错位感）
+      [...bannerGames].reverse().forEach(game => {
+        const item = document.createElement("div");
+        item.className = "banner-item";
+        item.innerHTML = `
+          <img src="${game.image}" alt="${game.name}" class="banner-image" onerror="this.src='https://via.placeholder.com/100x70?text=No+Image'">
+          <div class="banner-title">${game.name}</div>
+        `;
+        backward.appendChild(item);
       });
     }
 
-    // 渲染游戏列表
+    // 渲染游戏列表（所有游戏都显示）
     function renderGames(filteredGames) {
       const container = document.getElementById("gamesContainer");
       container.innerHTML = "";
