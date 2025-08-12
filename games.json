@@ -1,0 +1,12 @@
+[
+  {
+    "name": "塞尔达传说：旷野之息",
+    "image": "https://example.com/zelda.jpg",
+    "format": "仅数字版"
+  },
+  {
+    "name": "黑暗之魂3",
+    "image": "https://example.com/dark-souls.jpg",
+    "format": "数字版&光盘"
+  }
+]
