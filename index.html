@@ -1,234 +1,414 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>租金区间斜率计算</title>
-<style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>游戏图库 - 管理员模式</title>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <style>
     body {
-        font-family: Arial, sans-serif;
-        padding: 10px;
-        background: #f4f4f4;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f7f9;
+      margin: 0;
+      padding: 20px;
     }
-    .table-container {
-        overflow-x: auto;
-        margin-bottom: 20px;
-        background: white;
-        border-radius: 8px;
-        padding: 10px;
+
+    h1 {
+      text-align: center;
+      color: #333;
     }
-    table {
-        border-collapse: collapse;
-        width: 100%;
-        min-width: 600px;
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
     }
-    th, td {
-        border: 1px solid #ccc;
-        padding: 6px;
-        text-align: center;
-        font-size: 14px;
+
+    .btn {
+      padding: 10px 15px;
+      margin: 0 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
     }
-    th {
-        background: #f0f0f0;
+
+    .btn:hover {
+      background-color: #0056b3;
     }
-    .hidden {
-        display: none;
+
+    .admin-panel {
+      display: none;
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-    button {
-        margin: 4px 2px;
-        padding: 6px 10px;
-        border: none;
-        background: #4CAF50;
-        color: white;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 14px;
+
+    .form-group {
+      margin-bottom: 15px;
     }
-    button:hover {
-        background: #45a049;
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
     }
-    input {
-        width: 80px;
-        padding: 4px;
-        font-size: 14px;
-        text-align: center;
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
     }
-    @media (max-width: 768px) {
-        th, td {
-            font-size: 12px;
-            padding: 4px;
-        }
-        input {
-            width: 60px;
-            font-size: 12px;
-        }
-        button {
-            padding: 4px 8px;
-            font-size: 12px;
-        }
+
+    .games-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 30px;
+      justify-content: center;
     }
-    .delete-btn {
-        background: #e74c3c;
+
+    .game-card {
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      width: 200px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-    .delete-btn:hover {
-        background: #c0392b;
+
+    .game-image {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
     }
-</style>
+
+    .game-info {
+      padding: 10px;
+    }
+
+    .game-title {
+      font-weight: bold;
+      margin: 0 0 5px 0;
+      font-size: 14px;
+    }
+
+    .game-format {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .card-actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .btn-edit {
+      background-color: #ffc107;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-size: 12px;
+    }
+
+    .btn-delete {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-size: 12px;
+    }
+
+    #passwordModal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .modal-content input {
+      margin: 10px 0;
+    }
+  </style>
 </head>
 <body>
 
-<h2>租金区间斜率计算</h2>
+  <h1>🎮 我的游戏收藏</h1>
 
-<div class="table-container">
-    <table id="inputTable">
-        <thead>
-            <tr>
-                <th>天数</th>
-                <th>租金</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td data-days="1">1天</td>
-                <td><input type="number" id="rent1"></td>
-                <td><button class="delete-btn" onclick="deleteRent(1)">删除</button></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+  <!-- 顶部按钮栏 -->
+  <div class="header">
+    <button class="btn" onclick="showPasswordPrompt()">🔑 管理员登录</button>
+    <button class="btn" onclick="exitAdminMode()" id="exitBtn" style="display:none;">🚪 退出管理</button>
+  </div>
 
-<div>
-    <button onclick="addRentColumn()">添加租期</button>
-    <button onclick="calculate()">计算</button>
-    <button onclick="toggleFormula()">显示/隐藏公式</button>
-</div>
+  <!-- 密码输入弹窗 -->
+  <div id="passwordModal">
+    <div class="modal-content">
+      <h3>请输入管理员密码</h3>
+      <input type="password" id="adminPassword" placeholder="密码" />
+      <div>
+        <button class="btn" onclick="checkPassword()">确认</button>
+        <button class="btn" onclick="closeModal()">取消</button>
+      </div>
+    </div>
+  </div>
 
-<p id="errorMessage" style="color:red;"></p>
+  <!-- 管理员功能面板（默认隐藏） -->
+  <div class="admin-panel" id="adminPanel">
+    <div class="form-group">
+      <label>游戏名称</label>
+      <input type="text" id="gameName" placeholder="请输入名称" />
+    </div>
+    <div class="form-group">
+      <label>图片链接 或 上传图片</label>
+      <input type="url" id="gameImageUrl" placeholder="图片URL（可选）" />
+      <small>或</small>
+      <input type="file" id="gameImageFile" accept="image/*" />
+    </div>
+    <div class="form-group">
+      <label>内容形式</label>
+      <select id="gameFormat">
+        <option value="仅数字版">仅数字版</option>
+        <option value="数字版&光盘">数字版&光盘</option>
+        <option value="仅光盘">仅光盘</option>
+      </select>
+    </div>
+    <button class="btn" onclick="addGame()">➕ 添加游戏</button>
+    <button class="btn" onclick="exportData()">💾 导出数据为 games.json</button>
+  </div>
 
-<div class="table-container">
-    <table id="resultTable">
-        <thead>
-            <tr>
-                <th>天数</th>
-                <th>总租金</th>
-                <th>日租金</th>
-                <th class="hidden">公式</th>
-                <th class="hidden">斜率</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-</div>
+  <!-- 游戏展示区 -->
+  <div class="games-container" id="gamesContainer"></div>
 
-<script>
-function truncateToTwoDecimals(num) {
-    return Math.floor(num * 100) / 100;
-}
+  <script>
+    let games = [];
+    let isAdmin = false;
+    const ADMIN_PASSWORD = '123456'; // ✅ 修改为你自己的密码
 
-function addRentColumn() {
-    const days = prompt("请输入租期天数（正整数）");
-    if (!days || isNaN(days) || days <= 0) return;
+    // 页面加载时尝试从 games.json 加载数据
+    window.onload = async function() {
+      await loadData();
+      updateUI();
+    };
 
-    const tableBody = document.querySelector("#inputTable tbody");
-
-    const rents = [];
-    document.querySelectorAll('#inputTable td[data-days]').forEach(td => {
-        const d = parseInt(td.getAttribute('data-days'));
-        const value = document.getElementById(`rent${d}`).value;
-        rents.push({ days: d, value });
-    });
-
-    if (rents.some(r => r.days === parseInt(days))) {
-        alert("该租期已存在！");
-        return;
+    // 加载 games.json
+    async function loadData() {
+      try {
+        const response = await fetch('games.json?' + new Date().getTime());
+        if (response.ok) {
+          games = await response.json();
+        } else {
+          games = [];
+          console.warn("games.json 不存在或为空");
+        }
+      } catch (err) {
+        console.warn("无法加载 games.json，使用空数据");
+        games = [];
+      }
+      renderGames();
     }
 
-    rents.push({ days: parseInt(days), value: "" });
+    // 显示密码弹窗
+    function showPasswordPrompt() {
+      document.getElementById("passwordModal").style.display = "flex";
+      document.getElementById("adminPassword").value = "";
+    }
 
-    rents.sort((a, b) => a.days - b.days);
+    // 关闭弹窗
+    function closeModal() {
+      document.getElementById("passwordModal").style.display = "none";
+    }
 
-    tableBody.innerHTML = "";
-    rents.forEach(r => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td data-days="${r.days}">${r.days}天</td>
-            <td><input type="number" id="rent${r.days}" value="${r.value}"></td>
-            <td><button class="delete-btn" onclick="deleteRent(${r.days})">删除</button></td>
+    // 验证密码
+    function checkPassword() {
+      const pwdInput = document.getElementById("adminPassword").value;
+      if (pwdInput === ADMIN_PASSWORD) {
+        isAdmin = true;
+        closeModal();
+        updateUI();
+      } else {
+        alert("❌ 密码错误！");
+      }
+    }
+
+    // 更新 UI 状态
+    function updateUI() {
+      document.getElementById("exitBtn").style.display = isAdmin ? "inline" : "none";
+      document.getElementById("adminPanel").style.display = isAdmin ? "block" : "none";
+      renderGames(); // 重新渲染以显示/隐藏操作按钮
+    }
+
+    // 退出管理员模式
+    function exitAdminMode() {
+      isAdmin = false;
+      updateUI();
+    }
+
+    // 添加游戏
+    async function addGame() {
+      const name = document.getElementById("gameName").value.trim();
+      const imageUrl = document.getElementById("gameImageUrl").value.trim();
+      const file = document.getElementById("gameImageFile").files[0];
+      const format = document.getElementById("gameFormat").value;
+
+      if (!name || !format) {
+        alert("请填写名称和形式！");
+        return;
+      }
+
+      let image = imageUrl;
+      if (file && !image) {
+        try {
+          image = await getBase64(file);
+        } catch (e) {
+          alert("图片读取失败");
+          return;
+        }
+      }
+
+      if (!image) {
+        alert("请提供图片链接或上传图片！");
+        return;
+      }
+
+      games.push({ name, image, format });
+      saveData();
+      renderGames();
+      clearForm();
+    }
+
+    // 删除游戏
+    function deleteGame(index) {
+      if (confirm("确定删除？")) {
+        games.splice(index, 1);
+        saveData();
+        renderGames();
+      }
+    }
+
+    // 编辑游戏名称
+    function editGame(index) {
+      const newName = prompt("修改名称：", games[index].name);
+      if (newName && newName.trim()) {
+        games[index].name = newName.trim();
+        saveData();
+        renderGames();
+      }
+    }
+
+    // 转 Base64
+    function getBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // 保存数据到 games.json（需导出）
+    function saveData() {
+      // 实际保存通过导出实现
+    }
+
+    // 导出为 games.json
+    function exportData() {
+      if (games.length === 0) {
+        alert("当前没有数据可导出！");
+        return;
+      }
+
+      const dataStr = JSON.stringify(games, null, 2);
+      const blob = new Blob([dataStr], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "games.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // 清空表单
+    function clearForm() {
+      document.getElementById("gameName").value = "";
+      document.getElementById("gameImageUrl").value = "";
+      document.getElementById("gameImageFile").value = "";
+    }
+
+    // 渲染游戏卡片
+    function renderGames() {
+      const container = document.getElementById("gamesContainer");
+      container.innerHTML = "";
+
+      games.forEach((game, index) => {
+        const card = document.createElement("div");
+        card.className = "game-card";
+
+        let imgHtml = `<img src="${game.image}" alt="${game.name}" class="game-image" onerror="this.src='https://via.placeholder.com/200x150?text=No+Image'">`;
+
+        let actionsHtml = '';
+        if (isAdmin) {
+          actionsHtml = `
+            <div class="card-actions">
+              <button class="btn-edit" onclick="editGame(${index})">编辑</button>
+              <button class="btn-delete" onclick="deleteGame(${index})">删除</button>
+            </div>
+          `;
+        }
+
+        card.innerHTML = imgHtml + `
+          <div class="game-info">
+            <h3 class="game-title">${game.name}</h3>
+            <p class="game-format">${game.format}</p>
+            ${actionsHtml}
+          </div>
         `;
-        tableBody.appendChild(row);
-    });
-}
 
-function deleteRent(days) {
-    const tableBody = document.querySelector("#inputTable tbody");
-    const rows = Array.from(tableBody.querySelectorAll("tr"));
-    const filtered = rows.filter(row => parseInt(row.querySelector("td").getAttribute("data-days")) !== days);
+        container.appendChild(card);
+      });
 
-    tableBody.innerHTML = "";
-    filtered.forEach(row => tableBody.appendChild(row));
-}
-
-function calculate() {
-    const rentValues = [];
-    document.querySelectorAll('#inputTable td[data-days]').forEach(td => {
-        const days = parseInt(td.getAttribute('data-days'));
-        const value = parseFloat(document.getElementById(`rent${days}`).value);
-        if (!isNaN(value)) {
-            rentValues.push({ days, value });
-        }
-    });
-
-    rentValues.sort((a, b) => a.days - b.days);
-
-    document.getElementById("errorMessage").textContent = "";
-    if (rentValues.length < 2) {
-        document.getElementById("errorMessage").textContent = "至少需要两个租金值才能计算！";
-        return;
+      // 管理员模式下启用拖拽排序
+      if (isAdmin && games.length > 0) {
+        new Sortable(container, {
+          animation: 150,
+          onEnd: () => {
+            const newGames = [];
+            container.querySelectorAll('.game-card').forEach(card => {
+              const name = card.querySelector('.game-title').textContent;
+              const format = card.querySelector('.game-format').textContent;
+              const match = games.find(g => g.name === name && g.format === format);
+              if (match) newGames.push(match);
+            });
+            games = newGames.filter(Boolean);
+            saveData();
+          }
+        });
+      }
     }
-
-    const resultTableBody = document.querySelector("#resultTable tbody");
-    resultTableBody.innerHTML = "";
-
-    const first = rentValues[0];
-    resultTableBody.appendChild(makeRow(first.days, first.value, first.value / first.days, "有固定值", "无需计算"));
-
-    for (let i = 0; i < rentValues.length - 1; i++) {
-        const start = rentValues[i];
-        const end = rentValues[i + 1];
-        const slope = (end.value - start.value) / (end.days - start.days);
-
-        for (let day = start.days + 1; day < end.days; day++) {
-            const totalRent = start.value + (day - start.days) * slope;
-            const dailyRent = totalRent / day;
-            resultTableBody.appendChild(
-                makeRow(day, totalRent, dailyRent, 
-                `等于${start.days}天租金+(${day}天-${start.days}天)×${truncateToTwoDecimals(slope)}`, 
-                truncateToTwoDecimals(slope))
-            );
-        }
-
-        resultTableBody.appendChild(makeRow(end.days, end.value, end.value / end.days, "有固定值", "无需计算"));
-    }
-}
-
-function makeRow(days, total, daily, formula, slope) {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-        <td>${days}天</td>
-        <td>${truncateToTwoDecimals(total)}</td>
-        <td>${truncateToTwoDecimals(daily)}</td>
-        <td class="hidden">${formula}</td>
-        <td class="hidden">${slope}</td>
-    `;
-    return row;
-}
-
-function toggleFormula() {
-    document.querySelectorAll("#resultTable th:nth-child(4), #resultTable th:nth-child(5), #resultTable td:nth-child(4), #resultTable td:nth-child(5)")
-        .forEach(el => el.classList.toggle("hidden"));
-}
-</script>
-
+  </script>
 </body>
 </html>
