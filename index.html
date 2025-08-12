@@ -10,7 +10,7 @@
       background-color: #f4f7f9;
       margin: 0;
       padding: 20px;
-      overflow: hidden;
+      overflow: auto; /* ✅ 修复：恢复滚动 */
     }
 
     h1 {
@@ -163,7 +163,7 @@
       gap: 20px;
       margin-top: 10px;
       justify-content: center;
-      margin-left: 80px; /* 避开左侧已选列表 */
+      margin-left: 80px;
     }
 
     .game-card {
@@ -232,7 +232,7 @@
       top: 0;
       width: 280px;
       height: 100%;
-      background-color: #fff;
+      background-color: rgba(255, 255, 255, 0.95);
       box-shadow: 3px 0 10px rgba(0,0,0,0.1);
       z-index: 1000;
       transform: translateX(-280px);
@@ -295,7 +295,7 @@
       border-top: 1px solid #eee;
       position: sticky;
       bottom: 0;
-      background-color: #fff;
+      background-color: rgba(255, 255, 255, 0.95);
     }
 
     #selectedFooter button {
@@ -304,6 +304,7 @@
       font-size: 14px;
     }
 
+    /* 漂浮可拖动缩略图 */
     #sidebarThumb {
       position: fixed;
       left: 0;
@@ -311,15 +312,23 @@
       transform: translateY(-50%);
       width: 30px;
       height: 80px;
-      background-color: #007bff;
+      background-color: rgba(0, 123, 255, 0.8); /* 半透明蓝色 */
       color: white;
       writing-mode: vertical-lr;
       text-align: center;
-      padding: 10px;
+      padding: 10px 5px;
       border-radius: 0 5px 5px 0;
-      cursor: pointer;
+      cursor: move;
       z-index: 999;
       display: none;
+      font-size: 12px;
+      user-select: none;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+      backdrop-filter: blur(2px);
+    }
+
+    #sidebarThumb:hover {
+      background-color: rgba(0, 123, 255, 0.9);
     }
   </style>
 </head>
@@ -414,20 +423,51 @@
     </div>
   </div>
 
-  <!-- 侧边栏缩略图 -->
-  <div id="sidebarThumb" onclick="showSidebar()">选单</div>
+  <!-- 漂浮可拖动缩略图 -->
+  <div id="sidebarThumb">选单</div>
 
   <script>
     let games = [];
     let isAdmin = false;
     let editingIndex = null;
-    let selectedGames = []; // 已选清单
+    let selectedGames = [];
     const ADMIN_PASSWORD = '123456';
     let clickCount = 0;
     const title = document.getElementById("title");
 
+    // 漂浮缩略图拖动功能
+    const thumb = document.getElementById("sidebarThumb");
+    let isDragging = false;
+    let startY, startTop;
+
+    thumb.addEventListener("mousedown", (e) => {
+      isDragging = true;
+      startY = e.clientY;
+      startTop = parseInt(thumb.style.top) || (window.innerHeight - 80) / 2;
+      document.body.style.cursor = "move";
+      e.preventDefault();
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (!isDragging) return;
+      const dy = e.clientY - startY;
+      const newTop = startTop + dy;
+      const maxTop = window.innerHeight - 80;
+
+      thumb.style.top = Math.max(0, Math.min(newTop, maxTop)) + "px";
+    });
+
+    document.addEventListener("mouseup", () => {
+      isDragging = false;
+      document.body.style.cursor = "";
+    });
+
+    // 自动居中（首次）
     window.onload = function() {
       loadData();
+      // 初始位置居中
+      thumb.style.top = (window.innerHeight - 80) / 2 + "px";
+
       title.onclick = function() {
         clickCount++;
         if (clickCount >= 5) {
@@ -592,8 +632,6 @@
       const sort = document.getElementById("sortSelect").value;
 
       let filtered = [...games];
-
-      // 排除已选中的游戏
       filtered = filtered.filter(g => !selectedGames.some(s => s.name === g.name));
 
       if (query) {
@@ -704,7 +742,7 @@
       }
 
       selectedGames.push(game);
-      filterAndSort(); // 重新渲染，移除该游戏
+      filterAndSort();
       updateSelectedList();
       showSidebar();
       autoHideSidebar();
