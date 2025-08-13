@@ -83,7 +83,6 @@
       font-size: 10px;
       color: #ffcc00;
       font-weight: bold;
-      margin-right: 4px;
     }
 
     @keyframes scroll-left {
@@ -107,10 +106,14 @@
       font-size: 14px;
       color: #1976d2;
       text-align: center;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .edit-announcement {
-      margin-top: 10px;
+      margin-left: 10px;
       font-size: 12px;
       color: #1976d2;
       text-decoration: underline;
@@ -192,17 +195,52 @@
       border-radius: 10px;
       overflow: hidden;
       width: 140px;
+      height: 220px; /* 固定高度 */
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .game-image-container {
+      position: relative;
+      width: 100%;
+      height: 100px;
     }
 
     .game-image {
       width: 100%;
-      height: 100px;
+      height: 100%;
       object-fit: cover;
+    }
+
+    .game-tag {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      background-color: #ff9800;
+      color: white;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+
+    .top-left-badge {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      background-color: #ffcc00;
+      color: #000;
+      font-size: 10px;
+      font-weight: bold;
+      padding: 2px 4px;
+      border-radius: 3px;
     }
 
     .game-info {
       padding: 10px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
 
     .game-title {
@@ -217,24 +255,9 @@
       line-height: 1.4;
     }
 
-    .game-title span.top-left {
-      vertical-align: top;
-      margin-right: 4px;
-    }
-
     .game-format {
       font-size: 12px;
       color: #666;
-    }
-
-    .game-tag {
-      display: inline-block;
-      background-color: #ff9800;
-      color: white;
-      font-size: 12px;
-      padding: 2px 6px;
-      border-radius: 3px;
-      margin: 2px 0;
     }
 
     .btn {
@@ -409,7 +432,7 @@
   <!-- 公告栏 -->
   <div class="announcement" id="announcement">
     欢迎访问我的游戏收藏！
-    <div class="edit-announcement" onclick="editAnnouncement()" style="display:none;" id="editAnnouncementBtn">✏️ 编辑公告</div>
+    <span class="edit-announcement" id="editAnnouncementBtn" onclick="editAnnouncement()">✏️ 编辑</span>
   </div>
 
   <!-- 搜索与排序 -->
@@ -446,6 +469,10 @@
       <label>自定义标签（可选）</label>
       <input type="text" id="gameTag" placeholder="如：必玩、打折、经典" />
     </div>
+    <div class="form-group">
+      <label>超链接（可选）</label>
+      <input type="url" id="gameLink" placeholder="点击卡片跳转的网址" />
+    </div>
     <button class="btn" onclick="addGame()">➕ 添加游戏</button>
     <button class="btn" onclick="exportData()">💾 导出 games.json</button>
   </div>
@@ -477,6 +504,10 @@
       <div class="form-group">
         <label>自定义标签</label>
         <input type="text" id="editTag" placeholder="如：必玩、打折" />
+      </div>
+      <div class="form-group">
+        <label>超链接</label>
+        <input type="url" id="editLink" placeholder="点击跳转的网址" />
       </div>
       <div class="form-group">
         <label>
@@ -529,9 +560,8 @@
           if (pwd === ADMIN_PASSWORD) {
             isAdmin = true;
             document.getElementById("adminPanel").style.display = "block";
-            document.getElementById("editAnnouncementBtn").style.display = "block";
-            alert("✅ 已进入管理员模式");
-            filterAndSort();
+            document.getElementById("editAnnouncementBtn").style.display = "inline";
+            filterAndSort(); // 立即重新渲染，显示编辑按钮
           } else {
             alert("❌ 密码错误！");
           }
@@ -554,8 +584,12 @@
         games.forEach(g => {
           if (g.banner === undefined) g.banner = false;
           if (g.tag === undefined) g.tag = '';
+          if (g.link === undefined) g.link = '';
         });
-        document.getElementById("announcement").innerText = localStorage.getItem('announcement') || "欢迎访问我的游戏收藏！";
+        const savedAnnounce = localStorage.getItem('announcement');
+        if (savedAnnounce) {
+          document.getElementById("announcement").innerText = savedAnnounce;
+        }
         status.textContent = `✅ 成功加载 ${games.length} 个游戏`;
         filterAndSort();
       } catch (err) {
@@ -665,6 +699,7 @@
       const image = document.getElementById("gameImageUrl").value.trim();
       const format = document.getElementById("gameFormat").value;
       const tag = document.getElementById("gameTag").value.trim();
+      const link = document.getElementById("gameLink").value.trim();
 
       if (!name || !image || !format) {
         alert("请填写所有字段！");
@@ -675,7 +710,7 @@
         if (!confirm(`⚠️ 检测到可能重复：“${name}”\n确定要继续添加吗？`)) return;
       }
 
-      games.push({ name, image, format, banner: false, tag });
+      games.push({ name, image, format, banner: false, tag, link });
       filterAndSort();
       clearAddForm();
     }
@@ -688,6 +723,7 @@
       document.getElementById("editImage").value = game.image;
       document.getElementById("editFormat").value = game.format;
       document.getElementById("editTag").value = game.tag || '';
+      document.getElementById("editLink").value = game.link || '';
       document.getElementById("editBanner").checked = game.banner || false;
       document.getElementById("editModal").style.display = "flex";
     }
@@ -697,6 +733,7 @@
       const image = document.getElementById("editImage").value.trim();
       const format = document.getElementById("editFormat").value;
       const tag = document.getElementById("editTag").value.trim();
+      const link = document.getElementById("editLink").value.trim();
       const banner = document.getElementById("editBanner").checked;
 
       if (!name || !image || !format) {
@@ -704,7 +741,7 @@
         return;
       }
 
-      games[editingIndex] = { name, image, format, banner, tag };
+      games[editingIndex] = { name, image, format, banner, tag, link };
       filterAndSort();
       closeEditModal();
     }
@@ -743,6 +780,7 @@
       document.getElementById("gameImageUrl").value = "";
       document.getElementById("gameFormat").value = "仅数字版";
       document.getElementById("gameTag").value = "";
+      document.getElementById("gameLink").value = "";
     }
 
     // 渲染 Banner
@@ -818,17 +856,28 @@
         }
 
         const tagHtml = game.tag ? `<div class="game-tag">${game.tag}</div>` : '';
+        const topHtml = game.banner ? '<div class="top-left-badge">TOP</div>' : '';
 
-        card.innerHTML = `
-          <img src="${game.image}" alt="${game.name}" class="game-image" onerror="this.src='https://via.placeholder.com/140x100?text=No+Image'">
-          <div class="game-info">
-            <h3 class="game-title"><span class="top-left">${game.banner ? '<span class="top-badge">TOP</span>' : ''}</span>${game.name}</h3>
+        // 如果有链接，卡片可点击
+        const content = `
+          <div class="game-image-container">
+            <img src="${game.image}" alt="${game.name}" class="game-image" onerror="this.src='https://via.placeholder.com/140x100?text=No+Image'">
+            ${topHtml}
             ${tagHtml}
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">${game.name}</h3>
             <p class="game-format">${game.format}</p>
             ${actionsHtml}
             <button class="btn btn-add" onclick="addToSelected(${games.indexOf(game)})">➕ 加入清单</button>
           </div>
         `;
+
+        if (game.link) {
+          card.innerHTML = `<a href="${game.link}" target="_blank" style="color:inherit;text-decoration:none;display:block;height:100%;">${content}</a>`;
+        } else {
+          card.innerHTML = content;
+        }
 
         container.appendChild(card);
       });
@@ -925,11 +974,11 @@
 
     // 编辑公告
     function editAnnouncement() {
-      const current = document.getElementById("announcement").innerText;
+      const current = document.getElementById("announcement").innerText.replace("✏️ 编辑", "").trim();
       const newAnnounce = prompt("编辑公告内容：", current);
-      if (newAnnounce !== null) {
-        document.getElementById("announcement").innerText = newAnnounce;
-        localStorage.setItem('announcement', newAnnounce);
+      if (newAnnounce !== null && newAnnounce.trim() !== '') {
+        document.getElementById("announcement").innerHTML = newAnnounce.trim() + ' <span class="edit-announcement" onclick="editAnnouncement()">✏️ 编辑</span>';
+        localStorage.setItem('announcement', newAnnounce.trim());
       }
     }
   </script>
