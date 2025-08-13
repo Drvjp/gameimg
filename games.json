@@ -1,13 +1,61 @@
 {
-  "announcement": "🎉 新增《艾尔登法环》DLC，欢迎体验！",
+  "announcement": "🎉 请按下单套餐游戏数量按需选择，游戏后期可10元一次更换哦~",
   "games": [
     {
-      "name": "艾尔登法环",
-      "image": "https://example.com/eldenring.jpg",
+      "name": "艾尔登法环&黄金树",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202402/0713/d956c0df3a0cfe7c1b8e81c684ecff8a9a141c4f1f38578c.png",
       "format": "数字版&光盘",
       "banner": true,
       "tag": "必玩",
-      "link": "https://www.baidu.com"
+      "link": ""
+    },
+    {
+      "name": "山之呼唤",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202207/0615/eicVspHDlt11H1xtnsw5dgkz.png?w=230&thumb=false",
+      "format": "仅数字版",
+      "banner": false,
+      "tag": "VR",
+      "link": ""
+    },
+    {
+      "name": "生化危机4",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202207/2509/85p2Dwh5iDhUzRKe40QeNYh3.png?w=440&thumb=false",
+      "format": "数字版&光盘",
+      "banner": false,
+      "tag": "VR",
+      "link": ""
+    },
+    {
+      "name": "生化危机6",
+      "image": "https://image.api.playstation.com/cdn/HP0102/CUSA09846_00/i6MGZWz9bVqf4JergejRwYrP47QvB7PROwpGusjm9S9nfxcfguprXUH09lH1zFxk.png?w=440&thumb=false",
+      "format": "仅数字版",
+      "banner": false,
+      "tag": "双人",
+      "link": ""
+    },
+    {
+      "name": "生化危机8",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202101/0812/FkzwjnJknkrFlozkTdeQBMub.png?w=230&thumb=false",
+      "format": "数字版&光盘",
+      "banner": false,
+      "tag": "VR",
+      "link": ""
+    },
+    {
+      "name": "节奏光剑",
+      "image": "https://image.api.playstation.com/gs2-sec/appkgo/prod/CUSA12878_00/8/i_a385715ce8311a50991265ca4e9dff56d42eea96459663eab75b8df8844ddf68/i/icon0.png?w=230&thumb=false",
+      "format": "仅数字版",
+      "banner": false,
+      "tag": "VR",
+      "link": ""
+    },
+    {
+      "name": "侠盗猎车手5",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202203/1409/oltI7Zc96usbdvhVVXcV1EAi.png?w=440&thumb=false",
+      "format": "仅数字版",
+      "banner": false,
+      "tag": "必玩",
+      "link": ""
     }
   ]
 }
