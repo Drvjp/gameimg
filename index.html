@@ -195,7 +195,7 @@
       border-radius: 10px;
       overflow: hidden;
       width: 140px;
-      height: 220px; /* 固定高度 */
+      height: 240px; /* 固定高度 */
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       display: flex;
       flex-direction: column;
@@ -267,12 +267,6 @@
       border-radius: 3px;
       cursor: pointer;
       font-size: 12px;
-    }
-
-    .btn-add {
-      width: 100%;
-      background-color: #28a745;
-      color: white;
     }
 
     .btn-edit {
@@ -419,6 +413,12 @@
 
   <h1 id="title">🎮 我的游戏收藏</h1>
 
+  <!-- 公告栏 -->
+  <div class="announcement" id="announcement">
+    加载中...
+    <span class="edit-announcement" id="editAnnouncementBtn" style="display:none" onclick="editAnnouncement()">✏️ 编辑</span>
+  </div>
+
   <!-- 双行滚动 Banner -->
   <div class="banner-container" id="bannerContainer">
     <div class="banner-row">
@@ -427,12 +427,6 @@
     <div class="banner-row">
       <div class="banner backward" id="bannerBackward"></div>
     </div>
-  </div>
-
-  <!-- 公告栏 -->
-  <div class="announcement" id="announcement">
-    欢迎访问我的游戏收藏！
-    <span class="edit-announcement" id="editAnnouncementBtn" onclick="editAnnouncement()">✏️ 编辑</span>
   </div>
 
   <!-- 搜索与排序 -->
@@ -471,7 +465,7 @@
     </div>
     <div class="form-group">
       <label>超链接（可选）</label>
-      <input type="url" id="gameLink" placeholder="点击卡片跳转的网址" />
+      <input type="url" id="gameLink" placeholder="https://www.example.com" />
     </div>
     <button class="btn" onclick="addGame()">➕ 添加游戏</button>
     <button class="btn" onclick="exportData()">💾 导出 games.json</button>
@@ -507,7 +501,7 @@
       </div>
       <div class="form-group">
         <label>超链接</label>
-        <input type="url" id="editLink" placeholder="点击跳转的网址" />
+        <input type="url" id="editLink" placeholder="https://www.example.com" />
       </div>
       <div class="form-group">
         <label>
@@ -561,7 +555,7 @@
             isAdmin = true;
             document.getElementById("adminPanel").style.display = "block";
             document.getElementById("editAnnouncementBtn").style.display = "inline";
-            filterAndSort(); // 立即重新渲染，显示编辑按钮
+            filterAndSort(); // 立即重新渲染
           } else {
             alert("❌ 密码错误！");
           }
@@ -578,18 +572,24 @@
 
       try {
         const response = await fetch('games.json?' + new Date().getTime());
-        games = await response.json();
-        if (!Array.isArray(games)) games = [];
-        // 初始化字段
+        const data = await response.json();
+        
+        // 读取公告
+        const announceEl = document.getElementById("announcement");
+        const announceText = data.announcement || "欢迎访问我的游戏收藏！";
+        announceEl.innerHTML = announceText + ' <span class="edit-announcement" id="editAnnouncementBtn" onclick="editAnnouncement()">✏️ 编辑</span>';
+        if (!isAdmin) {
+          document.getElementById("editAnnouncementBtn").style.display = "none";
+        }
+
+        // 读取游戏列表
+        games = Array.isArray(data.games) ? data.games : [];
         games.forEach(g => {
           if (g.banner === undefined) g.banner = false;
           if (g.tag === undefined) g.tag = '';
           if (g.link === undefined) g.link = '';
         });
-        const savedAnnounce = localStorage.getItem('announcement');
-        if (savedAnnounce) {
-          document.getElementById("announcement").innerText = savedAnnounce;
-        }
+
         status.textContent = `✅ 成功加载 ${games.length} 个游戏`;
         filterAndSort();
       } catch (err) {
@@ -758,13 +758,19 @@
       }
     }
 
+    // 导出数据（包含 announcement 和 games）
     function exportData() {
       if (games.length === 0) {
         alert("当前没有数据可导出！");
         return;
       }
 
-      const dataStr = JSON.stringify(games, null, 2);
+      const announceText = document.getElementById("announcement").innerText.replace("✏️ 编辑", "").trim();
+      const dataStr = JSON.stringify({
+        announcement: announceText,
+        games: games
+      }, null, 2);
+
       const blob = new Blob([dataStr], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -772,7 +778,7 @@
       a.download = "games.json";
       a.click();
       URL.revokeObjectURL(url);
-      alert("✅ 文件已生成，请将 games.json 上传到 GitHub 仓库覆盖原文件");
+      alert("✅ 文件已生成，请上传覆盖 GitHub 上的 games.json");
     }
 
     function clearAddForm() {
@@ -853,12 +859,14 @@
               <button class="btn btn-delete" onclick="deleteGame(${games.indexOf(game)})">删除</button>
             </div>
           `;
+        } else {
+          // 非管理员：显示“加入清单”按钮
+          actionsHtml = `<button class="btn btn-add" onclick="addToSelected(${games.indexOf(game)})">➕ 加入清单</button>`;
         }
 
         const tagHtml = game.tag ? `<div class="game-tag">${game.tag}</div>` : '';
         const topHtml = game.banner ? '<div class="top-left-badge">TOP</div>' : '';
 
-        // 如果有链接，卡片可点击
         const content = `
           <div class="game-image-container">
             <img src="${game.image}" alt="${game.name}" class="game-image" onerror="this.src='https://via.placeholder.com/140x100?text=No+Image'">
@@ -869,12 +877,16 @@
             <h3 class="game-title">${game.name}</h3>
             <p class="game-format">${game.format}</p>
             ${actionsHtml}
-            <button class="btn btn-add" onclick="addToSelected(${games.indexOf(game)})">➕ 加入清单</button>
           </div>
         `;
 
-        if (game.link) {
-          card.innerHTML = `<a href="${game.link}" target="_blank" style="color:inherit;text-decoration:none;display:block;height:100%;">${content}</a>`;
+        if (game.link && game.link.trim() !== '') {
+          // 修复链接：确保有协议
+          let link = game.link.trim();
+          if (!/^https?:\/\//i.test(link)) {
+            link = 'https://' + link;
+          }
+          card.innerHTML = `<a href="${link}" target="_blank" style="color:inherit;text-decoration:none;display:block;height:100%;">${content}</a>`;
         } else {
           card.innerHTML = content;
         }
@@ -978,7 +990,6 @@
       const newAnnounce = prompt("编辑公告内容：", current);
       if (newAnnounce !== null && newAnnounce.trim() !== '') {
         document.getElementById("announcement").innerHTML = newAnnounce.trim() + ' <span class="edit-announcement" onclick="editAnnouncement()">✏️ 编辑</span>';
-        localStorage.setItem('announcement', newAnnounce.trim());
       }
     }
   </script>
