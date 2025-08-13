@@ -2,11 +2,11 @@
   "announcement": "🎉 请按下单套餐游戏数量按需选择，游戏后期可10元一次更换哦~",
   "games": [
     {
-      "name": "艾尔登法环&黄金树",
-      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202402/0713/d956c0df3a0cfe7c1b8e81c684ecff8a9a141c4f1f38578c.png",
+      "name": "PSN二档会员",
+      "image": "https://gmedia.playstation.com/is/image/SIEPDC/ps-plus-perfect-game-got-image-block-01-en-04jul24?$1600px--t$",
       "format": "数字版&光盘",
-      "banner": true,
-      "tag": "必玩",
+      "banner": false,
+      "tag": "点击查看列表~",
       "link": ""
     },
     {
@@ -54,7 +54,87 @@
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202203/1409/oltI7Zc96usbdvhVVXcV1EAi.png?w=440&thumb=false",
       "format": "仅数字版",
       "banner": false,
-      "tag": "必玩",
+      "tag": "",
+      "link": ""
+    },
+    {
+      "name": "GT赛车7",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202109/1321/yZ7dpmjtHr1olhutHT57IFRh.png?w=440&thumb=false",
+      "format": "数字版&光盘",
+      "banner": false,
+      "tag": "VR",
+      "link": ""
+    },
+    {
+      "name": "只只大冒险",
+      "image": "https://images.pushsquare.com/28a619143c4a5/130x95.jpg",
+      "format": "仅数字版",
+      "banner": false,
+      "tag": "",
+      "link": ""
+    },
+    {
+      "name": "最后的生还者2",
+      "image": "https://image.api.playstation.com/vulcan/img/rnd/202010/2618/w48z6bzefZPrRcJHc7L8SO66.png?w=440&thumb=false",
+      "format": "数字版&光盘",
+      "banner": false,
+      "tag": "",
+      "link": ""
+    },
+    {
+      "name": "漫威蜘蛛侠2",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202306/1219/1c7b75d8ed9271516546560d219ad0b22ee0a263b4537bd8.png?w=230&thumb=false",
+      "format": "仅数字版",
+      "banner": false,
+      "tag": "",
+      "link": ""
+    },
+    {
+      "name": "心灵杀手2",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202305/2420/c3daf3037feb797d9e71b81618e3b5ff3ff1f9609db5a4a2.png?w=230&thumb=false",
+      "format": "仅数字版",
+      "banner": false,
+      "tag": "",
+      "link": ""
+    },
+    {
+      "name": "如龙7外传/AQ",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202305/1808/55b918e1e16de90391058cae988d76a1d0696753ce8f192a.png",
+      "format": "仅数字版",
+      "banner": false,
+      "tag": "",
+      "link": ""
+    },
+    {
+      "name": "无人深空",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202308/2413/5c214b6568870e2f036270f0e8528048563f9a9929d138de.png?w=230&thumb=false",
+      "format": "数字版&光盘",
+      "banner": false,
+      "tag": "VR",
+      "link": ""
+    },
+    {
+      "name": "博得之门3",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202302/2321/ba706e54d68d10a0eb6ab7c36cdad9178c58b7fb7bb03d28.png?w=230&thumb=false",
+      "format": "仅数字版",
+      "banner": false,
+      "tag": "",
+      "link": ""
+    },
+    {
+      "name": "搬家1+2",
+      "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-04/c995d143ad4bd11373f0815c8be7b30f4bfbfbedaf0f.webp",
+      "format": "仅数字版",
+      "banner": false,
+      "tag": "",
+      "link": ""
+    },
+    {
+      "name": "超级鸡马",
+      "image": "https://image.api.playstation.com/cdn/UP1665/CUSA08580_00/4tQO4yzJfetvLtOoshrm64NJDA56kSZjDr501CdSLHdXIkrBpqnyhUALRryUhmDs.png?w=440&thumb=false",
+      "format": "仅数字版",
+      "banner": false,
+      "tag": "",
       "link": ""
     }
   ]
