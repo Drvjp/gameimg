@@ -1,4 +1,6 @@
-[
+{
+  "announcement": "🎉 新增《艾尔登法环》DLC，欢迎体验！",
+  "games": [
   {
     "name": "生化危机4",
     "image": "https://image.api.playstation.com/vulcan/ap/rnd/202207/2509/85p2Dwh5iDhUzRKe40QeNYh3.png?w=440&thumb=false",
@@ -71,4 +73,4 @@
     "format": "数字版&光盘",
     "banner": false
   }
-]
+    }
