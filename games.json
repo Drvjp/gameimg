@@ -1,7 +1,15 @@
 {
   "announcement": "🎉 新增《艾尔登法环》DLC，欢迎体验！",
   "games": [
-  {
+    {
+      "name": "艾尔登法环",
+      "image": "https://example.com/eldenring.jpg",
+      "format": "数字版&光盘",
+      "banner": true,
+      "tag": "必玩",
+      "link": "https://www.baidu.com"
+    }
+     {
     "name": "生化危机4",
     "image": "https://image.api.playstation.com/vulcan/ap/rnd/202207/2509/85p2Dwh5iDhUzRKe40QeNYh3.png?w=440&thumb=false",
     "format": "仅数字版",
@@ -73,4 +81,5 @@
     "format": "数字版&光盘",
     "banner": false
   }
-    }
+  ]
+}
