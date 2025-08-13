@@ -96,6 +96,27 @@
       100% { transform: translateX(100%); }
     }
 
+    /* 公告栏 */
+    .announcement {
+      max-width: 600px;
+      margin: 0 auto 20px auto;
+      padding: 12px;
+      background-color: #e3f2fd;
+      border: 1px solid #bbdefb;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #1976d2;
+      text-align: center;
+    }
+
+    .edit-announcement {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #1976d2;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
     /* 搜索与排序 */
     .filter-sort {
       display: flex;
@@ -192,7 +213,7 @@
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      min-height: 40px; /* 预留两行 */
+      min-height: 40px;
       line-height: 1.4;
     }
 
@@ -204,6 +225,16 @@
     .game-format {
       font-size: 12px;
       color: #666;
+    }
+
+    .game-tag {
+      display: inline-block;
+      background-color: #ff9800;
+      color: white;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin: 2px 0;
     }
 
     .btn {
@@ -231,7 +262,20 @@
       color: white;
     }
 
-    /* 底部选单按钮 */
+    /* 加载更多 */
+    #loadMore {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 14px;
+      color: #007bff;
+      cursor: pointer;
+    }
+
+    #loadMore:hover {
+      text-decoration: underline;
+    }
+
+    /* 底部按钮 */
     #selectedBtn {
       position: fixed;
       left: 50%;
@@ -246,7 +290,7 @@
       font-size: 16px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
       z-index: 1000;
-      display: none; /* 有内容时显示 */
+      display: none;
     }
 
     /* 遮罩层 */
@@ -259,12 +303,6 @@
       height: 100%;
       background-color: rgba(0,0,0,0.5);
       z-index: 1001;
-      animation: fade-in 0.3s;
-    }
-
-    @keyframes fade-in {
-      from { opacity: 0; }
-      to { opacity: 1; }
     }
 
     /* 底部弹出清单 */
@@ -368,6 +406,12 @@
     </div>
   </div>
 
+  <!-- 公告栏 -->
+  <div class="announcement" id="announcement">
+    欢迎访问我的游戏收藏！
+    <div class="edit-announcement" onclick="editAnnouncement()" style="display:none;" id="editAnnouncementBtn">✏️ 编辑公告</div>
+  </div>
+
   <!-- 搜索与排序 -->
   <div class="filter-sort">
     <input type="text" id="searchInput" placeholder="🔍 搜索游戏名称" oninput="filterAndSort()" />
@@ -398,11 +442,17 @@
         <option value="仅光盘">仅光盘</option>
       </select>
     </div>
+    <div class="form-group">
+      <label>自定义标签（可选）</label>
+      <input type="text" id="gameTag" placeholder="如：必玩、打折、经典" />
+    </div>
     <button class="btn" onclick="addGame()">➕ 添加游戏</button>
     <button class="btn" onclick="exportData()">💾 导出 games.json</button>
   </div>
 
   <div class="games-container" id="gamesContainer"></div>
+
+  <div id="loadMore" onclick="loadMore()">🔽 继续加载更多</div>
 
   <!-- 编辑弹窗 -->
   <div id="editModal" style="display:none; position:fixed; z-index:1000; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center;">
@@ -425,6 +475,10 @@
         </select>
       </div>
       <div class="form-group">
+        <label>自定义标签</label>
+        <input type="text" id="editTag" placeholder="如：必玩、打折" />
+      </div>
+      <div class="form-group">
         <label>
           <input type="checkbox" id="editBanner"> 加入顶部推荐 Banner
         </label>
@@ -437,7 +491,7 @@
   </div>
 
   <!-- 底部按钮 -->
-  <button id="selectedBtn" onclick="toggleSelectedPanel()">📋 选单 ({{count}})</button>
+  <button id="selectedBtn" onclick="toggleSelectedPanel()">📋 选单 (0)</button>
 
   <!-- 遮罩层 -->
   <div id="overlay" onclick="closeSelectedPanel()"></div>
@@ -453,6 +507,9 @@
 
   <script>
     let games = [];
+    let filteredGames = [];
+    let loadedCount = 0;
+    let pageSize = 50;
     let isAdmin = false;
     let editingIndex = null;
     let selectedGames = [];
@@ -460,8 +517,10 @@
     let clickCount = 0;
     const title = document.getElementById("title");
 
+    // 自动加载
     window.onload = function() {
       loadData();
+      setupInfiniteScroll();
       title.onclick = function() {
         clickCount++;
         if (clickCount >= 5) {
@@ -470,6 +529,7 @@
           if (pwd === ADMIN_PASSWORD) {
             isAdmin = true;
             document.getElementById("adminPanel").style.display = "block";
+            document.getElementById("editAnnouncementBtn").style.display = "block";
             alert("✅ 已进入管理员模式");
             filterAndSort();
           } else {
@@ -479,6 +539,7 @@
       };
     };
 
+    // 加载数据
     async function loadData() {
       const status = document.getElementById("status");
       const container = document.getElementById("gamesContainer");
@@ -489,7 +550,12 @@
         const response = await fetch('games.json?' + new Date().getTime());
         games = await response.json();
         if (!Array.isArray(games)) games = [];
-        games.forEach(g => { if (g.banner === undefined) g.banner = false; });
+        // 初始化字段
+        games.forEach(g => {
+          if (g.banner === undefined) g.banner = false;
+          if (g.tag === undefined) g.tag = '';
+        });
+        document.getElementById("announcement").innerText = localStorage.getItem('announcement') || "欢迎访问我的游戏收藏！";
         status.textContent = `✅ 成功加载 ${games.length} 个游戏`;
         filterAndSort();
       } catch (err) {
@@ -499,6 +565,58 @@
       }
     }
 
+    // 设置无限滚动
+    function setupInfiniteScroll() {
+      window.addEventListener('scroll', () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+          loadMore();
+        }
+      });
+    }
+
+    // 过滤并排序
+    function filterAndSort() {
+      const query = document.getElementById("searchInput").value.trim().toLowerCase();
+      const sort = document.getElementById("sortSelect").value;
+
+      let filtered = [...games];
+      filtered = filtered.filter(g => !selectedGames.some(s => s.name === g.name));
+
+      if (query) {
+        filtered = filtered.filter(g => g.name.toLowerCase().includes(query));
+      }
+
+      if (sort === 'name-asc') {
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (sort === 'name-desc') {
+        filtered.sort((a, b) => b.name.localeCompare(a.name));
+      }
+
+      filteredGames = filtered;
+      loadedCount = 0;
+      document.getElementById("gamesContainer").innerHTML = "";
+      loadMore(); // 加载第一页
+      renderBanner();
+      updateSelectedList();
+    }
+
+    // 加载更多
+    function loadMore() {
+      const start = loadedCount;
+      const end = start + pageSize;
+      const batch = filteredGames.slice(start, end);
+
+      if (batch.length === 0) {
+        document.getElementById("loadMore").style.display = "none";
+        return;
+      }
+
+      renderGames(batch);
+      loadedCount = end;
+      document.getElementById("loadMore").style.display = end < filteredGames.length ? "block" : "none";
+    }
+
+    // 查重（略）
     function isDuplicate(newName, existingGames) {
       const noiseWords = [
         'v', 'ver', 'version', '加强版', '豪华版', '终极版', '重制版', '典藏版', '特别版', '限定版', '年度版',
@@ -541,10 +659,12 @@
       });
     }
 
+    // 添加游戏
     function addGame() {
       const name = document.getElementById("gameName").value.trim();
       const image = document.getElementById("gameImageUrl").value.trim();
       const format = document.getElementById("gameFormat").value;
+      const tag = document.getElementById("gameTag").value.trim();
 
       if (!name || !image || !format) {
         alert("请填写所有字段！");
@@ -555,17 +675,19 @@
         if (!confirm(`⚠️ 检测到可能重复：“${name}”\n确定要继续添加吗？`)) return;
       }
 
-      games.push({ name, image, format, banner: false });
+      games.push({ name, image, format, banner: false, tag });
       filterAndSort();
       clearAddForm();
     }
 
+    // 编辑
     function openEditModal(index) {
       editingIndex = index;
       const game = games[index];
       document.getElementById("editName").value = game.name;
       document.getElementById("editImage").value = game.image;
       document.getElementById("editFormat").value = game.format;
+      document.getElementById("editTag").value = game.tag || '';
       document.getElementById("editBanner").checked = game.banner || false;
       document.getElementById("editModal").style.display = "flex";
     }
@@ -574,6 +696,7 @@
       const name = document.getElementById("editName").value.trim();
       const image = document.getElementById("editImage").value.trim();
       const format = document.getElementById("editFormat").value;
+      const tag = document.getElementById("editTag").value.trim();
       const banner = document.getElementById("editBanner").checked;
 
       if (!name || !image || !format) {
@@ -581,7 +704,7 @@
         return;
       }
 
-      games[editingIndex] = { name, image, format, banner };
+      games[editingIndex] = { name, image, format, banner, tag };
       filterAndSort();
       closeEditModal();
     }
@@ -619,40 +742,10 @@
       document.getElementById("gameName").value = "";
       document.getElementById("gameImageUrl").value = "";
       document.getElementById("gameFormat").value = "仅数字版";
+      document.getElementById("gameTag").value = "";
     }
 
-    function filterAndSort() {
-      const query = document.getElementById("searchInput").value.trim().toLowerCase();
-      const sort = document.getElementById("sortSelect").value;
-
-      let filtered = [...games];
-      filtered = filtered.filter(g => !selectedGames.some(s => s.name === g.name));
-
-      if (query) {
-        filtered = filtered.filter(g => g.name.toLowerCase().includes(query));
-      }
-
-      if (sort === 'name-asc') {
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
-      } else if (sort === 'name-desc') {
-        filtered.sort((a, b) => b.name.localeCompare(a.name));
-      }
-
-      renderGames(filtered);
-      renderBanner();
-      updateSelectedList();
-    }
-
-    function createBannerItem(game) {
-      const item = document.createElement("div");
-      item.className = "banner-item";
-      item.innerHTML = `
-        <img src="${game.image}" alt="${game.name}" class="banner-image" onerror="this.src='https://via.placeholder.com/100x70?text=No+Image'">
-        <div class="banner-title">${game.name} <span class="top-badge">TOP</span></div>
-      `;
-      return item;
-    }
-
+    // 渲染 Banner
     function renderBanner() {
       const forward = document.getElementById("bannerForward");
       const backward = document.getElementById("bannerBackward");
@@ -670,7 +763,12 @@
       if (bannerGames.length <= 2) {
         backward.parentElement.style.display = "none";
         bannerGames.forEach(game => {
-          const item = createBannerItem(game);
+          const item = document.createElement("div");
+          item.className = "banner-item";
+          item.innerHTML = `
+            <img src="${game.image}" alt="${game.name}" class="banner-image" onerror="this.src='https://via.placeholder.com/100x70?text=No+Image'">
+            <div class="banner-title">${game.name} <span class="top-badge">TOP</span></div>
+          `;
           forward.appendChild(item);
         });
       } else {
@@ -680,22 +778,32 @@
         const bottomRow = bannerGames.slice(mid).reverse();
 
         topRow.forEach(game => {
-          const item = createBannerItem(game);
+          const item = document.createElement("div");
+          item.className = "banner-item";
+          item.innerHTML = `
+            <img src="${game.image}" alt="${game.name}" class="banner-image" onerror="this.src='https://via.placeholder.com/100x70?text=No+Image'">
+            <div class="banner-title">${game.name} <span class="top-badge">TOP</span></div>
+          `;
           forward.appendChild(item);
         });
 
         bottomRow.forEach(game => {
-          const item = createBannerItem(game);
+          const item = document.createElement("div");
+          item.className = "banner-item";
+          item.innerHTML = `
+            <img src="${game.image}" alt="${game.name}" class="banner-image" onerror="this.src='https://via.placeholder.com/100x70?text=No+Image'">
+            <div class="banner-title">${game.name} <span class="top-badge">TOP</span></div>
+          `;
           backward.appendChild(item);
         });
       }
     }
 
-    function renderGames(filteredGames) {
+    // 渲染游戏
+    function renderGames(gamesToRender) {
       const container = document.getElementById("gamesContainer");
-      container.innerHTML = "";
 
-      filteredGames.forEach((game, index) => {
+      gamesToRender.forEach((game, index) => {
         const card = document.createElement("div");
         card.className = "game-card";
 
@@ -709,10 +817,13 @@
           `;
         }
 
+        const tagHtml = game.tag ? `<div class="game-tag">${game.tag}</div>` : '';
+
         card.innerHTML = `
           <img src="${game.image}" alt="${game.name}" class="game-image" onerror="this.src='https://via.placeholder.com/140x100?text=No+Image'">
           <div class="game-info">
             <h3 class="game-title"><span class="top-left">${game.banner ? '<span class="top-badge">TOP</span>' : ''}</span>${game.name}</h3>
+            ${tagHtml}
             <p class="game-format">${game.format}</p>
             ${actionsHtml}
             <button class="btn btn-add" onclick="addToSelected(${games.indexOf(game)})">➕ 加入清单</button>
@@ -723,6 +834,7 @@
       });
     }
 
+    // 加入清单
     function addToSelected(index) {
       const game = games[index];
       if (selectedGames.some(g => g.name === game.name)) {
@@ -809,6 +921,16 @@
       const overlay = document.getElementById("overlay");
       panel.classList.remove("active");
       overlay.style.display = "none";
+    }
+
+    // 编辑公告
+    function editAnnouncement() {
+      const current = document.getElementById("announcement").innerText;
+      const newAnnounce = prompt("编辑公告内容：", current);
+      if (newAnnounce !== null) {
+        document.getElementById("announcement").innerText = newAnnounce;
+        localStorage.setItem('announcement', newAnnounce);
+      }
     }
   </script>
 </body>
