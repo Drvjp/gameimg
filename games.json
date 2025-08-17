@@ -354,8 +354,8 @@
       "link": ""
     },
     {
-      "name": "逃出双人同捆",
-      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202209/0715/i0TXlnI7gMouVHOdoFgVvPyr.jpg?w=780&thumb=false",
+      "name": "逃出生天",
+      "image": "https://image.api.playstation.com/cdn/UP0006/CUSA07995_00/es9H68Zt2bCx8VHQ91tPy5CmnMoyHrgYKFkyKk6YRjLvfL849ER7E4GV8Mu1Zmfe.png?w=230&thumb=false",
       "format": "仅数字版",
       "banner": false,
       "tag": "",
@@ -447,6 +447,62 @@
       "format": "仅数字版",
       "banner": false,
       "tag": "VR",
+      "link": ""
+    },
+    {
+      "name": "完蛋我被美女包围了",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202407/1012/3a1638d971dc3f55eee4192fc3ffc90df466356941248266.png?w=230&thumb=false",
+      "format": "仅数字版",
+      "banner": false,
+      "tag": "",
+      "link": ""
+    },
+    {
+      "name": "真人快打11/",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202103/0221/lRjosIJ7zGrfClMQNIlievwS.png?w=230&thumb=false",
+      "format": "仅数字版",
+      "banner": false,
+      "tag": "",
+      "link": ""
+    },
+    {
+      "name": "尘埃5",
+      "image": "https://image.api.playstation.com/vulcan/img/rnd/202007/2111/AU9y67cQ8s4t6S0Tg2peRQ5s.png?w=230&thumb=false",
+      "format": "仅数字版",
+      "banner": false,
+      "tag": "",
+      "link": ""
+    },
+    {
+      "name": "全境封锁",
+      "image": "https://image.api.playstation.com/cdn/EP0001/CUSA01262_00/n4QMOvdDTGOLHFDoJlsBCNFcremiVZ6WUd7OwjOl8MH1D4njpXDNfrz1MbB9Bpgg.png?w=230&thumb=false",
+      "format": "仅数字版",
+      "banner": false,
+      "tag": "",
+      "link": ""
+    },
+    {
+      "name": "泰坦陨落2",
+      "image": "https://image.api.playstation.com/cdn/UP0006/CUSA04027_00/FdF3KYaO25xICLolMJygw8Nw8GwEsAR4138Gh0i0OISCWkeFjpykgTVdZvL3b0Yh.png?w=230&thumb=false",
+      "format": "仅数字版",
+      "banner": false,
+      "tag": "",
+      "link": ""
+    },
+    {
+      "name": "双人成行",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202012/0815/7CRynuLSAb0vysSC4TmZy5e4.png?w=230&thumb=false",
+      "format": "仅数字版",
+      "banner": false,
+      "tag": "",
+      "link": ""
+    },
+    {
+      "name": "大富翁11",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202403/1109/ad3bff730ae036d2c2dcd4786a2dd83f891286930fef06ca.png?w=230&thumb=false",
+      "format": "仅数字版",
+      "banner": false,
+      "tag": "",
       "link": ""
     }
   ]
