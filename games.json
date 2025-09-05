@@ -504,6 +504,14 @@
       "banner": false,
       "tag": "",
       "link": ""
+    },
+    {
+      "name": "空洞骑士 丝之歌",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202508/2505/66f43d82a3d31493a2b3edec5359872e45c0c097115a9fbd.png?w=180&thumb=false",
+      "format": "仅数字版",
+      "banner": false,
+      "tag": "新游戏",
+      "link": ""
     }
   ]
 }
