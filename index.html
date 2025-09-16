@@ -436,7 +436,7 @@
       <option value="default">按添加顺序</option>
       <option value="name-asc">名称 A-Z</option>
       <option value="name-desc">名称 Z-A</option>
-      <option value="drag-sort">拖拽排序</option>
+      <option value="drag-sort" id="dragSortOption" style="display:none">拖拽排序</option>
     </select>
   </div>
 
@@ -549,16 +549,24 @@
       loadData();
       setupInfiniteScroll();
       setupDragSort();
+      // 页面加载时，检查是否有保存的拖拽排序，并根据管理员状态显示或隐藏相关选项
+      if (localStorage.getItem('dragSortOrder')) {
+        // 如果有保存的拖拽排序，但不是管理员，则清除排序选项
+        if (!isAdmin) {
+          document.getElementById("sortSelect").value = "default";
+        }
+      }
       title.onclick = function() {
         clickCount++;
         if (clickCount >= 5) {
           clickCount = 0;
           const pwd = prompt("请输入管理员密码：");
           if (pwd === ADMIN_PASSWORD) {
-            isAdmin = true;
-            document.getElementById("adminPanel").style.display = "block";
-            document.getElementById("editAnnouncementBtn").style.display = "inline";
-            filterAndSort(); // 立即重新渲染
+          isAdmin = true;
+          document.getElementById("adminPanel").style.display = "block";
+          document.getElementById("editAnnouncementBtn").style.display = "inline";
+          document.getElementById("dragSortOption").style.display = "block";
+          filterAndSort(); // 立即重新渲染
           } else {
             alert("❌ 密码错误！");
           }
@@ -627,18 +635,23 @@
         filtered.sort((a, b) => a.name.localeCompare(b.name));
       } else if (sort === 'name-desc') {
         filtered.sort((a, b) => b.name.localeCompare(a.name));
-      } else if (sort === 'drag-sort' && localStorage.getItem('dragSortOrder')) {
-        // 应用保存的拖拽排序
-        const dragSortOrder = JSON.parse(localStorage.getItem('dragSortOrder'));
-        filtered.sort((a, b) => {
-          const indexA = dragSortOrder.indexOf(a.name);
-          const indexB = dragSortOrder.indexOf(b.name);
-          if (indexA === -1 && indexB === -1) return 0;
-          if (indexA === -1) return 1;
-          if (indexB === -1) return -1;
-          return indexA - indexB;
-        });
-      }
+      } else if (sort === 'drag-sort') {
+          // 应用保存的拖拽排序（仅管理员可用）
+          if (isAdmin && localStorage.getItem('dragSortOrder')) {
+            const dragSortOrder = JSON.parse(localStorage.getItem('dragSortOrder'));
+            filtered.sort((a, b) => {
+              const indexA = dragSortOrder.indexOf(a.name);
+              const indexB = dragSortOrder.indexOf(b.name);
+              if (indexA === -1 && indexB === -1) return 0;
+              if (indexA === -1) return 1;
+              if (indexB === -1) return -1;
+              return indexA - indexB;
+            });
+          } else {
+            // 非管理员用户选择了拖拽排序，自动切换回默认排序
+            document.getElementById("sortSelect").value = "default";
+          }
+        }
 
       filteredGames = filtered;
       loadedCount = 0;
@@ -655,7 +668,7 @@
       
       // 监听拖拽相关事件
       container.addEventListener('dragstart', function(e) {
-        if (e.target.classList.contains('game-card')) {
+        if (isAdmin && e.target.classList.contains('game-card')) {
           draggedItem = e.target;
           setTimeout(() => {
             e.target.style.opacity = '0.5';
@@ -664,7 +677,7 @@
       });
       
       container.addEventListener('dragend', function(e) {
-        if (e.target.classList.contains('game-card')) {
+        if (isAdmin && e.target.classList.contains('game-card')) {
           e.target.style.opacity = '1';
           draggedItem = null;
           
@@ -677,51 +690,58 @@
           
           if (order.length > 0) {
             localStorage.setItem('dragSortOrder', JSON.stringify(order));
+            // 自动选择拖拽排序选项，确保下次加载时应用保存的排序
+            document.getElementById("sortSelect").value = "drag-sort";
             alert('排序已保存！');
           }
         }
       });
       
       container.addEventListener('dragover', function(e) {
-        e.preventDefault();
+        if (isAdmin) {
+          e.preventDefault();
+        }
       });
       
       container.addEventListener('dragenter', function(e) {
-        if (e.target.classList.contains('game-card') && e.target !== draggedItem) {
+        if (isAdmin && e.target.classList.contains('game-card') && e.target !== draggedItem) {
           e.target.style.border = '2px dashed #0066cc';
         }
       });
       
       container.addEventListener('dragleave', function(e) {
-        if (e.target.classList.contains('game-card')) {
+        if (isAdmin && e.target.classList.contains('game-card')) {
           e.target.style.border = 'none';
         }
       });
       
       container.addEventListener('drop', function(e) {
-        e.preventDefault();
-        
-        if (e.target.classList.contains('game-card') && e.target !== draggedItem) {
-          e.target.style.border = 'none';
+        if (isAdmin) {
+          e.preventDefault();
           
-          // 获取容器和所有卡片
-          const container = draggedItem.parentNode;
-          const cards = Array.from(container.querySelectorAll('.game-card'));
-          const draggedIndex = cards.indexOf(draggedItem);
-          const dropIndex = cards.indexOf(e.target);
-          
-          // 插入到新位置
-          if (draggedIndex < dropIndex) {
-            container.insertBefore(draggedItem, e.target.nextSibling);
-          } else {
-            container.insertBefore(draggedItem, e.target);
+          if (e.target.classList.contains('game-card') && e.target !== draggedItem) {
+            e.target.style.border = 'none';
+            
+            // 获取容器和所有卡片
+            const container = draggedItem.parentNode;
+            const cards = Array.from(container.querySelectorAll('.game-card'));
+            const draggedIndex = cards.indexOf(draggedItem);
+            const dropIndex = cards.indexOf(e.target);
+            
+            // 插入到新位置
+            if (draggedIndex < dropIndex) {
+              container.insertBefore(draggedItem, e.target.nextSibling);
+            } else {
+              container.insertBefore(draggedItem, e.target);
+            }
           }
         }
       });
     }
 
-    // 清除拖拽排序
+    // 清除拖拽排序（仅管理员可用）
     function clearDragSort() {
+      if (!isAdmin) return;
       localStorage.removeItem('dragSortOrder');
       document.getElementById("sortSelect").value = "default";
       filterAndSort();
@@ -944,7 +964,7 @@
       gamesToRender.forEach((game, index) => {
         const card = document.createElement("div");
         card.className = "game-card";
-        card.draggable = true;
+        card.draggable = isAdmin;
 
         let actionsHtml = '';
         if (isAdmin) {
