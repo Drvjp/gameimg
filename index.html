@@ -436,6 +436,7 @@
       <option value="default">按添加顺序</option>
       <option value="name-asc">名称 A-Z</option>
       <option value="name-desc">名称 Z-A</option>
+      <option value="drag-sort">拖拽排序</option>
     </select>
   </div>
 
@@ -443,6 +444,7 @@
 
   <!-- 管理员功能面板 -->
   <div id="adminPanel">
+    <button class="btn" onclick="clearDragSort()">🗑️ 清除拖拽排序</button>
     <div class="form-group">
       <label>游戏名称</label>
       <input type="text" id="gameName" placeholder="请输入名称" />
@@ -546,6 +548,7 @@
     window.onload = function() {
       loadData();
       setupInfiniteScroll();
+      setupDragSort();
       title.onclick = function() {
         clickCount++;
         if (clickCount >= 5) {
@@ -624,6 +627,17 @@
         filtered.sort((a, b) => a.name.localeCompare(b.name));
       } else if (sort === 'name-desc') {
         filtered.sort((a, b) => b.name.localeCompare(a.name));
+      } else if (sort === 'drag-sort' && localStorage.getItem('dragSortOrder')) {
+        // 应用保存的拖拽排序
+        const dragSortOrder = JSON.parse(localStorage.getItem('dragSortOrder'));
+        filtered.sort((a, b) => {
+          const indexA = dragSortOrder.indexOf(a.name);
+          const indexB = dragSortOrder.indexOf(b.name);
+          if (indexA === -1 && indexB === -1) return 0;
+          if (indexA === -1) return 1;
+          if (indexB === -1) return -1;
+          return indexA - indexB;
+        });
       }
 
       filteredGames = filtered;
@@ -632,6 +646,86 @@
       loadMore(); // 加载第一页
       renderBanner();
       updateSelectedList();
+    }
+
+    // 设置拖拽排序
+    function setupDragSort() {
+      const container = document.getElementById("gamesContainer");
+      let draggedItem = null;
+      
+      // 监听拖拽相关事件
+      container.addEventListener('dragstart', function(e) {
+        if (e.target.classList.contains('game-card')) {
+          draggedItem = e.target;
+          setTimeout(() => {
+            e.target.style.opacity = '0.5';
+          }, 0);
+        }
+      });
+      
+      container.addEventListener('dragend', function(e) {
+        if (e.target.classList.contains('game-card')) {
+          e.target.style.opacity = '1';
+          draggedItem = null;
+          
+          // 保存拖拽排序结果
+          const cards = Array.from(container.querySelectorAll('.game-card'));
+          const order = cards.map(card => {
+            const title = card.querySelector('.game-title');
+            return title ? title.textContent.trim() : '';
+          }).filter(name => name);
+          
+          if (order.length > 0) {
+            localStorage.setItem('dragSortOrder', JSON.stringify(order));
+            alert('排序已保存！');
+          }
+        }
+      });
+      
+      container.addEventListener('dragover', function(e) {
+        e.preventDefault();
+      });
+      
+      container.addEventListener('dragenter', function(e) {
+        if (e.target.classList.contains('game-card') && e.target !== draggedItem) {
+          e.target.style.border = '2px dashed #0066cc';
+        }
+      });
+      
+      container.addEventListener('dragleave', function(e) {
+        if (e.target.classList.contains('game-card')) {
+          e.target.style.border = 'none';
+        }
+      });
+      
+      container.addEventListener('drop', function(e) {
+        e.preventDefault();
+        
+        if (e.target.classList.contains('game-card') && e.target !== draggedItem) {
+          e.target.style.border = 'none';
+          
+          // 获取容器和所有卡片
+          const container = draggedItem.parentNode;
+          const cards = Array.from(container.querySelectorAll('.game-card'));
+          const draggedIndex = cards.indexOf(draggedItem);
+          const dropIndex = cards.indexOf(e.target);
+          
+          // 插入到新位置
+          if (draggedIndex < dropIndex) {
+            container.insertBefore(draggedItem, e.target.nextSibling);
+          } else {
+            container.insertBefore(draggedItem, e.target);
+          }
+        }
+      });
+    }
+
+    // 清除拖拽排序
+    function clearDragSort() {
+      localStorage.removeItem('dragSortOrder');
+      document.getElementById("sortSelect").value = "default";
+      filterAndSort();
+      alert('拖拽排序已清除！');
     }
 
     // 加载更多
@@ -850,6 +944,7 @@
       gamesToRender.forEach((game, index) => {
         const card = document.createElement("div");
         card.className = "game-card";
+        card.draggable = true;
 
         let actionsHtml = '';
         if (isAdmin) {
