@@ -596,5 +596,25 @@
       "newRelease": true,
       "releaseDate": "2025-09-19"
     }
+    {
+      "id": "67",
+      "name": "羊蹄山之魂",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202504/2217/3db73eea2ad61f69f6dc2c4ef55c037c7a1b68e496984994.jpg?w=620&thumb=false",
+      "format": "仅数字版",
+      "tag": "新游",
+      "link": "",
+      "newRelease": true,
+      "releaseDate": "2025-10-02"
+    }
+    {
+      "id": "68",
+      "name": "植物大战僵尸™：重植版",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202507/1618/d84ce02b74d8d0ac02fd7b4ce1db6ce501aafa0f332c854d.png?w=180&thumb=false",
+      "format": "仅数字版",
+      "tag": "新游",
+      "link": "",
+      "newRelease": true,
+      "releaseDate": "2025-10-24"
+    }
   ]
 }
