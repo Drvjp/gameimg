@@ -1,525 +1,600 @@
 {
-  "announcement": "🎉 请按下单套餐游戏数量按需选择，游戏后期可10元一次更换哦~",
+  "announcement": "欢迎访问我的游戏收藏！",
   "games": [
     {
+      "id": "1",
       "name": "PSN二档会员",
       "image": "https://gmedia.playstation.com/is/image/SIEPDC/ps-plus-perfect-game-got-image-block-01-en-04jul24?$1600px--t$",
       "format": "数字版&光盘",
-      "banner": false,
       "tag": "点击查看列表~",
-      "link": "https://www.playstation.com/zh-hant-hk/ps-plus/games/?category=GAME_CATALOG#plus-container"
+      "link": "https://www.playstation.com/zh-hant-hk/ps-plus/games/?category=GAME_CATALOG#plus-container",
+      "newRelease": false
     },
     {
+      "id": "2",
       "name": "山之呼唤",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202207/0615/eicVspHDlt11H1xtnsw5dgkz.png?w=230&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "VR",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "3",
       "name": "生化危机4",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202207/2509/85p2Dwh5iDhUzRKe40QeNYh3.png?w=440&thumb=false",
       "format": "数字版&光盘",
-      "banner": false,
       "tag": "VR",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "4",
       "name": "生化危机6",
       "image": "https://image.api.playstation.com/cdn/HP0102/CUSA09846_00/i6MGZWz9bVqf4JergejRwYrP47QvB7PROwpGusjm9S9nfxcfguprXUH09lH1zFxk.png?w=440&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "双人",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "5",
       "name": "生化危机8",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202101/0812/FkzwjnJknkrFlozkTdeQBMub.png?w=230&thumb=false",
       "format": "数字版&光盘",
-      "banner": false,
       "tag": "VR",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "6",
       "name": "节奏光剑",
       "image": "https://image.api.playstation.com/gs2-sec/appkgo/prod/CUSA12878_00/8/i_a385715ce8311a50991265ca4e9dff56d42eea96459663eab75b8df8844ddf68/i/icon0.png?w=230&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "VR",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "7",
       "name": "侠盗猎车手5",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202203/1409/oltI7Zc96usbdvhVVXcV1EAi.png?w=440&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "8",
       "name": "GT赛车7",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202109/1321/yZ7dpmjtHr1olhutHT57IFRh.png?w=440&thumb=false",
       "format": "数字版&光盘",
-      "banner": false,
       "tag": "VR",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "9",
       "name": "只只大冒险",
       "image": "https://images.pushsquare.com/28a619143c4a5/130x95.jpg",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "10",
       "name": "最后的生还者2",
       "image": "https://image.api.playstation.com/vulcan/img/rnd/202010/2618/w48z6bzefZPrRcJHc7L8SO66.png?w=440&thumb=false",
       "format": "数字版&光盘",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "11",
       "name": "漫威蜘蛛侠2",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202306/1219/1c7b75d8ed9271516546560d219ad0b22ee0a263b4537bd8.png?w=230&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "12",
       "name": "心灵杀手2",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202305/2420/c3daf3037feb797d9e71b81618e3b5ff3ff1f9609db5a4a2.png?w=230&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "13",
       "name": "如龙7外传",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202305/1808/55b918e1e16de90391058cae988d76a1d0696753ce8f192a.png",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "14",
       "name": "无人深空",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202308/2413/5c214b6568870e2f036270f0e8528048563f9a9929d138de.png?w=230&thumb=false",
       "format": "数字版&光盘",
-      "banner": false,
       "tag": "VR",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "15",
       "name": "博得之门3",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202302/2321/ba706e54d68d10a0eb6ab7c36cdad9178c58b7fb7bb03d28.png?w=230&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "16",
       "name": "搬家1+2",
       "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-04/c995d143ad4bd11373f0815c8be7b30f4bfbfbedaf0f.webp",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "17",
       "name": "超级鸡马",
       "image": "https://image.api.playstation.com/cdn/UP1665/CUSA08580_00/4tQO4yzJfetvLtOoshrm64NJDA56kSZjDr501CdSLHdXIkrBpqnyhUALRryUhmDs.png?w=440&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "18",
       "name": "刺客信条影",
       "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-03/image-2025-03-20-11-38.png",
       "format": "数字版&光盘",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "19",
       "name": "地平线5",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202502/1300/b76acec852af7bc40931592a5a07d1bd23a5705a1b396508.jpg?w=780&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "20",
       "name": "夺宝奇兵：古老之圈",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202503/0418/071f05895a446a275f2be178cff86ea1da790b5e1a50a768.jpg?w=620&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "21",
       "name": "艾尔登法环&黄金树",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202402/0713/d956c0df3a0cfe7c1b8e81c684ecff8a9a141c4f1f38578c.png",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "22",
       "name": "负鼠闹翻天",
       "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-07/image-2025-07-24-12-31.png",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "23",
       "name": "光与影33号远征队",
       "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-04/image-2025-04-25-13-55.png",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "24",
       "name": "黑神话悟空",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202405/2120/fc91aea00abeb7a7c1904d70d94eaa25738761777e68395d.jpeg?w=620&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "25",
       "name": "怪物猎人 荒野",
       "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-02/49bbec039669447641577add31bd2e00-1920-1080.webp",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "26",
       "name": "荒野大镖客2",
       "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-07/image-2024-12-11-20-44.png",
       "format": "数字版&光盘",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "27",
       "name": "皇牌空战7",
       "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-02/image-2025-02-04-20-30.png",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "28",
       "name": "火影忍者 终极风暴羁绊",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202307/2603/53825970b0b97cff24e9ff97264bc37c95dc3d2b3578dff7.jpg?w=620&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "29",
       "name": "霍格沃茨之遗豪华版",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202503/2716/9d691701d881f2d5cd2275b5b3cbebca3c82046a7ba2a77b.jpg?w=620&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "30",
       "name": "寂静岭2",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202404/2613/f96421368b01c9a55fad1da2268edba46db0c46fbccbad13.jpg?w=620&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "31",
       "name": "街头霸王6",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202211/1408/l3bg7nmfPpPzam5jOVlaUFww.jpg?w=620&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "32",
       "name": "浪人崛起",
       "image": "https://image.api.playstation.com/pr/bam-art/174/047/8a28b094-4d8b-4854-a841-e54d59c6fdb0.jpg?w=440&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "33",
       "name": "血源老猎人",
       "image": "https://image.api.playstation.com/vulcan/img/rnd/202011/1317/vyn7ozdBhWPEYZGImLQGWSPd.jpg?w=780&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "34",
       "name": "龙珠电光炸裂",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202405/2306/e940c07107a4cefbbedbbd53451e26f0dbf292dcfab6c307.png?w=230&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "35",
       "name": "明末 渊虚之羽",
       "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-07/image-2025-07-29-14-45.png",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "36",
       "name": "枪火意大利",
       "image": "https://image.api.playstation.com/cdn/HP5036/CUSA11902_00/j98zCYXZyoArLijfOgMIZy2TwxjPLWmS8IuFfh17M7nqhif8f3cKjRHU3cSkuFIy.png?w=230&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "37",
       "name": "如龙8",
       "image": "https://image.api.playstation.com/pr/bam-art/168/901/774f8b87-50a9-45fe-80b2-2d8c78f4c98c.jpg?w=440&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "38",
       "name": "如龙8外传",
       "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-02/eb8e3628-7e15-40a5-829c-4d6337e84184.jpg",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "39",
       "name": "赛博朋克+往日之影",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202306/0116/b3e1c61b87636e91d368cdd98dda621c1b99b028bc39f523.png",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "40",
       "name": "生化危机7",
       "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-01/icon0.jpg",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "41",
       "name": "生化危机启示录2",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202010/0501/2MndlQoyfqKoxnDRWEOAWlL5.png?w=1920&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "42",
       "name": "双影奇境",
       "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-03/150709931.jpeg",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "43",
       "name": "死亡搁浅2",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202503/0316/ba08d42ca97ad050e653b7eda937dca69e560a707eb03dd4.jpg?w=620&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "44",
       "name": "四海兄弟故乡",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202504/2416/044c29ea5623bbb31fc1b2db8577621ba7f035b4c679cfdc.jpg?w=620&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "45",
       "name": "逃出生天",
       "image": "https://image.api.playstation.com/cdn/UP0006/CUSA07995_00/es9H68Zt2bCx8VHQ91tPy5CmnMoyHrgYKFkyKk6YRjLvfL849ER7E4GV8Mu1Zmfe.png?w=230&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "46",
       "name": "我的世界",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202407/0401/670c294ded3baf4fa11068db2ec6758c63f7daeb266a35a1.png?w=780&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "47",
       "name": "三国无双起源",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202410/3101/e69a13687a7fea3df4dae30f6f6724c5bab1771178575816.png?w=440&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "48",
       "name": "无主之地3",
       "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-08/image-2025-08-02-16-14.png",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "49",
       "name": "无主之地4",
       "image": "https://cdn2.steamgriddb.com/thumb/d1e1fa0779ea7cf1f4fbe2403b99d226.jpg",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "50",
       "name": "小小梦魇1+2合集",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202203/3115/zyAN9ya8ZrVrQtU6VeIsssa7.png?w=620&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "51",
       "name": "剑星 星刃",
       "image": "https://image.api.playstation.com/pr/bam-art/175/681/d8280d41-e781-4995-be40-9aab03e63937.jpg?w=440&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "52",
       "name": "野狗子",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202410/0109/143fd61d6f0e3cc3f6bdabe287158eb3fb04851077ef7f4b.png?w=230&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "53",
       "name": "宇宙机器人2",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202407/0200/aac40cfde55b67abf081d5d9ebcc5e3e08aaa65a4c99424e.jpg?w=620&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "54",
       "name": "最终幻想7重生",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202308/3005/6de6b1c4b0c475b5c28fd2011655ab8206ed846926fa1671.png?w=440&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "55",
       "name": "FF16-天空余音DLC",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202311/1609/40ac9be6b518497d692fb65cc7bdc594d7b2656147b0eddc.png?w=440&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "仅DLC 无本体",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "56",
       "name": "JOJO的奇妙冒险",
       "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-07/image-2025-07-24-12-20.png",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "57",
       "name": "MOSS1+2",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202211/1505/swt7dmZN9nmnHZaQGdV6kB5U.png?w=620&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "VR",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "58",
       "name": "完蛋我被美女包围了",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202407/1012/3a1638d971dc3f55eee4192fc3ffc90df466356941248266.png?w=230&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "59",
       "name": "真人快打11/",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202103/0221/lRjosIJ7zGrfClMQNIlievwS.png?w=230&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "60",
       "name": "尘埃5",
       "image": "https://image.api.playstation.com/vulcan/img/rnd/202007/2111/AU9y67cQ8s4t6S0Tg2peRQ5s.png?w=230&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "61",
       "name": "全境封锁",
       "image": "https://image.api.playstation.com/cdn/EP0001/CUSA01262_00/n4QMOvdDTGOLHFDoJlsBCNFcremiVZ6WUd7OwjOl8MH1D4njpXDNfrz1MbB9Bpgg.png?w=230&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "62",
       "name": "泰坦陨落2",
       "image": "https://image.api.playstation.com/cdn/UP0006/CUSA04027_00/FdF3KYaO25xICLolMJygw8Nw8GwEsAR4138Gh0i0OISCWkeFjpykgTVdZvL3b0Yh.png?w=230&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "63",
       "name": "双人成行",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202012/0815/7CRynuLSAb0vysSC4TmZy5e4.png?w=230&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "64",
       "name": "大富翁11",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202403/1109/ad3bff730ae036d2c2dcd4786a2dd83f891286930fef06ca.png?w=230&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "",
-      "link": ""
+      "link": "",
+      "newRelease": false
     },
     {
+      "id": "65",
       "name": "空洞骑士 丝之歌",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202508/2505/66f43d82a3d31493a2b3edec5359872e45c0c097115a9fbd.png?w=180&thumb=false",
       "format": "仅数字版",
-      "banner": false,
       "tag": "新游戏",
-      "link": ""
+      "link": "",
+      "newRelease": false
+    },
+    {
+      "id": "66",
+      "name": "消逝的光芒 困兽",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202506/0710/1292639d55f49db42584cc13130fe6eee653bfefac27e110.jpg?w=620&thumb=false",
+      "format": "仅数字版",
+      "tag": "新游",
+      "link": "",
+      "newRelease": true,
+      "releaseDate": "2025-09-19"
     }
   ]
 }
