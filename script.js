@@ -8,7 +8,7 @@ let pageSize = 50;
 let isAdmin = false;
 let editingIndex = null;
 let selectedGames = [];
-const ADMIN_PASSWORD = '123456';
+const ADMIN_PASSWORD = 'Wcs160520';
 
 // 生成有序ID
 let gameIdCounter = 1;
