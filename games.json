@@ -593,8 +593,7 @@
       "format": "仅数字版",
       "tag": "新游",
       "link": "",
-      "newRelease": true,
-      "releaseDate": "2025-09-19"
+      "newRelease": false,
     },
     {
       "id": "67",
@@ -615,6 +614,15 @@
       "link": "",
       "newRelease": true,
       "releaseDate": "2025-10-24"
+    },
+    {
+      "id": "68",
+      "name": "寂静岭F豪华版",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202505/0704/9382bbaafd616aae7c02de84f57a298b5e2cfa87d030a0d1.jpg?w=1024&thumb=false",
+      "format": "仅数字版",
+      "tag": "新游",
+      "link": "",
+      "newRelease": false,
     }
   ]
 }
