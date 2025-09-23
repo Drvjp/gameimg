@@ -616,9 +616,18 @@
       "releaseDate": "2025-10-24"
     },
     {
-      "id": "68",
+      "id": "69",
       "name": "寂静岭F豪华版",
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202505/0704/9382bbaafd616aae7c02de84f57a298b5e2cfa87d030a0d1.jpg?w=1024&thumb=false",
+      "format": "仅数字版",
+      "tag": "新游",
+      "link": "",
+      "newRelease": false,
+    }
+    {
+      "id": "70",
+      "name": "NBA 2K26",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202506/2509/b8f95044ba911cdd537d5b29a22cc79719f48ae281dda353.jpg?w=780&thumb=false",
       "format": "仅数字版",
       "tag": "新游",
       "link": "",
