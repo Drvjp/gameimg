@@ -593,7 +593,7 @@
       "format": "仅数字版",
       "tag": "新游",
       "link": "",
-      "newRelease": false,
+      "newRelease": false
     },
     {
       "id": "67",
@@ -622,7 +622,7 @@
       "format": "仅数字版",
       "tag": "新游",
       "link": "",
-      "newRelease": false,
+      "newRelease": false
     },
     {
       "id": "70",
@@ -631,7 +631,7 @@
       "format": "仅数字版",
       "tag": "新游",
       "link": "",
-      "newRelease": false,
+      "newRelease": false
     }
   ]
 }
