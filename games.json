@@ -602,8 +602,7 @@
       "format": "仅数字版",
       "tag": "新游",
       "link": "",
-      "newRelease": true,
-      "releaseDate": "2025-10-02"
+      "newRelease": false,
     },
     {
       "id": "68",
