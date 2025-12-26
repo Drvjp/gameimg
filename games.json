@@ -611,8 +611,7 @@
       "format": "仅数字版",
       "tag": "新游",
       "link": "",
-      "newRelease": true,
-      "releaseDate": "2025-10-24"
+      "newRelease": false
     },
     {
       "id": "69",
@@ -629,6 +628,15 @@
       "image": "https://image.api.playstation.com/vulcan/ap/rnd/202506/2509/b8f95044ba911cdd537d5b29a22cc79719f48ae281dda353.jpg?w=780&thumb=false",
       "format": "仅数字版",
       "tag": "新游",
+      "link": "",
+      "newRelease": false
+    },
+    {
+      "id": "71",
+      "name": "蛋糕大作战",
+      "image": "https://cdn2.steamgriddb.com/thumb/bfe019b596776b96d96795da74ac8fc9.jpg",
+      "format": "仅数字版",
+      "tag": "多人",
       "link": "",
       "newRelease": false
     }
