@@ -611,7 +611,8 @@
       "format": "仅数字版",
       "tag": "新游",
       "link": "",
-      "newRelease": false
+      "newRelease": true,
+      "releaseDate": "2025-10-24"
     },
     {
       "id": "69",
