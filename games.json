@@ -640,6 +640,15 @@
       "tag": "多人",
       "link": "",
       "newRelease": false
+    },
+    {
+      "id": "72",
+      "name": "巫师3",
+      "image": "https://image.api.playstation.com/gs2-sec/appkgo/prod/CUSA01490_00/6/i_c173d1f616975af2cc35e2338c6980450f0e5bf37e7897c83ddd3f5a4b39b034/i/icon0_10.png",
+      "format": "仅数字版",
+      "tag": "经典必玩",
+      "link": "",
+      "newRelease": false
     }
   ]
 }
