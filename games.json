@@ -605,14 +605,13 @@
       "newRelease": false
     },
     {
-      "id": "68",
-      "name": "植物大战僵尸™：重植版",
-      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202507/1618/d84ce02b74d8d0ac02fd7b4ce1db6ce501aafa0f332c854d.png?w=180&thumb=false",
-      "format": "仅数字版",
-      "tag": "新游",
+      "id": "76",
+      "name": "使命召唤22 黑色行动7",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202508/2119/e4452d0c284fa9ab9fef015fe55e5414d1b9962835bc9d0b.png?w=230&thumb=false",
+      "format": "数字版&光盘",
+      "tag": "多人",
       "link": "",
-      "newRelease": false,
-      "releaseDate": "2025-10-24"
+      "newRelease": false
     },
     {
       "id": "69",
@@ -672,15 +671,6 @@
       "id": "75",
       "name": "使命召唤17 黑色行动冷战",
       "image": "https://image.api.playstation.com/vulcan/img/rnd/202111/2000/U7p0shHsOLlc504vClDX12aO.png?w=230&thumb=false",
-      "format": "数字版&光盘",
-      "tag": "多人",
-      "link": "",
-      "newRelease": false
-    },
-    {
-      "id": "76",
-      "name": "使命召唤22 黑色行动7",
-      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202508/2119/e4452d0c284fa9ab9fef015fe55e5414d1b9962835bc9d0b.png?w=230&thumb=false",
       "format": "数字版&光盘",
       "tag": "多人",
       "link": "",
