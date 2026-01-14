@@ -649,6 +649,42 @@
       "tag": "经典必玩",
       "link": "",
       "newRelease": false
+    }，
+    {
+      "id": "73",
+      "name": "使命召唤12 黑色行动3",
+      "image": "https://image.api.playstation.com/cdn/UP0002/CUSA03005_00/zW7SlYicv1XbS2geSckHcWNzRG4AKqowOHpSstpBoDDv9r00wAoPPfUHGpGy3PHB.png?w=230&thumb=false",
+      "format": "仅数字版",
+      "tag": "多人",
+      "link": "",
+      "newRelease": false
+    },
+    {
+      "id": "74",
+      "name": "使命召唤16 现代战争",
+      "image": "https://image.api.playstation.com/vulcan/img/cfn/11307n1HOavo3ovVnxU33mQ8BBsSXNHCokCyRoVQXlDHdBVkwnJwkb-37XHT52Od-PPT27hE1k0kjATHajJcpfrEhzQm7pmP.png?w=230&thumb=false",
+      "format": "数字版&光盘",
+      "tag": "多人",
+      "link": "",
+      "newRelease": false
+    },
+    {
+      "id": "75",
+      "name": "使命召唤17 黑色行动冷战",
+      "image": "https://image.api.playstation.com/vulcan/img/rnd/202111/2000/U7p0shHsOLlc504vClDX12aO.png?w=230&thumb=false",
+      "format": "数字版&光盘",
+      "tag": "多人",
+      "link": "",
+      "newRelease": false
+    },
+    {
+      "id": "76",
+      "name": "使命召唤22 黑色行动7",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202508/2119/e4452d0c284fa9ab9fef015fe55e5414d1b9962835bc9d0b.png?w=230&thumb=false",
+      "format": "数字版&光盘",
+      "tag": "多人",
+      "link": "",
+      "newRelease": false
     }
   ]
 }
