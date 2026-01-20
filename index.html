@@ -1,770 +1,843 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>柴哒赁电玩游戏库展示</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-        }
-        
-        body {
-            background-color: #f5f5f5;
-            min-height: 100vh;
-        }
-        
-        header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 15px 20px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        header h1 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 600;
-        }
-        
-        /* 公告栏 */
-        .announcement {
-            background-color: #fff;
-            padding: 10px 20px;
-            text-align: center;
-            border-bottom: 1px solid #e0e0e0;
-            font-size: 16px;
-            color: #333;
-            font-weight: 500;
-        }
-        
-        /* 即将上新 - 与游戏列表保持一致的布局 */
-        .new-releases {
-            background-color: #fff;
-            margin: 20px;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .new-releases h2 {
-            margin-bottom: 15px;
-            color: #e74c3c;
-            font-size: 20px;
-            border-left: 4px solid #e74c3c;
-            padding-left: 10px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .new-releases h2::before {
-            content: "🔥";
-            margin-right: 8px;
-        }
-        
-        /* 直接使用游戏列表容器的样式 */
-        .new-release-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            grid-auto-flow: dense;
-            gap: 20px;
-            min-height: 200px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        
-        /* 确保游戏卡片在容器中正确显示 */
-        .new-release-container .game-card {
-            width: 100%;
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        /* 在响应式设计中与游戏列表保持一致 */
-        @media (max-width: 768px) {
-            .new-release-container {
-                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            }
-        }
-        
-        .new-release-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        
-        .new-release-card .game-image-container {
-            position: relative;
-            padding-top: 71.4%; /* 黄金比例 16:11 */
-            overflow: hidden;
-        }
-        
-        .new-release-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 4px;
-        }
-        
-        .new-release-info {
-            padding: 12px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .new-release-title {
-            font-size: 16px;
-            font-weight: 500;
-            color: #333;
-            margin: 0 0 6px 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        
-        .new-release-format {
-            font-size: 14px;
-            color: #666;
-            margin: 0;
-        }
-        
-        .new-release-badge {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background-color: #e74c3c;
-            color: white;
-            font-size: 12px;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: 600;
-            z-index: 10;
-        }
-        
-        /* 双行滚动 Banner */
-        .banner-container {
-            background-color: #fff;
-            margin: 20px;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .banner-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 8px;
-        }
-        
-        .banner-wrapper {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-        }
-        
-        .banner-column {
-            flex: 1;
-        }
-        
-        .banner-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            padding: 8px;
-            border-radius: 6px;
-            transition: background-color 0.3s ease;
-        }
-        
-        .banner-item:hover {
-            background-color: #f8f9fa;
-        }
-        
-        .banner-image {
-            width: 60px;
-            height: 40px;
-            object-fit: cover;
-            border-radius: 4px;
-            margin-right: 10px;
-        }
-        
-        .banner-title {
-            font-size: 14px;
-            font-weight: 500;
-            color: #333;
-            flex: 1;
-        }
-        
-        .top-badge {
-            display: inline-block;
-            background-color: #e74c3c;
-            color: white;
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 10px;
-            margin-left: 5px;
-            font-weight: 600;
-        }
-        
-        /* 搜索与排序区域 */
-        .search-sort-area {
-            background-color: #fff;
-            margin: 20px;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .search-container {
-            display: flex;
-            align-items: center;
-            background-color: #f8f9fa;
-            border-radius: 6px;
-            padding: 0 15px;
-            height: 40px;
-        }
-        
-        .search-container input {
-            flex: 1;
-            border: none;
-            background: transparent;
-            height: 100%;
-            font-size: 14px;
-            color: #333;
-            outline: none;
-        }
-        
-        .search-container::before {
-            content: "🔍";
-            margin-right: 10px;
-            color: #666;
-        }
-        
-        .sort-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .sort-container label {
-            font-size: 14px;
-            color: #333;
-            font-weight: 500;
-        }
-        
-        .sort-container select {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            background-color: white;
-            cursor: pointer;
-            outline: none;
-        }
-        
-        .sort-container select:hover {
-            border-color: #3498db;
-        }
-        
-        /* 游戏列表容器 */
-        .games-container {
-            background-color: #fff;
-            margin: 20px;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 20px;
-            min-height: 200px;
-        }
-        
-        /* 在手机小屏时，游戏列表显示两列 */
-        @media (max-width: 768px) {
-            .games-container {
-                grid-template-columns: repeat(2, 1fr);
-                margin: 10px;
-                padding: 15px;
-                gap: 15px;
-            }
-        }
-        
-        /* 游戏卡片 */
-        .game-card {
-            background-color: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        .game-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-        }
-        
-        .game-image-container {
-            position: relative;
-            height: 160px;
-            overflow: hidden;
-            background-color: #f5f5f5;
-        }
-        
-        .game-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-        
-        .game-card:hover .game-image {
-            transform: scale(1.05);
-        }
-        
-        .top-left-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: #e74c3c;
-            color: white;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 4px 8px;
-            border-radius: 4px;
-            z-index: 10;
-        }
-        
-        .game-tag {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(52, 152, 219, 0.9);
-            color: white;
-            font-size: 11px;
-            padding: 3px 8px;
-            border-radius: 12px;
-            z-index: 10;
-        }
-        
-        .game-info {
-            padding: 15px;
-        }
-        
-        .game-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 8px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        
-        .game-format {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 12px;
-        }
-        
-        .btn {
-            display: inline-block;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            text-align: center;
-        }
-        
-        .btn-add {
-            background-color: #27ae60;
-            color: white;
-        }
-        
-        .btn-add:hover {
-            background-color: #229954;
-        }
-        
-        /* 加载更多按钮 */
-        #loadMore {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            margin: 20px auto;
-            display: block;
-            transition: background-color 0.3s ease;
-        }
-        
-        #loadMore:hover {
-            background-color: #2980b9;
-        }
-        
-        /* 底部固定按钮 */
-        #selectedBtn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 12px 16px;
-            border-radius: 50px;
-            min-width: 60px;
-            height: 60px;
-            font-size: 14px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            white-space: nowrap;
-            overflow: visible;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            z-index: 100;
-        }
-        
-        #selectedBtn:hover {
-            background-color: #c0392b;
-            transform: scale(1.1);
-        }
-        
-        /* 遮罩层 */
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 999;
-            display: none;
-        }
-        
-        /* 底部弹出清单 */
-        #selectedPanel {
-            position: fixed;
-            bottom: -100%;
-            left: 0;
-            right: 0;
-            background-color: white;
-            border-top-left-radius: 16px;
-            border-top-right-radius: 16px;
-            padding: 30px 20px 20px;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
-            z-index: 1000;
-            transition: bottom 0.3s ease;
-            max-height: 70vh;
-            overflow-y: auto;
-        }
-        
-        #selectedPanel.active {
-            bottom: 0;
-        }
-        
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .panel-header h3 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-        }
-        
-        .close-panel {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #666;
-            padding: 0;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: background-color 0.3s ease;
-        }
-        
-        .close-panel:hover {
-            background-color: #f5f5f5;
-        }
-        
-        #selectedList {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .selected-item {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            position: relative;
-        }
-        
-        .selected-item img {
-            width: 60px;
-            height: 40px;
-            object-fit: cover;
-            border-radius: 4px;
-            margin-right: 12px;
-        }
-        
-        .selected-item-info {
-            flex: 1;
-        }
-        
-        .selected-item-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 2px;
-        }
-        
-        .selected-item-format {
-            font-size: 12px;
-            color: #666;
-        }
-        
-        .selected-item-remove {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s ease;
-        }
-        
-        .selected-item-remove:hover {
-            background-color: #c0392b;
-        }
-        
-        .panel-actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .panel-actions .btn {
-            flex: 1;
-        }
-        
-        .btn-copy {
-            background-color: #3498db;
-            color: white;
-        }
-        
-        .btn-copy:hover {
-            background-color: #2980b9;
-        }
-        
-        .btn-clear {
-            background-color: #95a5a6;
-            color: white;
-        }
-        
-        .btn-clear:hover {
-            background-color: #7f8c8d;
-        }
-        
-        /* 状态提示 */
-        #status {
-            text-align: center;
-            padding: 20px;
-            color: #666;
-            font-size: 14px;
-        }
-        
-        /* 管理员入口 */
-        .admin-login {
-            position: fixed;
-            bottom: 100px;
-            right: 20px;
-            background-color: #95a5a6;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 20px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            z-index: 100;
-        }
-        
-        .admin-login:hover {
-            background-color: #7f8c8d;
-            transform: scale(1.1);
-        }
-        
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            .games-container {
-                margin: 10px;
-            }
-            
-            .search-sort-area, .banner-container, .new-releases {
-                margin: 10px;
-            }
-            
-            .banner-wrapper {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .search-container input {
-                font-size: 13px;
-            }
-            
-            header h1 {
-                font-size: 24px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-          
-            .game-info {
-                padding: 12px;
-            }
-            
-            .game-title {
-                font-size: 15px;
-            }
-            
-            .btn {
-                font-size: 13px;
-                padding: 7px 14px;
-            }
-            
-            header h1 {
-                font-size: 20px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>游戏平台库</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 16px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    /* 滚动公告 */
+    .announcement-bar {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      padding: 8px 16px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .announcement-text {
+      font-size: 14px;
+      color: #ca8a04;
+      white-space: nowrap;
+      animation: scroll-left 20s linear infinite;
+    }
+
+    @keyframes scroll-left {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto 16px;
+    }
+
+    .search-box input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: white;
+      color: var(--text);
+      font-size: 15px;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .search-icon {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .search-icon:hover {
+      background: var(--primary-hover);
+    }
+
+    /* 平台 + 排序 */
+    .platform-sort-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .platform-filter {
+      display: flex;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .platform-btn {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 20px;
+      white-space: nowrap;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .platform-btn.active, .platform-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .sort-toggle {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text-muted);
+      white-space: nowrap;
+      position: relative;
+    }
+
+    .sort-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      z-index: 100;
+      display: none;
+      margin-top: 4px;
+    }
+
+    .sort-menu.show {
+      display: block;
+    }
+
+    .sort-option {
+      padding: 8px 16px;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .sort-option:hover {
+      background: #f1f5f9;
+    }
+
+    .sort-option.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* 游戏列表：响应式两列 */
+    .game-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    @media (min-width: 769px) {
+      .game-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+    }
+
+    .game-card {
+      display: flex;
+      background: var(--card-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      position: relative;
+      border: 1px solid var(--border);
+    }
+
+    .game-image-container {
+      position: relative;
+      margin-right: 16px;
+    }
+
+    .game-image {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    .featured-tag {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: var(--primary);
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 20px;
+      z-index: 2;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .game-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .game-name {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .tag-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .tag {
+      background: #f1f5f9;
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* 操作按钮组 */
+    .action-buttons {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .action-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: white;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    .action-btn.info {
+      color: var(--primary);
+    }
+
+    .action-btn.link {
+      color: #7c3aed;
+    }
+
+    .action-btn.add {
+      background: var(--primary);
+      color: white;
+    }
+
+    .action-btn.add.added {
+      background: #10b981;
+      font-size: 10px;
+    }
+
+    /* 清单栏 */
+    .list-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      padding: 16px;
+      box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+      z-index: 100;
+      max-height: 40vh;
+      overflow-y: auto;
+      border-top: 1px solid var(--border);
+    }
+
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .list-title {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 16px;
+    }
+
+    .list-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .copy-btn {
+      background: var(--primary);
+      color: white;
+    }
+
+    .clear-btn {
+      background: #ef4444;
+      color: white;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .list-items {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .list-item {
+      font-size: 15px;
+      padding: 6px 0;
+      color: var(--text);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* 移除按钮 */
+    .remove-btn {
+      background: none;
+      border: none;
+      color: #ef4444;
+      font-size: 18px;
+      cursor: pointer;
+      margin-left: 8px;
+      padding: 0;
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .remove-btn:hover {
+      color: #b91c1c;
+    }
+
+    /* 弹窗模态框 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 90vw;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .modal-body {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text);
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>🎮 柴哒赁电玩游戏库展示</h1>
-    </header>
+
+  <!-- 标题 + 公告 + 搜索 -->
+  <div class="header">
+    <h1 id="title">游戏平台库</h1>
     
-    <div id="announcement" class="announcement">🎉 请按下单套餐游戏数量按需选择，游戏后期可10元一次更换哦~</div>
-    
-    <!-- 即将上新区域 -->
-    <div class="new-releases">
-        <h2>即将上新----------新游选项会有差价哦~详情联系客服咨询。</h2>
-        <div id="newReleaseContainer" class="new-release-container"></div>
+    <!-- 滚动公告 -->
+    <div class="announcement-bar">
+      <div class="announcement-text" id="announcementText">加载中...</div>
     </div>
-    
-    <!-- 搜索与排序区域 -->
-    <div class="search-sort-area">
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="搜索游戏名称..." oninput="filterAndSort()">
-        </div>
-        <div class="sort-container">
-            <label for="sortSelect">排序方式：</label>
-            <select id="sortSelect" onchange="filterAndSort()">
-                <option value="default">默认排序</option>
-                <option value="name-asc">名称 A-Z</option>
-                <option value="name-desc">名称 Z-A</option>
-            </select>
-        </div>
+
+    <!-- 搜索框 -->
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="搜索游戏名称或标签..." />
+      <button class="search-icon" onclick="performSearch()">🔍</button>
     </div>
-        <!-- 双行滚动 Banner -->
-    <div id="bannerContainer" class="banner-container">
-        <div class="banner-title">🌟 可选游戏列表，其他游戏可咨询客服详情~</div>
-        <div class="banner-wrapper">
-            <div id="bannerForward" class="banner-column"></div>
-            <div id="bannerBackward" class="banner-column"></div>
-        </div>
+  </div>
+
+  <!-- 平台选择 + 排序 -->
+  <div class="platform-sort-container">
+    <div class="platform-filter" id="platformFilter">
+      <!-- 动态生成 -->
     </div>
-    <!-- 状态提示 -->
-    <div id="status"></div>
-    
-    <!-- 游戏列表容器 -->
-    <div id="gamesContainer" class="games-container"></div>
-    
-    <!-- 加载更多按钮 -->
-    <button id="loadMore" onclick="loadMore()">加载更多</button>
-    
-    <!-- 底部弹出清单 -->
-    <div id="selectedPanel">
-        <div class="panel-header">
-            <h3>已选游戏</h3>
-            <button class="close-panel" onclick="closeSelectedPanel()">×</button>
-        </div>
-        <div id="selectedList"></div>
-        <div class="panel-actions">
-            <button class="btn btn-copy" onclick="copySelected()">复制名称</button>
-            <button class="btn btn-clear" onclick="clearSelected()">清空清单</button>
-        </div>
+    <div class="sort-toggle" id="sortToggle">
+      排序 ▼
+      <div class="sort-menu" id="sortMenu">
+        <div class="sort-option active" data-sort="custom">自定义排序</div>
+        <div class="sort-option" data-sort="name">按名称 A-Z</div>
+      </div>
     </div>
-    
-    <!-- 遮罩层 -->
-    <div id="overlay" onclick="closeSelectedPanel()"></div>
-    
-    <!-- 底部固定按钮 -->
-    <button id="selectedBtn" onclick="toggleSelectedPanel()">📋</button>
-    
-    <!-- 管理员登录按钮 -->
-    <button class="admin-login" onclick="adminLogin()">🔒</button>
-    
-    <script src="script.js"></script>
-    
-    <script>
-        // 页面加载时执行
-        document.addEventListener('DOMContentLoaded', async function() {
-            // 加载数据
-            const loadSuccess = await loadData();
-            if (loadSuccess) {
-                filterAndSort();
-                setupInfiniteScroll();
-            }
+  </div>
+
+  <!-- 游戏列表 -->
+  <div class="game-list" id="gameList">
+    <!-- 动态填充 -->
+  </div>
+
+  <!-- 底部清单栏 -->
+  <div class="list-bar" id="listBar" style="display: none;">
+    <div class="list-header">
+      <div class="list-title">已选游戏</div>
+      <div class="list-actions">
+        <button class="btn copy-btn" onclick="copyGameNames()">复制名称</button>
+        <button class="btn clear-btn" onclick="clearList()">清空</button>
+      </div>
+    </div>
+    <div class="list-items" id="listItems"></div>
+  </div>
+
+  <script>
+    let games = [];
+    let categories = [];
+    let currentPlatform = null;
+    let currentSort = 'custom';
+    let searchQuery = '';
+    let selectedList = { category: null, games: [] };
+
+    // 5次点击进入后台
+    let clickCount = 0;
+    document.getElementById('title').addEventListener('click', () => {
+      clickCount++;
+      if (clickCount >= 5) {
+        clickCount = 0;
+        const pwd = prompt('请输入密码进入后台管理：');
+        if (pwd === 'Wcs160520') {
+          window.location.href = 'admin.html';
+        } else {
+          alert('密码错误！');
+        }
+      }
+    });
+
+    // 排序菜单
+    document.getElementById('sortToggle').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const menu = document.getElementById('sortMenu');
+      menu.classList.toggle('show');
+    });
+
+    document.addEventListener('click', () => {
+      document.getElementById('sortMenu').classList.remove('show');
+    });
+
+    document.querySelectorAll('.sort-option').forEach(opt => {
+      opt.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.querySelectorAll('.sort-option').forEach(o => o.classList.remove('active'));
+        opt.classList.add('active');
+        currentSort = opt.dataset.sort;
+        renderGames();
+        document.getElementById('sortMenu').classList.remove('show');
+      });
+    });
+
+    // 加载数据
+    async function loadGames() {
+      try {
+        const res = await fetch('game.json');
+        if (!res.ok) throw new Error('无法加载 game.json');
+        const data = await res.json();
+
+        // 公告
+        const announcement = data.meta?.announcement || '欢迎使用游戏平台库！';
+        document.getElementById('announcementText').textContent = announcement;
+
+        games = data.games || [];
+        categories = data.categories || [];
+
+        initUI();
+        if (categories.length > 0) {
+          currentPlatform = categories[0].id;
+        }
+        renderGames();
+      } catch (err) {
+        console.error(err);
+        alert('加载失败，请检查 game.json');
+      }
+    }
+
+    function initUI() {
+      const platformFilter = document.getElementById('platformFilter');
+      platformFilter.innerHTML = '';
+
+      categories.forEach(cat => {
+        const btn = document.createElement('div');
+        btn.className = 'platform-btn';
+        btn.dataset.platform = cat.id;
+        btn.textContent = cat.name;
+        btn.addEventListener('click', () => switchPlatform(cat.id));
+        platformFilter.appendChild(btn);
+      });
+
+      if (categories.length > 0) {
+        platformFilter.querySelector('.platform-btn').classList.add('active');
+      }
+    }
+
+    function switchPlatform(platformId) {
+      document.querySelectorAll('.platform-btn').forEach(btn => btn.classList.remove('active'));
+      const btn = Array.from(document.querySelectorAll('.platform-btn')).find(b => b.dataset.platform === platformId);
+      if (btn) btn.classList.add('active');
+
+      currentPlatform = platformId;
+
+      if (selectedList.games.length > 0 && selectedList.category !== null && selectedList.category !== currentPlatform) {
+        alert(`清单中已有【${getCategoryName(selectedList.category)}】，请先清空再切换平台`);
+        currentPlatform = selectedList.category;
+        document.querySelector(`[data-platform="${selectedList.category}"]`)?.classList.add('active');
+      }
+
+      renderGames();
+    }
+
+    function getCategoryName(id) {
+      const cat = categories.find(c => c.id === id);
+      return cat ? cat.name : '未知平台';
+    }
+
+    function performSearch() {
+      searchQuery = document.getElementById('searchInput').value.trim();
+      renderGames();
+    }
+
+    function renderGames() {
+      const gameList = document.getElementById('gameList');
+      gameList.innerHTML = '';
+
+      let filtered = games.filter(game => {
+        if (currentPlatform && game.category !== currentPlatform) return false;
+        if (searchQuery) {
+          const q = searchQuery.toLowerCase();
+          if (!game.name.toLowerCase().includes(q) &&
+              !game.tags.some(t => t.toLowerCase().includes(q))) return false;
+        }
+        return true;
+      });
+
+      if (currentSort === 'name') {
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (currentSort === 'custom') {
+        filtered.sort((a, b) => (a.customOrder || 0) - (b.customOrder || 0));
+      }
+
+      filtered.forEach(game => {
+        const card = document.createElement('div');
+        card.className = 'game-card';
+
+        const imgContainer = document.createElement('div');
+        imgContainer.className = 'game-image-container';
+
+        const img = document.createElement('img');
+        img.className = 'game-image';
+        img.src = game.image || 'https://via.placeholder.com/80?text=Game';
+        img.alt = game.name;
+        imgContainer.appendChild(img);
+
+        if (game.badge && game.badge.trim()) {
+          const tag = document.createElement('div');
+          tag.className = 'featured-tag';
+          tag.textContent = game.badge.trim();
+          imgContainer.appendChild(tag);
+        }
+
+        const info = document.createElement('div');
+        info.className = 'game-info';
+
+        const name = document.createElement('div');
+        name.className = 'game-name';
+        name.textContent = game.name;
+
+        const tagContainer = document.createElement('div');
+        tagContainer.className = 'tag-container';
+        (game.tags || []).forEach(tag => {
+          const tagEl = document.createElement('span');
+          tagEl.className = 'tag';
+          tagEl.textContent = tag;
+          tagContainer.appendChild(tagEl);
         });
-    </script>
+
+        info.appendChild(name);
+        info.appendChild(tagContainer);
+        card.appendChild(imgContainer);
+        card.appendChild(info);
+
+        // 操作按钮组
+        const actionButtons = document.createElement('div');
+        actionButtons.className = 'action-buttons';
+
+        // 介绍按钮
+        if (game.description && game.description.trim()) {
+          const infoBtn = document.createElement('button');
+          infoBtn.className = 'action-btn info';
+          infoBtn.innerHTML = 'ℹ️';
+          infoBtn.onclick = (e) => {
+            e.stopPropagation();
+            showDescriptionModal(game.name, game.description);
+          };
+          actionButtons.appendChild(infoBtn);
+        }
+
+        // 链接按钮
+        if (game.url && game.url.trim()) {
+          const linkBtn = document.createElement('button');
+          linkBtn.className = 'action-btn link';
+          linkBtn.innerHTML = '🔗';
+          linkBtn.onclick = (e) => {
+            e.stopPropagation();
+            window.open(game.url, '_blank');
+          };
+          actionButtons.appendChild(linkBtn);
+        }
+
+        // 加清单按钮
+        const addBtn = document.createElement('button');
+        addBtn.className = 'action-btn add';
+        addBtn.textContent = selectedList.games.some(g => g.id === game.id) ? '✓' : '+';
+        addBtn.onclick = () => addToList(game);
+        if (selectedList.games.some(g => g.id === game.id)) {
+          addBtn.classList.add('added');
+        }
+        actionButtons.appendChild(addBtn);
+
+        card.appendChild(actionButtons);
+        gameList.appendChild(card);
+      });
+
+      updateListBar();
+    }
+
+    // ✅ 关键：加入清单（超4个仅提示，不阻止）
+    function addToList(game) {
+      if (selectedList.games.length >= 4) {
+        alert('亲，套餐通常是最多4款游戏哦，超出后需要额外下单游戏卡，如有需求请及时与客服联系哦。');
+      }
+
+      if (selectedList.category === null) {
+        selectedList.category = game.category;
+        selectedList.games.push(game);
+        updateListBar();
+        renderGames();
+        return;
+      }
+
+      if (selectedList.category === game.category) {
+        if (!selectedList.games.some(g => g.id === game.id)) {
+          selectedList.games.push(game);
+          updateListBar();
+          renderGames();
+        }
+      } else {
+        alert(`清单中已有【${getCategoryName(selectedList.category)}】，不能混入其他平台`);
+      }
+    }
+
+    // ✅ 新增：从清单中移除单个游戏
+    function removeFromList(gameId) {
+      selectedList.games = selectedList.games.filter(g => g.id !== gameId);
+      if (selectedList.games.length === 0) {
+        selectedList.category = null;
+      }
+      updateListBar();
+      renderGames();
+    }
+
+    // ✅ 更新：清单栏带移除按钮
+    function updateListBar() {
+      const listBar = document.getElementById('listBar');
+      const listItems = document.getElementById('listItems');
+      const count = selectedList.games.length;
+
+      if (count === 0) {
+        listBar.style.display = 'none';
+        return;
+      }
+
+      listBar.style.display = 'block';
+      listItems.innerHTML = '';
+      selectedList.games.forEach(game => {
+        const item = document.createElement('div');
+        item.className = 'list-item';
+        item.innerHTML = `
+          ${game.name}
+          <button class="remove-btn" onclick="removeFromList('${game.id}')">×</button>
+        `;
+        listItems.appendChild(item);
+      });
+    }
+
+    function copyGameNames() {
+      if (selectedList.games.length === 0) return;
+      const names = selectedList.games.map(g => g.name).join('\n');
+      navigator.clipboard.writeText(names)
+        .then(() => alert('已复制到剪贴板'))
+        .catch(err => alert('复制失败'));
+    }
+
+    function clearList() {
+      selectedList = { category: null, games: [] };
+      updateListBar();
+      renderGames();
+    }
+
+    function showDescriptionModal(title, content) {
+      let modal = document.getElementById('descriptionModal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'descriptionModal';
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+          <div class="modal-content">
+            <div class="modal-header">
+              <div class="modal-title"></div>
+              <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body"></div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+
+        modal.querySelector('.close-modal').onclick = () => {
+          modal.classList.remove('show');
+        };
+
+        modal.onclick = (e) => {
+          if (e.target === modal) modal.classList.remove('show');
+        };
+      }
+
+      modal.querySelector('.modal-title').textContent = title;
+      modal.querySelector('.modal-body').textContent = content;
+      modal.classList.add('show');
+    }
+
+    window.addEventListener('DOMContentLoaded', loadGames);
+  </script>
+
 </body>
 </html>
