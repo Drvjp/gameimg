@@ -197,7 +197,7 @@
     @media (min-width: 769px) {
       .game-list {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(6, 1fr);
         gap: 20px;
       }
     }
@@ -363,6 +363,21 @@
       color: white;
     }
 
+    .toggle-btn {
+      background: #cbd5e1;
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .toggle-btn:hover {
+      background: #94a3b8;
+    }
+
     .btn:hover {
       opacity: 0.9;
     }
@@ -503,8 +518,9 @@
   <!-- 底部清单栏 -->
   <div class="list-bar" id="listBar" style="display: none;">
     <div class="list-header">
-      <div class="list-title">已选游戏</div>
+      <div class="list-title" id="listTitle">已选游戏</div>
       <div class="list-actions">
+        <button class="btn toggle-btn" id="toggleListBtn" onclick="toggleList()">▼</button>
         <button class="btn copy-btn" onclick="copyGameNames()">复制名称</button>
         <button class="btn clear-btn" onclick="clearList()">清空</button>
       </div>
@@ -519,6 +535,7 @@
     let currentSort = 'custom';
     let searchQuery = '';
     let selectedList = { category: null, games: [] };
+    let isListExpanded = true; // 默认展开
 
     // 5次点击进入后台
     let clickCount = 0;
@@ -732,7 +749,7 @@
       updateListBar();
     }
 
-    // ✅ 关键：加入清单（超4个仅提示，不阻止）
+    // 加入清单（超4个仅提示，不阻止）
     function addToList(game) {
       if (selectedList.games.length >= 4) {
         alert('亲，套餐通常是最多4款游戏哦，超出后需要额外下单游戏卡，如有需求请及时与客服联系哦。');
@@ -757,17 +774,41 @@
       }
     }
 
-    // ✅ 新增：从清单中移除单个游戏
+    // 从清单中移除单个游戏
     function removeFromList(gameId) {
       selectedList.games = selectedList.games.filter(g => g.id !== gameId);
       if (selectedList.games.length === 0) {
         selectedList.category = null;
+        document.getElementById('listBar').style.display = 'none';
+      } else {
+        updateListBar(); // 保持当前展开/收起状态
       }
-      updateListBar();
       renderGames();
     }
 
-    // ✅ 更新：清单栏带移除按钮
+    // 切换清单抽屉展开/收起
+    function toggleList() {
+      const listItems = document.getElementById('listItems');
+      const toggleBtn = document.getElementById('toggleListBtn');
+      const listTitle = document.getElementById('listTitle');
+      const count = selectedList.games.length;
+
+      if (isListExpanded) {
+        // 收起
+        listItems.style.display = 'none';
+        toggleBtn.textContent = '▲';
+        listTitle.textContent = `已选 ${count} 款游戏`;
+      } else {
+        // 展开
+        listItems.style.display = 'flex';
+        toggleBtn.textContent = '▼';
+        listTitle.textContent = '已选游戏';
+      }
+
+      isListExpanded = !isListExpanded;
+    }
+
+    // 更新清单栏
     function updateListBar() {
       const listBar = document.getElementById('listBar');
       const listItems = document.getElementById('listItems');
@@ -789,6 +830,17 @@
         `;
         listItems.appendChild(item);
       });
+
+      // 如果当前是收起状态，保持收起；否则保持展开
+      if (!isListExpanded) {
+        listItems.style.display = 'none';
+        document.getElementById('listTitle').textContent = `已选 ${count} 款游戏`;
+        document.getElementById('toggleListBtn').textContent = '▲';
+      } else {
+        listItems.style.display = 'flex';
+        document.getElementById('listTitle').textContent = '已选游戏';
+        document.getElementById('toggleListBtn').textContent = '▼';
+      }
     }
 
     function copyGameNames() {
