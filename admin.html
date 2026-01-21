@@ -153,6 +153,20 @@
       font-weight: 600;
     }
 
+    .toggle-visibility {
+      background: #cbd5e1;
+      color: var(--text);
+      border: none;
+      padding: 4px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .toggle-visibility.hidden {
+      background: #f87171;
+    }
+
     .add-category-form {
       display: flex;
       gap: 12px;
@@ -195,6 +209,9 @@
       margin-bottom: 16px;
       color: var(--primary);
       font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .game-table {
@@ -209,9 +226,10 @@
     .game-table colgroup col:nth-child(4) { width: 12%; } /* 平台 */
     .game-table colgroup col:nth-child(5) { width: 12%; } /* 标签 */
     .game-table colgroup col:nth-child(6) { width: 8%; }  /* 角标 */
-    .game-table colgroup col:nth-child(7) { width: 10%; } /* 链接 */
-    .game-table colgroup col:nth-child(8) { width: 10%; } /* 排序 */
-    .game-table colgroup col:nth-child(9) { width: 17%; } /* 操作 */
+    .game-table colgroup col:nth-child(7) { width: 8%; }  /* 介绍 */
+    .game-table colgroup col:nth-child(8) { width: 10%; } /* 链接 */
+    .game-table colgroup col:nth-child(9) { width: 10%; } /* 排序 */
+    .game-table colgroup col:nth-child(10) { width: 9%; }/* 操作 */
 
     .game-table th,
     .game-table td {
@@ -265,6 +283,15 @@
 
     .draggable-row {
       cursor: move;
+    }
+
+    /* 编辑表单容器 */
+    .edit-form-container {
+      background: #f8fafc;
+      padding: 16px;
+      border-radius: 12px;
+      margin-top: 8px;
+      border: 1px dashed var(--border);
     }
 
     /* 悬浮按钮 */
@@ -341,9 +368,6 @@
   <!-- 游戏管理 -->
   <div class="section">
     <h2>游戏管理（可拖拽排序）</h2>
-    <div id="gameFormContainer">
-      <!-- 动态表单 -->
-    </div>
     <div id="gameGroups">
       <!-- 按平台分组渲染 -->
     </div>
@@ -351,6 +375,7 @@
 
   <!-- 右下角悬浮按钮 -->
   <div class="admin-floating-buttons">
+    <button class="floating-btn" onclick="showAddGameForm()">+ 添加新游戏</button>
     <button class="floating-btn export" onclick="exportJson()">导出 game.json</button>
     <button class="floating-btn copy" onclick="copyJsonData()">复制 JSON 数据</button>
   </div>
@@ -368,12 +393,6 @@
         const res = await fetch('game.json');
         if (!res.ok) throw new Error('无法加载 game.json');
         data = await res.json();
-
-        // 填充公告
-        if (data.meta?.announcement) {
-          document.getElementById('announcementInput').value = data.meta.announcement;
-        }
-
         renderCategories();
         renderGames();
       } catch (err) {
@@ -390,19 +409,34 @@
       alert('公告已保存');
     }
 
-    // 渲染品类
+    // 渲染品类（带可见性开关）
     function renderCategories() {
       const list = document.getElementById('categoryList');
       list.innerHTML = '';
       data.categories.forEach(cat => {
+        const isVisible = cat.visible !== false; // 默认 true
+
         const item = document.createElement('div');
         item.className = 'category-item';
         item.innerHTML = `
           <span class="category-name" onclick="editCategoryName('${cat.id}', this)">${cat.name}</span>
+          <button class="toggle-visibility ${isVisible ? '' : 'hidden'}" 
+                  onclick="toggleCategoryVisibility('${cat.id}')">
+            ${isVisible ? '👁️' : '🙈'}
+          </button>
           <button onclick="deleteCategory('${cat.id}')">删除</button>
         `;
         list.appendChild(item);
       });
+    }
+
+    function toggleCategoryVisibility(id) {
+      const cat = data.categories.find(c => c.id === id);
+      if (cat) {
+        cat.visible = cat.visible === false; // 切换
+        renderCategories();
+        renderGames(); // 重新渲染游戏（隐藏/显示分组）
+      }
     }
 
     function editCategoryName(id, element) {
@@ -425,7 +459,7 @@
         return;
       }
       const newId = 'cat_' + Date.now();
-      data.categories.push({ id: newId, name: name });
+      data.categories.push({ id: newId, name: name, visible: true });
       renderCategories();
       document.getElementById('newCategoryName').value = '';
     }
@@ -447,21 +481,25 @@
       return Math.max(...data.games.map(g => g.customOrder || 0));
     }
 
-    // 渲染游戏
+    // 渲染游戏（按平台分组 + 拖拽）
     function renderGames() {
       const container = document.getElementById('gameGroups');
       container.innerHTML = '';
 
       const groups = {};
       data.categories.forEach(cat => {
+        if (cat.visible === false) return; // 跳过隐藏的品类
         groups[cat.id] = { ...cat, games: [] };
       });
+      // 未分类
       groups[''] = { name: '未分类', games: [] };
 
       data.games.forEach(game => {
         const key = game.category || '';
         if (!groups[key]) {
-          groups[key] = { name: '未知', games: [] };
+          // 如果所属品类被隐藏，则归入“未分类”
+          groups[''].games.push(game);
+          return;
         }
         groups[key].games.push(game);
       });
@@ -486,7 +524,7 @@
 
         table.innerHTML = `
           <colgroup>
-            <col><col><col><col><col><col><col><col><col>
+            <col><col><col><col><col><col><col><col><col><col>
           </colgroup>
           <thead>
             <tr>
@@ -496,6 +534,7 @@
               <th>平台</th>
               <th>标签</th>
               <th>角标</th>
+              <th>介绍</th>
               <th>链接</th>
               <th>排序</th>
               <th>操作</th>
@@ -514,6 +553,10 @@
 
           const platformName = data.categories.find(c => c.id === game.category)?.name || '未分类';
 
+          // 介绍标记
+          const hasDesc = game.description && game.description.trim();
+          const descMark = hasDesc ? '✅' : '❌';
+
           row.innerHTML = `
             <td>${game.id}</td>
             <td><img src="${game.image || ''}" alt="封面"></td>
@@ -521,10 +564,11 @@
             <td>${platformName}</td>
             <td class="tag-cell">${game.tags?.join(', ') || ''}</td>
             <td>${game.badge || ''}</td>
+            <td>${descMark}</td>
             <td class="url-cell">${game.url || ''}</td>
             <td>${game.customOrder || 0}</td>
             <td>
-              <button class="edit-btn" onclick="editGame('${game.id}')">编辑</button>
+              <button class="edit-btn" onclick="editGame('${game.id}', this)">编辑</button>
               <button class="delete-btn" onclick="deleteGame('${game.id}')">删除</button>
             </td>
           `;
@@ -562,8 +606,6 @@
         groupDiv.appendChild(table);
         container.appendChild(groupDiv);
       });
-
-      renderGameForm(null);
     }
 
     function recalculateOrderForGroup(tbody, categoryId) {
@@ -577,69 +619,124 @@
       });
     }
 
-    // 渲染表单
-    function renderGameForm(gameId) {
-      const container = document.getElementById('gameFormContainer');
-      const isEdit = gameId !== null;
-      const game = isEdit ? data.games.find(g => g.id === gameId) : null;
+    // 显示添加新游戏表单（悬浮按钮触发）
+    function showAddGameForm() {
+      // 移除可能存在的旧表单
+      document.querySelectorAll('.edit-form-container').forEach(el => el.remove());
+
+      const formContainer = document.createElement('div');
+      formContainer.className = 'edit-form-container';
+      formContainer.id = 'global-add-form';
 
       const platforms = data.categories.map(c => 
-        `<option value="${c.id}" ${game && game.category === c.id ? 'selected' : ''}>${c.name}</option>`
+        `<option value="${c.id}">${c.name}</option>`
       ).join('');
 
-      const defaultOrder = isEdit ? (game.customOrder || 0) : (getMaxOrder() + 1);
-
-      container.innerHTML = `
+      formContainer.innerHTML = `
         <div class="form-row">
           <div class="form-col">
             <label>游戏名称</label>
-            <input type="text" class="form-control" id="gameName" value="${game ? game.name : ''}">
+            <input type="text" class="form-control" id="gameName" placeholder="输入游戏名称">
           </div>
           <div class="form-col">
             <label>图片 URL</label>
-            <input type="text" class="form-control" id="gameImage" value="${game ? game.image : ''}">
+            <input type="text" class="form-control" id="gameImage" placeholder="图片链接">
           </div>
           <div class="form-col">
             <label>平台</label>
             <select class="form-control" id="gameCategory">
-              <option value="">-- 选择平台 --</option>
               ${platforms}
             </select>
           </div>
           <div class="form-col">
             <label>标签（逗号分隔）</label>
-            <input type="text" class="form-control" id="gameTags" value="${game ? game.tags?.join(', ') : ''}">
+            <input type="text" class="form-control" id="gameTags" placeholder="动作, 冒险">
           </div>
           <div class="form-col">
             <label>角标标签（如 VR、新）</label>
-            <input type="text" class="form-control" id="gameBadge" value="${game ? (game.badge || '') : ''}">
+            <input type="text" class="form-control" id="gameBadge" placeholder="VR">
           </div>
           <div class="form-col">
             <label>游戏链接（URL）</label>
-            <input type="text" class="form-control" id="gameUrl" value="${game ? (game.url || '') : ''}">
+            <input type="text" class="form-control" id="gameUrl" placeholder="https://...">
           </div>
           <div class="form-col">
             <label>游戏介绍（留空则不显示）</label>
-            <textarea class="form-control" id="gameDescription" rows="3">${game ? (game.description || '') : ''}</textarea>
+            <textarea class="form-control" id="gameDescription" rows="2" placeholder="详细介绍..."></textarea>
           </div>
           <div class="form-col">
             <label>自定义排序</label>
-            <input type="number" class="form-control" id="gameOrder" value="${defaultOrder}">
+            <input type="number" class="form-control" id="gameOrder" value="${getMaxOrder() + 1}">
           </div>
         </div>
-        <button class="floating-btn" style="width:auto;" onclick="${isEdit ? `saveGame('${gameId}')` : 'addNewGame()'}">
-          ${isEdit ? '保存修改' : '添加新游戏'}
-        </button>
-        ${isEdit ? `<button class="floating-btn copy" style="width:auto; margin-left:12px;" onclick="cancelEdit()">取消</button>` : ''}
+        <button class="floating-btn" style="width:auto; margin-top:8px;" onclick="addNewGame()">添加新游戏</button>
+        <button class="floating-btn copy" style="width:auto; margin-left:12px; margin-top:8px;" onclick="document.getElementById('global-add-form').remove()">取消</button>
       `;
+
+      // 插入到游戏管理区顶部
+      const gameGroups = document.getElementById('gameGroups');
+      gameGroups.parentNode.insertBefore(formContainer, gameGroups);
     }
 
-    function editGame(id) {
-      renderGameForm(id);
-    }
+    // 编辑游戏（表单插入到当前行下方）
+    function editGame(id, editBtn) {
+      // 移除其他编辑表单
+      document.querySelectorAll('.edit-form-container').forEach(el => el.remove());
 
-    function cancelEdit() {
-      renderGameForm(null);
+      const game = data.games.find(g => g.id === id);
+      if (!game) return;
+
+      const formContainer = document.createElement('div');
+      formContainer.className = 'edit-form-container';
+
+      const platforms = data.categories.map(c => 
+        `<option value="${c.id}" ${game.category === c.id ? 'selected' : ''}>${c.name}</option>`
+      ).join('');
+
+      formContainer.innerHTML = `
+        <div class="form-row">
+          <div class="form-col">
+            <label>游戏名称</label>
+            <input type="text" class="form-control" id="gameName" value="${game.name}">
+          </div>
+          <div class="form-col">
+            <label>图片 URL</label>
+            <input type="text" class="form-control" id="gameImage" value="${game.image || ''}">
+          </div>
+          <div class="form-col">
+            <label>平台</label>
+            <select class="form-control" id="gameCategory">
+              ${platforms}
+            </select>
+          </div>
+          <div class="form-col">
+            <label>标签（逗号分隔）</label>
+            <input type="text" class="form-control" id="gameTags" value="${game.tags?.join(', ') || ''}">
+          </div>
+          <div class="form-col">
+            <label>角标标签（如 VR、新）</label>
+            <input type="text" class="form-control" id="gameBadge" value="${game.badge || ''}">
+          </div>
+          <div class="form-col">
+            <label>游戏链接（URL）</label>
+            <input type="text" class="form-control" id="gameUrl" value="${game.url || ''}">
+          </div>
+          <div class="form-col">
+            <label>游戏介绍（留空则不显示）</label>
+            <textarea class="form-control" id="gameDescription" rows="2">${game.description || ''}</textarea>
+          </div>
+          <div class="form-col">
+            <label>自定义排序</label>
+            <input type="number" class="form-control" id="gameOrder" value="${game.customOrder || 0}">
+          </div>
+        </div>
+        <button class="floating-btn" style="width:auto; margin-top:8px;" onclick="saveGame('${id}')">保存修改</button>
+        <button class="floating-btn copy" style="width:auto; margin-left:12px; margin-top:8px;" onclick="this.closest('.edit-form-container').remove()">取消</button>
+      `;
+
+      // 插入到当前行下方
+      const row = editBtn.closest('tr');
+      row.parentNode.insertBefore(formContainer, row.nextSibling);
     }
 
     function saveGame(id) {
@@ -700,6 +797,7 @@
       });
 
       renderGames();
+      document.getElementById('global-add-form')?.remove();
     }
 
     function deleteGame(id) {
