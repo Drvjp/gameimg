@@ -114,30 +114,80 @@
       flex-wrap: wrap;
     }
 
-    .platform-filter {
-      display: flex;
-      gap: 12px;
+    /* 平台筛选滚动容器 */
+    .platform-filter-wrapper {
+      position: relative;
       flex: 1;
       min-width: 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding: 4px 0;
+      border-radius: 12px;
+      background: white;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    .platform-filter-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* 平台按钮组 */
+    .platform-filter {
+      display: flex;
+      gap: 8px;
+      flex: 0 0 auto;
+      padding: 4px 8px;
     }
 
     .platform-btn {
       background: white;
       border: 1px solid var(--border);
-      padding: 8px 16px;
-      border-radius: 20px;
+      padding: 6px 12px;
+      border-radius: 16px;
       white-space: nowrap;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
       cursor: pointer;
       color: var(--text-muted);
       transition: all 0.2s;
+      flex: 0 0 auto;
+      min-width: 60px;
+      text-align: center;
     }
 
     .platform-btn.active, .platform-btn:hover {
       background: var(--primary);
       color: white;
       border-color: var(--primary);
+    }
+
+    /* 滑动指示器 */
+    .scroll-indicator {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.8);
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--text-muted);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .scroll-indicator.left {
+      left: 8px;
+    }
+
+    .scroll-indicator.right {
+      right: 8px;
     }
 
     .sort-toggle {
@@ -498,8 +548,12 @@
 
   <!-- 平台选择 + 排序 -->
   <div class="platform-sort-container">
-    <div class="platform-filter" id="platformFilter">
-      <!-- 动态生成 -->
+    <div class="platform-filter-wrapper">
+      <div class="scroll-indicator left">←</div>
+      <div class="scroll-indicator right">→</div>
+      <div class="platform-filter" id="platformFilter">
+        <!-- 动态生成 -->
+      </div>
     </div>
     <div class="sort-toggle" id="sortToggle">
       排序 ▼
@@ -535,7 +589,7 @@
     let currentSort = 'custom';
     let searchQuery = '';
     let selectedList = { category: null, games: [] };
-    let isListExpanded = true; // 默认展开
+    let isListExpanded = true;
 
     // 5次点击进入后台
     let clickCount = 0;
@@ -581,7 +635,6 @@
         if (!res.ok) throw new Error('无法加载 game.json');
         const data = await res.json();
 
-        // 公告
         const announcement = data.meta?.announcement || '欢迎使用游戏平台库！';
         document.getElementById('announcementText').textContent = announcement;
 
@@ -708,7 +761,6 @@
         const actionButtons = document.createElement('div');
         actionButtons.className = 'action-buttons';
 
-        // 介绍按钮
         if (game.description && game.description.trim()) {
           const infoBtn = document.createElement('button');
           infoBtn.className = 'action-btn info';
@@ -720,7 +772,6 @@
           actionButtons.appendChild(infoBtn);
         }
 
-        // 链接按钮
         if (game.url && game.url.trim()) {
           const linkBtn = document.createElement('button');
           linkBtn.className = 'action-btn link';
@@ -732,7 +783,6 @@
           actionButtons.appendChild(linkBtn);
         }
 
-        // 加清单按钮
         const addBtn = document.createElement('button');
         addBtn.className = 'action-btn add';
         addBtn.textContent = selectedList.games.some(g => g.id === game.id) ? '✓' : '+';
@@ -749,7 +799,6 @@
       updateListBar();
     }
 
-    // 加入清单（超4个仅提示，不阻止）
     function addToList(game) {
       if (selectedList.games.length >= 4) {
         alert('亲，套餐通常是最多4款游戏哦，超出后需要额外下单游戏卡，如有需求请及时与客服联系哦。');
@@ -774,19 +823,17 @@
       }
     }
 
-    // 从清单中移除单个游戏
     function removeFromList(gameId) {
       selectedList.games = selectedList.games.filter(g => g.id !== gameId);
       if (selectedList.games.length === 0) {
         selectedList.category = null;
         document.getElementById('listBar').style.display = 'none';
       } else {
-        updateListBar(); // 保持当前展开/收起状态
+        updateListBar();
       }
       renderGames();
     }
 
-    // 切换清单抽屉展开/收起
     function toggleList() {
       const listItems = document.getElementById('listItems');
       const toggleBtn = document.getElementById('toggleListBtn');
@@ -794,12 +841,10 @@
       const count = selectedList.games.length;
 
       if (isListExpanded) {
-        // 收起
         listItems.style.display = 'none';
         toggleBtn.textContent = '▲';
         listTitle.textContent = `已选 ${count} 款游戏`;
       } else {
-        // 展开
         listItems.style.display = 'flex';
         toggleBtn.textContent = '▼';
         listTitle.textContent = '已选游戏';
@@ -808,7 +853,6 @@
       isListExpanded = !isListExpanded;
     }
 
-    // 更新清单栏
     function updateListBar() {
       const listBar = document.getElementById('listBar');
       const listItems = document.getElementById('listItems');
@@ -831,7 +875,6 @@
         listItems.appendChild(item);
       });
 
-      // 如果当前是收起状态，保持收起；否则保持展开
       if (!isListExpanded) {
         listItems.style.display = 'none';
         document.getElementById('listTitle').textContent = `已选 ${count} 款游戏`;
