@@ -257,7 +257,7 @@
       cursor: move;
     }
 
-    /* 编辑表单容器 - 横向布局：左输入区 + 右按钮区 */
+    /* 编辑/新增表单容器 - 统一横向布局 */
     .edit-form-container {
       background: #f8fafc;
       padding: 16px;
@@ -412,7 +412,7 @@
 
   <!-- 右下角悬浮按钮（缩小常驻） -->
   <div class="admin-floating-buttons">
-    <button class="floating-btn" title="添加新游戏" onclick="showAddGameForm()">+</button>
+    <button class="floating-btn" title="添加新游戏" onclick="showGameForm()">+</button>
     <button class="floating-btn export" title="导出 game.json" onclick="exportJson()">📤</button>
     <button class="floating-btn copy" title="复制 JSON 数据" onclick="copyJsonData()">📋</button>
   </div>
@@ -611,7 +611,7 @@
             <td class="url-cell">${game.url || ''}</td>
             <td>${game.customOrder || 0}</td>
             <td>
-              <button class="edit-btn" onclick="editGame('${game.id}', this)">编辑</button>
+              <button class="edit-btn" onclick="showGameForm('${game.id}', this)">编辑</button>
               <button class="delete-btn" onclick="deleteGame('${game.id}')">删除</button>
             </td>
           `;
@@ -662,8 +662,9 @@
       });
     }
 
-    // 显示添加新游戏表单（横向布局，插入在最后）
-    function showAddGameForm() {
+    // 通用游戏表单（新增/编辑）
+    function showGameForm(id = null, editBtn = null) {
+      // 移除所有旧表单
       document.querySelectorAll('.edit-form-container').forEach(el => el.remove());
 
       const formContainer = document.createElement('div');
@@ -673,81 +674,31 @@
         `<option value="${c.id}">${c.name}</option>`
       ).join('');
 
-      formContainer.innerHTML = `
-        <div class="form-left">
-          <div class="form-field">
-            <label>游戏名称</label>
-            <input type="text" class="form-control" id="gameName" placeholder="输入游戏名称">
-          </div>
-          <div class="form-field">
-            <label>图片 URL</label>
-            <input type="text" class="form-control" id="gameImage" placeholder="图片链接">
-          </div>
-          <div class="form-field">
-            <label>平台</label>
-            <select class="form-control" id="gameCategory">
-              ${platforms}
-            </select>
-          </div>
-          <div class="form-field">
-            <label>标签（逗号分隔）</label>
-            <input type="text" class="form-control" id="gameTags" placeholder="动作, 冒险">
-          </div>
-          <div class="form-field">
-            <label>角标标签</label>
-            <input type="text" class="form-control" id="gameBadge" placeholder="VR">
-          </div>
-          <div class="form-field">
-            <label>游戏链接</label>
-            <input type="text" class="form-control" id="gameUrl" placeholder="https://...">
-          </div>
-          <div class="form-field">
-            <label>游戏介绍</label>
-            <textarea class="form-control" id="gameDescription" rows="1" placeholder="详细介绍..."></textarea>
-          </div>
-          <div class="form-field">
-            <label>自定义排序</label>
-            <input type="number" class="form-control" id="gameOrder" value="${getMaxOrder() + 1}">
-          </div>
-        </div>
-        <div class="form-right">
-          <button class="floating-btn" onclick="addNewGame()">保存新增</button>
-          <button class="floating-btn copy" onclick="this.closest('.edit-form-container').remove()">取消</button>
-        </div>
-      `;
-
-      const gameGroups = document.getElementById('gameGroups');
-      // 插入到最后一个子元素之后（即所有游戏分组的最下方）
-      if (gameGroups.lastChild) {
-        gameGroups.insertBefore(formContainer, gameGroups.lastChild.nextSibling);
-      } else {
-        gameGroups.appendChild(formContainer);
+      let game = null;
+      if (id) {
+        game = data.games.find(g => g.id === id);
+        if (!game) return;
       }
-    }
 
-    // 编辑游戏（横向布局）
-    function editGame(id, editBtn) {
-      document.querySelectorAll('.edit-form-container').forEach(el => el.remove());
-
-      const game = data.games.find(g => g.id === id);
-      if (!game) return;
-
-      const formContainer = document.createElement('div');
-      formContainer.className = 'edit-form-container';
-
-      const platforms = data.categories.map(c => 
-        `<option value="${c.id}" ${game.category === c.id ? 'selected' : ''}>${c.name}</option>`
-      ).join('');
+      // 默认值
+      const name = game?.name || '';
+      const image = game?.image || '';
+      const category = game?.category || (data.categories[0]?.id || '');
+      const tags = game?.tags?.join(', ') || '';
+      const badge = game?.badge || '';
+      const url = game?.url || '';
+      const description = game?.description || '';
+      const order = game?.customOrder || (getMaxOrder() + 1);
 
       formContainer.innerHTML = `
         <div class="form-left">
           <div class="form-field">
             <label>游戏名称</label>
-            <input type="text" class="form-control" id="gameName" value="${game.name}">
+            <input type="text" class="form-control" id="gameName" value="${name}" placeholder="输入游戏名称">
           </div>
           <div class="form-field">
             <label>图片 URL</label>
-            <input type="text" class="form-control" id="gameImage" value="${game.image || ''}">
+            <input type="text" class="form-control" id="gameImage" value="${image}" placeholder="图片链接">
           </div>
           <div class="form-field">
             <label>平台</label>
@@ -757,33 +708,52 @@
           </div>
           <div class="form-field">
             <label>标签（逗号分隔）</label>
-            <input type="text" class="form-control" id="gameTags" value="${game.tags?.join(', ') || ''}">
+            <input type="text" class="form-control" id="gameTags" value="${tags}" placeholder="动作, 冒险">
           </div>
           <div class="form-field">
             <label>角标标签</label>
-            <input type="text" class="form-control" id="gameBadge" value="${game.badge || ''}">
+            <input type="text" class="form-control" id="gameBadge" value="${badge}" placeholder="VR">
           </div>
           <div class="form-field">
             <label>游戏链接</label>
-            <input type="text" class="form-control" id="gameUrl" value="${game.url || ''}">
+            <input type="text" class="form-control" id="gameUrl" value="${url}" placeholder="https://...">
           </div>
           <div class="form-field">
             <label>游戏介绍</label>
-            <textarea class="form-control" id="gameDescription" rows="1">${game.description || ''}</textarea>
+            <textarea class="form-control" id="gameDescription" rows="1" placeholder="详细介绍...">${description}</textarea>
           </div>
           <div class="form-field">
             <label>自定义排序</label>
-            <input type="number" class="form-control" id="gameOrder" value="${game.customOrder || 0}">
+            <input type="number" class="form-control" id="gameOrder" value="${order}">
           </div>
         </div>
         <div class="form-right">
-          <button class="floating-btn" onclick="saveGame('${id}')">保存修改</button>
+          <button class="floating-btn" onclick="${id ? `saveGame('${id}')` : 'addNewGame()'}">${id ? '保存修改' : '保存新增'}</button>
           <button class="floating-btn copy" onclick="this.closest('.edit-form-container').remove()">取消</button>
         </div>
       `;
 
-      const row = editBtn.closest('tr');
-      row.parentNode.insertBefore(formContainer, row.nextSibling);
+      // 插入位置逻辑
+      const gameGroups = document.getElementById('gameGroups');
+      if (id && editBtn) {
+        // 编辑模式：插入在当前行下方
+        const row = editBtn.closest('tr');
+        row.parentNode.insertBefore(formContainer, row.nextSibling);
+      } else {
+        // 新增模式：插入在最底部
+        if (gameGroups.lastChild) {
+          gameGroups.insertBefore(formContainer, gameGroups.lastChild.nextSibling);
+        } else {
+          gameGroups.appendChild(formContainer);
+        }
+        // 自动滚动到底部
+        setTimeout(() => {
+          formContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      }
+
+      // 设置选中平台
+      document.getElementById('gameCategory').value = category;
     }
 
     function saveGame(id) {
