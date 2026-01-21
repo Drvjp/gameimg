@@ -73,7 +73,7 @@
       max-width: 600px;
       margin: 0 auto 16px;
       align-items: center;
-      flex-wrap: wrap; /* 允许换行 */
+      flex-wrap: wrap;
       justify-content: center;
     }
 
@@ -81,7 +81,7 @@
       flex: 1;
       display: flex;
       gap: 10px;
-      min-width: 200px; /* 防止过窄 */
+      min-width: 200px;
     }
 
     .search-box input {
@@ -93,7 +93,7 @@
       color: var(--text);
       font-size: 15px;
       transition: border-color 0.2s;
-      min-width: 0; /* 关键：允许收缩 */
+      min-width: 0;
     }
 
     .search-box input:focus {
@@ -111,14 +111,14 @@
       font-size: 16px;
       font-weight: 600;
       transition: background 0.2s;
-      flex-shrink: 0; /* 不收缩 */
+      flex-shrink: 0;
     }
 
     .search-icon:hover {
       background: var(--primary-hover);
     }
 
-    /* 排序按钮 - 小屏时换行 */
+    /* 排序按钮 */
     .sort-toggle {
       background: white;
       border: 1px solid var(--border);
@@ -132,7 +132,7 @@
       position: relative;
       min-width: 80px;
       text-align: center;
-      align-self: stretch; /* 与搜索框高度一致 */
+      align-self: stretch;
     }
 
     .sort-menu {
@@ -169,10 +169,10 @@
       font-weight: 600;
     }
 
-    /* 平台筛选区域 - 独占一行 */
+    /* 平台筛选区域 - 箭头不遮挡文字 */
     .platform-filter-outer {
       position: relative;
-      overflow: hidden; /* 隐藏滚动条，但允许内部滚动 */
+      overflow: hidden;
       margin-bottom: 16px;
       border-radius: 12px;
       background: white;
@@ -184,7 +184,7 @@
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
       -ms-overflow-style: none;
-      padding: 8px 12px; /* 内边距，避免内容贴边 */
+      padding: 8px 40px; /* ← 关键：左右留空 */
       display: flex;
     }
 
@@ -221,7 +221,7 @@
       border-color: var(--primary);
     }
 
-    /* 固定箭头 - 不随滚动 */
+    /* 固定箭头 - 不遮挡文字 */
     .scroll-indicator {
       position: absolute;
       top: 50%;
@@ -242,21 +242,31 @@
     }
 
     .scroll-indicator.left {
-      left: 12px; /* 左侧固定 12px */
+      left: 12px;
     }
 
     .scroll-indicator.right {
-      right: 12px; /* 右侧固定 12px */
+      right: 12px;
     }
 
-    /* 游戏列表：响应式两列 */
+    /* 游戏列表：响应式布局 */
     .game-list {
       display: flex;
       flex-direction: column;
       gap: 16px;
     }
 
-    @media (min-width: 769px) {
+    /* 手机横屏 / 小平板：3 列 */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .game-list {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+    }
+
+    /* PC 大屏：6 列 */
+    @media (min-width: 1025px) {
       .game-list {
         display: grid;
         grid-template-columns: repeat(6, 1fr);
@@ -580,7 +590,7 @@
     </div>
   </div>
 
-  <!-- 平台筛选（独占一行，箭头固定） -->
+  <!-- 平台筛选（箭头不遮挡文字） -->
   <div class="platform-filter-outer">
     <div class="scroll-indicator left">←</div>
     <div class="scroll-indicator right">→</div>
