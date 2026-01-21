@@ -65,7 +65,7 @@
       100% { transform: translateX(-100%); }
     }
 
-    /* 搜索 + 排序容器 */
+    /* 搜索 + 排序容器 - 响应式 */
     .search-sort-container {
       display: flex;
       gap: 12px;
@@ -73,12 +73,15 @@
       max-width: 600px;
       margin: 0 auto 16px;
       align-items: center;
+      flex-wrap: wrap; /* 允许换行 */
+      justify-content: center;
     }
 
     .search-box {
       flex: 1;
       display: flex;
       gap: 10px;
+      min-width: 200px; /* 防止过窄 */
     }
 
     .search-box input {
@@ -90,6 +93,7 @@
       color: var(--text);
       font-size: 15px;
       transition: border-color 0.2s;
+      min-width: 0; /* 关键：允许收缩 */
     }
 
     .search-box input:focus {
@@ -107,13 +111,14 @@
       font-size: 16px;
       font-weight: 600;
       transition: background 0.2s;
+      flex-shrink: 0; /* 不收缩 */
     }
 
     .search-icon:hover {
       background: var(--primary-hover);
     }
 
-    /* 排序按钮（在搜索框右侧） */
+    /* 排序按钮 - 小屏时换行 */
     .sort-toggle {
       background: white;
       border: 1px solid var(--border);
@@ -127,6 +132,7 @@
       position: relative;
       min-width: 80px;
       text-align: center;
+      align-self: stretch; /* 与搜索框高度一致 */
     }
 
     .sort-menu {
@@ -164,17 +170,22 @@
     }
 
     /* 平台筛选区域 - 独占一行 */
-    .platform-filter-wrapper {
+    .platform-filter-outer {
       position: relative;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      padding: 8px 40px; /* ← → 箭头留空 */
+      overflow: hidden; /* 隐藏滚动条，但允许内部滚动 */
       margin-bottom: 16px;
       border-radius: 12px;
       background: white;
       box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    .platform-filter-wrapper {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding: 8px 12px; /* 内边距，避免内容贴边 */
+      display: flex;
     }
 
     .platform-filter-wrapper::-webkit-scrollbar {
@@ -210,12 +221,12 @@
       border-color: var(--primary);
     }
 
-    /* 滑动指示器 - 不覆盖文字 */
+    /* 固定箭头 - 不随滚动 */
     .scroll-indicator {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.95);
       border-radius: 50%;
       width: 28px;
       height: 28px;
@@ -225,16 +236,17 @@
       font-size: 16px;
       font-weight: bold;
       color: var(--text-muted);
-      z-index: 2;
+      z-index: 3;
       pointer-events: none;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
     .scroll-indicator.left {
-      left: 12px;
+      left: 12px; /* 左侧固定 12px */
     }
 
     .scroll-indicator.right {
-      right: 12px;
+      right: 12px; /* 右侧固定 12px */
     }
 
     /* 游戏列表：响应式两列 */
@@ -526,6 +538,19 @@
       line-height: 1.6;
       color: var(--text);
     }
+
+    /* 小屏优化：排序按钮换行 */
+    @media (max-width: 480px) {
+      .search-sort-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .sort-toggle {
+        align-self: stretch;
+        text-align: center;
+      }
+    }
   </style>
 </head>
 <body>
@@ -555,12 +580,14 @@
     </div>
   </div>
 
-  <!-- 平台筛选（独占一行） -->
-  <div class="platform-filter-wrapper">
+  <!-- 平台筛选（独占一行，箭头固定） -->
+  <div class="platform-filter-outer">
     <div class="scroll-indicator left">←</div>
     <div class="scroll-indicator right">→</div>
-    <div class="platform-filter" id="platformFilter">
-      <!-- 动态生成 -->
+    <div class="platform-filter-wrapper">
+      <div class="platform-filter" id="platformFilter">
+        <!-- 动态生成 -->
+      </div>
     </div>
   </div>
 
