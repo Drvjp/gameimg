@@ -344,6 +344,7 @@
       padding: 0 !important;
       border: none !important;
       background: transparent !important;
+      vertical-align: top;
     }
 
     /* 悬浮按钮 - 缩小常驻 */
@@ -751,7 +752,7 @@
 
       // 插入位置逻辑
       if (id && editBtn) {
-        // 编辑模式：插入在当前行下方（作为 tr > td colspan=10）
+        // ✅ 编辑模式：插入在当前行下方
         const row = editBtn.closest('tr');
         const tbody = row.parentNode;
 
@@ -762,7 +763,7 @@
         const td = formRow.querySelector('td');
         td.appendChild(formContainer);
 
-        // 插入在当前行之后
+        // ✅ 插入在当前行之后
         tbody.insertBefore(formRow, row.nextSibling);
 
         // 自动滚动到表单
@@ -772,7 +773,7 @@
         }, 100);
 
       } else {
-        // 新增模式：插入在所有游戏组最下方
+        // ✅ 新增模式：插入在所有游戏组最下方
         const gameGroups = document.getElementById('gameGroups');
         if (gameGroups.lastChild) {
           gameGroups.insertBefore(formContainer, gameGroups.lastChild.nextSibling);
