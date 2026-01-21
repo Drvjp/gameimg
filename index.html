@@ -65,12 +65,20 @@
       100% { transform: translateX(-100%); }
     }
 
-    .search-box {
+    /* 搜索 + 排序容器 */
+    .search-sort-container {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       width: 100%;
       max-width: 600px;
       margin: 0 auto 16px;
+      align-items: center;
+    }
+
+    .search-box {
+      flex: 1;
+      display: flex;
+      gap: 10px;
     }
 
     .search-box input {
@@ -105,102 +113,20 @@
       background: var(--primary-hover);
     }
 
-    /* 平台 + 排序 */
-    .platform-sort-container {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-    }
-
-    /* 平台筛选滚动容器 */
-    .platform-filter-wrapper {
-      position: relative;
-      flex: 1;
-      min-width: 0;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      padding: 4px 0;
-      border-radius: 12px;
-      background: white;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    }
-
-    .platform-filter-wrapper::-webkit-scrollbar {
-      display: none;
-    }
-
-    /* 平台按钮组 */
-    .platform-filter {
-      display: flex;
-      gap: 8px;
-      flex: 0 0 auto;
-      padding: 4px 8px;
-    }
-
-    .platform-btn {
-      background: white;
-      border: 1px solid var(--border);
-      padding: 6px 12px;
-      border-radius: 16px;
-      white-space: nowrap;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      color: var(--text-muted);
-      transition: all 0.2s;
-      flex: 0 0 auto;
-      min-width: 60px;
-      text-align: center;
-    }
-
-    .platform-btn.active, .platform-btn:hover {
-      background: var(--primary);
-      color: white;
-      border-color: var(--primary);
-    }
-
-    /* 滑动指示器 */
-    .scroll-indicator {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255,255,255,0.8);
-      border-radius: 50%;
-      width: 28px;
-      height: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      font-weight: bold;
-      color: var(--text-muted);
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    .scroll-indicator.left {
-      left: 8px;
-    }
-
-    .scroll-indicator.right {
-      right: 8px;
-    }
-
+    /* 排序按钮（在搜索框右侧） */
     .sort-toggle {
       background: white;
       border: 1px solid var(--border);
-      padding: 8px 16px;
-      border-radius: 20px;
+      padding: 10px 16px;
+      border-radius: 12px;
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
       color: var(--text-muted);
       white-space: nowrap;
       position: relative;
+      min-width: 80px;
+      text-align: center;
     }
 
     .sort-menu {
@@ -235,6 +161,80 @@
     .sort-option.active {
       color: var(--primary);
       font-weight: 600;
+    }
+
+    /* 平台筛选区域 - 独占一行 */
+    .platform-filter-wrapper {
+      position: relative;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding: 8px 40px; /* ← → 箭头留空 */
+      margin-bottom: 16px;
+      border-radius: 12px;
+      background: white;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    .platform-filter-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+
+    .platform-filter {
+      display: flex;
+      gap: 8px;
+      flex: 0 0 auto;
+      padding: 4px 0;
+    }
+
+    .platform-btn {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 16px;
+      white-space: nowrap;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+      flex: 0 0 auto;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .platform-btn.active, .platform-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* 滑动指示器 - 不覆盖文字 */
+    .scroll-indicator {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.9);
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--text-muted);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .scroll-indicator.left {
+      left: 12px;
+    }
+
+    .scroll-indicator.right {
+      right: 12px;
     }
 
     /* 游戏列表：响应式两列 */
@@ -530,7 +530,7 @@
 </head>
 <body>
 
-  <!-- 标题 + 公告 + 搜索 -->
+  <!-- 标题 + 公告 + 搜索 + 排序 -->
   <div class="header">
     <h1 id="title">柴哒赁电玩数字游戏库</h1>
     
@@ -539,28 +539,28 @@
       <div class="announcement-text" id="announcementText">加载中...</div>
     </div>
 
-    <!-- 搜索框 -->
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="搜索游戏名称或标签..." />
-      <button class="search-icon" onclick="performSearch()">🔍</button>
+    <!-- 搜索框 + 排序 -->
+    <div class="search-sort-container">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="搜索游戏名称或标签..." />
+        <button class="search-icon" onclick="performSearch()">🔍</button>
+      </div>
+      <div class="sort-toggle" id="sortToggle">
+        排序 ▼
+        <div class="sort-menu" id="sortMenu">
+          <div class="sort-option active" data-sort="custom">自定义排序</div>
+          <div class="sort-option" data-sort="name">按名称 A-Z</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- 平台选择 + 排序 -->
-  <div class="platform-sort-container">
-    <div class="platform-filter-wrapper">
-      <div class="scroll-indicator left">←</div>
-      <div class="scroll-indicator right">→</div>
-      <div class="platform-filter" id="platformFilter">
-        <!-- 动态生成 -->
-      </div>
-    </div>
-    <div class="sort-toggle" id="sortToggle">
-      排序 ▼
-      <div class="sort-menu" id="sortMenu">
-        <div class="sort-option active" data-sort="custom">自定义排序</div>
-        <div class="sort-option" data-sort="name">按名称 A-Z</div>
-      </div>
+  <!-- 平台筛选（独占一行） -->
+  <div class="platform-filter-wrapper">
+    <div class="scroll-indicator left">←</div>
+    <div class="scroll-indicator right">→</div>
+    <div class="platform-filter" id="platformFilter">
+      <!-- 动态生成 -->
     </div>
   </div>
 
