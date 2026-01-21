@@ -5,11 +5,12 @@
   "categories": [
     {
       "id": "sony",
-      "name": "索尼"
+      "name": "索尼",
+      "visible": true
     },
     {
       "id": "cat_1768964794901",
-      "name": "SWITCH"
+      "name": "SWITCH2"
     }
   ],
   "games": [
@@ -1062,6 +1063,239 @@
       "description": "",
       "customOrder": 75,
       "newRelease": false
+    },
+    {
+      "id": "g_1768974412405",
+      "name": "随动回旋镖",
+      "image": "https://cdn2.steamgriddb.com/thumb/3b4742297e8f5122cf0f323d79832350.jpg",
+      "category": "cat_1768964794901",
+      "tags": [
+        "多人，派对"
+      ],
+      "badge": "竞技",
+      "url": "",
+      "description": "最多可支持1-6人竞技",
+      "customOrder": 76
+    },
+    {
+      "id": "g_1768974615508",
+      "name": "马里奥赛车 世界",
+      "image": "https://cdn2.steamgriddb.com/thumb/d23856a82fa228f48a8cc7e8ddb221f8.jpg",
+      "category": "cat_1768964794901",
+      "tags": [],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 77
+    },
+    {
+      "id": "g_1768974679616",
+      "name": "舞力全开2026",
+      "image": "https://cdn2.steamgriddb.com/thumb/8a8f1ab5f57f7a6146c36945656df252.jpg",
+      "category": "cat_1768964794901",
+      "tags": [],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 78
+    },
+    {
+      "id": "g_1768974810354",
+      "name": "赛博朋克2077",
+      "image": "https://cdn2.steamgriddb.com/thumb/4030e2eebb977639f8836aa25a293e40.jpg",
+      "category": "cat_1768964794901",
+      "tags": [],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 79
+    },
+    {
+      "id": "g_1768974889238",
+      "name": "塞尔达荒野之息",
+      "image": "https://cdn2.steamgriddb.com/thumb/121b81f7d167ca2c24fdab4f044048f8.jpg",
+      "category": "cat_1768964794901",
+      "tags": [],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 80
+    },
+    {
+      "id": "g_1768975062443",
+      "name": "塞尔达王国之泪",
+      "image": "https://cdn2.steamgriddb.com/thumb/72654158f52bf25f9a8101f78aceaa2f.jpg",
+      "category": "cat_1768964794901",
+      "tags": [],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 81
+    },
+    {
+      "id": "g_1768975191212",
+      "name": "SWITCH2 秘密展",
+      "image": "https://cdn2.steamgriddb.com/thumb/7bd77f146c8cc4f37c299bf524bf3419.png",
+      "category": "cat_1768964794901",
+      "tags": [],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 82
+    },
+    {
+      "id": "g_1768975220138",
+      "name": "双影奇境",
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202502/2109/fa7b01c5bc07e3a802025ad4f8e660ec05bbc7501151c7bd.jpg?w=620&thumb=false",
+      "category": "cat_1768964794901",
+      "tags": [],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 83
+    },
+    {
+      "id": "g_1768975259980",
+      "name": "街头霸王6",
+      "image": "https://cdn2.steamgriddb.com/thumb/e77f93582920dd4f7c42d5e8dfb5a07e.jpg",
+      "category": "cat_1768964794901",
+      "tags": [],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 84
+    },
+    {
+      "id": "g_1768975309123",
+      "name": "咚奇刚蕉力全开",
+      "image": "https://cdn2.steamgriddb.com/thumb/1dd04201e009eab1c680589b2d9c7524.jpg",
+      "category": "cat_1768964794901",
+      "tags": [],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 85
+    },
+    {
+      "id": "g_1768975353390",
+      "name": "宝可梦 Z&A",
+      "image": "https://cdn2.steamgriddb.com/thumb/e0a5caef34b7535c913610b035a2c9ab.jpg",
+      "category": "cat_1768964794901",
+      "tags": [],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 86
+    },
+    {
+      "id": "g_1768975403017",
+      "name": "舞力全开2025",
+      "image": "https://cdn2.steamgriddb.com/thumb/38506718ab76fb692e5ac67c82d4a55a.jpg",
+      "category": "cat_1768964794901",
+      "tags": [],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 87
+    },
+    {
+      "id": "g_1768975509269",
+      "name": "完蛋我被美女包围了",
+      "image": "https://cdn2.steamgriddb.com/thumb/94c0bcea1a860ba92ff5621705808121.jpg",
+      "category": "cat_1768964794901",
+      "tags": [],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 88
+    },
+    {
+      "id": "g_1768975559151",
+      "name": "真人快打11",
+      "image": "https://cdn2.steamgriddb.com/thumb/8841adf0cad4ceb6967786ccb3700aa8.jpg",
+      "category": "cat_1768964794901",
+      "tags": [],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 89
+    },
+    {
+      "id": "g_1768975593887",
+      "name": "胡闹厨房2",
+      "image": "https://cdn2.steamgriddb.com/thumb/c147cc04c5ac79a251a3f999dcb910ae.jpg",
+      "category": "cat_1768964794901",
+      "tags": [],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 90
+    },
+    {
+      "id": "g_1768975643295",
+      "name": "胡闹搬家",
+      "image": "https://cdn2.steamgriddb.com/thumb/389638a47250a0eb103cd8ea49a9822f.jpg",
+      "category": "cat_1768964794901",
+      "tags": [],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 91
+    },
+    {
+      "id": "g_1768975681308",
+      "name": "饥荒",
+      "image": "https://cdn2.steamgriddb.com/thumb/75e68b29387d9ec13d2086f86c77b564.jpg",
+      "category": "cat_1768964794901",
+      "tags": [],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 92
+    },
+    {
+      "id": "g_1768975718040",
+      "name": "小小梦魇2",
+      "image": "https://cdn2.steamgriddb.com/thumb/ce420da1dae0395f3d31b438a08e15db.jpg",
+      "category": "cat_1768964794901",
+      "tags": [],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 93
+    },
+    {
+      "id": "g_1768975747148",
+      "name": "Limbo",
+      "image": "https://cdn2.steamgriddb.com/thumb/0cd3b54a7d3b2574518e1bf717574ca3.jpg",
+      "category": "cat_1768964794901",
+      "tags": [],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 94
+    },
+    {
+      "id": "g_1768975792148",
+      "name": "土豆兄弟",
+      "image": "https://cdn2.steamgriddb.com/thumb/37a09fd3225f46c08a85e19a60195ae7.jpg",
+      "category": "cat_1768964794901",
+      "tags": [],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 95
+    },
+    {
+      "id": "g_1768975830591",
+      "name": "吸血鬼幸存者",
+      "image": "https://cdn2.steamgriddb.com/thumb/b6c580b0ed08cf19c925be5a68475cd4.jpg",
+      "category": "cat_1768964794901",
+      "tags": [],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 96
     }
   ]
 }
