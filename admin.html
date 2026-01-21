@@ -257,7 +257,7 @@
       cursor: move;
     }
 
-    /* 编辑表单容器 - 水平布局 */
+    /* 编辑表单容器 - 横向布局：左输入区 + 右按钮区 */
     .edit-form-container {
       background: #f8fafc;
       padding: 16px;
@@ -265,24 +265,32 @@
       margin-top: 8px;
       border: 1px dashed var(--border);
       display: flex;
-      flex-wrap: wrap;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .form-left {
+      flex: 1;
+      min-width: 300px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
       gap: 12px;
     }
 
-    .form-field {
-      flex: 1;
-      min-width: 150px;
+    .form-left .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
-    .form-field label {
-      display: block;
+    .form-left .form-field label {
       font-weight: 600;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       color: var(--text);
       font-size: 13px;
     }
 
-    .form-control {
+    .form-left .form-control {
       width: 100%;
       padding: 6px 10px;
       border: 1px solid var(--border);
@@ -297,11 +305,28 @@
       min-height: 40px;
     }
 
-    .form-actions {
-      flex: 100%;
+    .form-right {
       display: flex;
-      gap: 12px;
-      margin-top: 8px;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: flex-start;
+    }
+
+    .form-right button {
+      width: 100px;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .form-right .floating-btn {
+      width: auto;
+      padding: 10px 16px;
+      font-size: 14px;
     }
 
     /* 悬浮按钮 - 缩小常驻 */
@@ -637,7 +662,7 @@
       });
     }
 
-    // 显示添加新游戏表单（水平布局）
+    // 显示添加新游戏表单（横向布局，插入在最后）
     function showAddGameForm() {
       document.querySelectorAll('.edit-form-container').forEach(el => el.remove());
 
@@ -649,55 +674,58 @@
       ).join('');
 
       formContainer.innerHTML = `
-        <div class="form-field">
-          <label>游戏名称</label>
-          <input type="text" class="form-control" id="gameName" placeholder="输入游戏名称">
+        <div class="form-left">
+          <div class="form-field">
+            <label>游戏名称</label>
+            <input type="text" class="form-control" id="gameName" placeholder="输入游戏名称">
+          </div>
+          <div class="form-field">
+            <label>图片 URL</label>
+            <input type="text" class="form-control" id="gameImage" placeholder="图片链接">
+          </div>
+          <div class="form-field">
+            <label>平台</label>
+            <select class="form-control" id="gameCategory">
+              ${platforms}
+            </select>
+          </div>
+          <div class="form-field">
+            <label>标签（逗号分隔）</label>
+            <input type="text" class="form-control" id="gameTags" placeholder="动作, 冒险">
+          </div>
+          <div class="form-field">
+            <label>角标标签</label>
+            <input type="text" class="form-control" id="gameBadge" placeholder="VR">
+          </div>
+          <div class="form-field">
+            <label>游戏链接</label>
+            <input type="text" class="form-control" id="gameUrl" placeholder="https://...">
+          </div>
+          <div class="form-field">
+            <label>游戏介绍</label>
+            <textarea class="form-control" id="gameDescription" rows="1" placeholder="详细介绍..."></textarea>
+          </div>
+          <div class="form-field">
+            <label>自定义排序</label>
+            <input type="number" class="form-control" id="gameOrder" value="${getMaxOrder() + 1}">
+          </div>
         </div>
-        <div class="form-field">
-          <label>图片 URL</label>
-          <input type="text" class="form-control" id="gameImage" placeholder="图片链接">
-        </div>
-        <div class="form-field">
-          <label>平台</label>
-          <select class="form-control" id="gameCategory">
-            ${platforms}
-          </select>
-        </div>
-        <div class="form-field">
-          <label>标签（逗号分隔）</label>
-          <input type="text" class="form-control" id="gameTags" placeholder="动作, 冒险">
-        </div>
-        <div class="form-field">
-          <label>角标标签</label>
-          <input type="text" class="form-control" id="gameBadge" placeholder="VR">
-        </div>
-        <div class="form-field">
-          <label>游戏链接</label>
-          <input type="text" class="form-control" id="gameUrl" placeholder="https://...">
-        </div>
-        <div class="form-field">
-          <label>游戏介绍</label>
-          <textarea class="form-control" id="gameDescription" rows="1" placeholder="详细介绍..."></textarea>
-        </div>
-        <div class="form-field">
-          <label>自定义排序</label>
-          <input type="number" class="form-control" id="gameOrder" value="${getMaxOrder() + 1}">
-        </div>
-        <div class="form-actions">
-          <button class="floating-btn" style="width:auto;" onclick="addNewGame()">添加新游戏</button>
-          <button class="floating-btn copy" style="width:auto;" onclick="this.closest('.edit-form-container').remove()">取消</button>
+        <div class="form-right">
+          <button class="floating-btn" onclick="addNewGame()">保存新增</button>
+          <button class="floating-btn copy" onclick="this.closest('.edit-form-container').remove()">取消</button>
         </div>
       `;
 
       const gameGroups = document.getElementById('gameGroups');
-      if (gameGroups.firstChild) {
-        gameGroups.insertBefore(formContainer, gameGroups.firstChild);
+      // 插入到最后一个子元素之后（即所有游戏分组的最下方）
+      if (gameGroups.lastChild) {
+        gameGroups.insertBefore(formContainer, gameGroups.lastChild.nextSibling);
       } else {
         gameGroups.appendChild(formContainer);
       }
     }
 
-    // 编辑游戏（水平布局）
+    // 编辑游戏（横向布局）
     function editGame(id, editBtn) {
       document.querySelectorAll('.edit-form-container').forEach(el => el.remove());
 
@@ -712,43 +740,45 @@
       ).join('');
 
       formContainer.innerHTML = `
-        <div class="form-field">
-          <label>游戏名称</label>
-          <input type="text" class="form-control" id="gameName" value="${game.name}">
+        <div class="form-left">
+          <div class="form-field">
+            <label>游戏名称</label>
+            <input type="text" class="form-control" id="gameName" value="${game.name}">
+          </div>
+          <div class="form-field">
+            <label>图片 URL</label>
+            <input type="text" class="form-control" id="gameImage" value="${game.image || ''}">
+          </div>
+          <div class="form-field">
+            <label>平台</label>
+            <select class="form-control" id="gameCategory">
+              ${platforms}
+            </select>
+          </div>
+          <div class="form-field">
+            <label>标签（逗号分隔）</label>
+            <input type="text" class="form-control" id="gameTags" value="${game.tags?.join(', ') || ''}">
+          </div>
+          <div class="form-field">
+            <label>角标标签</label>
+            <input type="text" class="form-control" id="gameBadge" value="${game.badge || ''}">
+          </div>
+          <div class="form-field">
+            <label>游戏链接</label>
+            <input type="text" class="form-control" id="gameUrl" value="${game.url || ''}">
+          </div>
+          <div class="form-field">
+            <label>游戏介绍</label>
+            <textarea class="form-control" id="gameDescription" rows="1">${game.description || ''}</textarea>
+          </div>
+          <div class="form-field">
+            <label>自定义排序</label>
+            <input type="number" class="form-control" id="gameOrder" value="${game.customOrder || 0}">
+          </div>
         </div>
-        <div class="form-field">
-          <label>图片 URL</label>
-          <input type="text" class="form-control" id="gameImage" value="${game.image || ''}">
-        </div>
-        <div class="form-field">
-          <label>平台</label>
-          <select class="form-control" id="gameCategory">
-            ${platforms}
-          </select>
-        </div>
-        <div class="form-field">
-          <label>标签（逗号分隔）</label>
-          <input type="text" class="form-control" id="gameTags" value="${game.tags?.join(', ') || ''}">
-        </div>
-        <div class="form-field">
-          <label>角标标签</label>
-          <input type="text" class="form-control" id="gameBadge" value="${game.badge || ''}">
-        </div>
-        <div class="form-field">
-          <label>游戏链接</label>
-          <input type="text" class="form-control" id="gameUrl" value="${game.url || ''}">
-        </div>
-        <div class="form-field">
-          <label>游戏介绍</label>
-          <textarea class="form-control" id="gameDescription" rows="1">${game.description || ''}</textarea>
-        </div>
-        <div class="form-field">
-          <label>自定义排序</label>
-          <input type="number" class="form-control" id="gameOrder" value="${game.customOrder || 0}">
-        </div>
-        <div class="form-actions">
-          <button class="floating-btn" style="width:auto;" onclick="saveGame('${id}')">保存修改</button>
-          <button class="floating-btn copy" style="width:auto;" onclick="this.closest('.edit-form-container').remove()">取消</button>
+        <div class="form-right">
+          <button class="floating-btn" onclick="saveGame('${id}')">保存修改</button>
+          <button class="floating-btn copy" onclick="this.closest('.edit-form-container').remove()">取消</button>
         </div>
       `;
 
@@ -814,7 +844,7 @@
       });
 
       renderGames();
-      document.querySelectorAll('#global-add-form, .edit-form-container').forEach(el => el.remove());
+      document.querySelectorAll('.edit-form-container').forEach(el => el.remove());
     }
 
     function deleteGame(id) {
