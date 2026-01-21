@@ -334,6 +334,18 @@
       font-size: 14px;
     }
 
+    /* 编辑表单占位行 */
+    .form-row {
+      background: transparent !important;
+      border: none !important;
+    }
+
+    .form-row td {
+      padding: 0 !important;
+      border: none !important;
+      background: transparent !important;
+    }
+
     /* 悬浮按钮 - 缩小常驻 */
     .admin-floating-buttons {
       position: fixed;
@@ -739,23 +751,23 @@
 
       // 插入位置逻辑
       if (id && editBtn) {
-        // 编辑模式：插入在当前行所在的 .platform-group 中，位于表格之后
+        // 编辑模式：插入在当前行下方（作为 tr > td colspan=10）
         const row = editBtn.closest('tr');
         const tbody = row.parentNode;
-        const table = tbody.closest('table');
-        const groupDiv = table.closest('.platform-group');
 
-        // 创建一个包装器，避免直接插入 tbody
-        const wrapper = document.createElement('div');
-        wrapper.className = 'form-wrapper';
-        wrapper.appendChild(formContainer);
+        // 创建一个占位行
+        const formRow = document.createElement('tr');
+        formRow.className = 'form-row';
+        formRow.innerHTML = `<td colspan="10" style="padding: 0; border: none; background: transparent;"></td>`;
+        const td = formRow.querySelector('td');
+        td.appendChild(formContainer);
 
-        // 插入在表格之后
-        groupDiv.insertBefore(wrapper, table.nextSibling);
+        // 插入在当前行之后
+        tbody.insertBefore(formRow, row.nextSibling);
 
         // 自动滚动到表单
         setTimeout(() => {
-          wrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          formRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
           document.getElementById('gameName').focus();
         }, 100);
 
