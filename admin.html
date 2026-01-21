@@ -233,7 +233,7 @@
       white-space: normal;
     }
 
-    .edit-btn, .delete-btn {
+    .edit-btn, .delete-btn, .copy-btn {
       padding: 6px 12px;
       border: none;
       border-radius: 8px;
@@ -251,6 +251,23 @@
     .delete-btn {
       background: #ef4444;
       color: white;
+    }
+
+    .copy-btn {
+      background: #10b981;
+      color: white;
+    }
+
+    .edit-btn:hover {
+      background: var(--primary-hover);
+    }
+
+    .delete-btn:hover {
+      background: #dc2626;
+    }
+
+    .copy-btn:hover {
+      background: #059669;
     }
 
     .draggable-row {
@@ -630,6 +647,7 @@
             <td>${game.customOrder || 0}</td>
             <td>
               <button class="edit-btn" onclick="showGameForm('${game.id}', this)">编辑</button>
+              <button class="copy-btn" onclick="duplicateGame('${game.id}')">复制</button>
               <button class="delete-btn" onclick="deleteGame('${game.id}')">删除</button>
             </td>
           `;
@@ -682,7 +700,6 @@
 
     // 通用游戏表单（新增/编辑）
     function showGameForm(id = null, editBtn = null) {
-      // 移除所有旧表单
       document.querySelectorAll('.edit-form-container').forEach(el => el.remove());
 
       const formContainer = document.createElement('div');
@@ -750,30 +767,22 @@
         </div>
       `;
 
-      // 插入位置逻辑
       if (id && editBtn) {
-        // ✅ 编辑模式：插入在当前行下方
         const row = editBtn.closest('tr');
         const tbody = row.parentNode;
-
-        // 创建一个占位行
         const formRow = document.createElement('tr');
         formRow.className = 'form-row';
         formRow.innerHTML = `<td colspan="10" style="padding: 0; border: none; background: transparent;"></td>`;
         const td = formRow.querySelector('td');
         td.appendChild(formContainer);
-
-        // ✅ 插入在当前行之后
         tbody.insertBefore(formRow, row.nextSibling);
 
-        // 自动滚动到表单
         setTimeout(() => {
           formRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
           document.getElementById('gameName').focus();
         }, 100);
 
       } else {
-        // ✅ 新增模式：插入在所有游戏组最下方
         const gameGroups = document.getElementById('gameGroups');
         if (gameGroups.lastChild) {
           gameGroups.insertBefore(formContainer, gameGroups.lastChild.nextSibling);
@@ -786,7 +795,6 @@
         }, 100);
       }
 
-      // 设置选中平台
       document.getElementById('gameCategory').value = category;
     }
 
@@ -849,6 +857,32 @@
 
       renderGames();
       document.querySelectorAll('.edit-form-container').forEach(el => el.remove());
+    }
+
+    // 新增：复制游戏
+    function duplicateGame(id) {
+      const original = data.games.find(g => g.id === id);
+      if (!original) return;
+
+      const newGame = JSON.parse(JSON.stringify(original));
+      newGame.id = 'g_' + Date.now();
+      newGame.customOrder = (original.customOrder || 0) + 1;
+
+      const index = data.games.findIndex(g => g.id === id);
+      if (index !== -1) {
+        data.games.splice(index + 1, 0, newGame);
+      } else {
+        data.games.push(newGame);
+      }
+
+      renderGames();
+
+      setTimeout(() => {
+        const newEditBtn = document.querySelector(`[data-id="${newGame.id}"] .edit-btn`);
+        if (newEditBtn) {
+          showGameForm(newGame.id, newEditBtn);
+        }
+      }, 100);
     }
 
     function deleteGame(id) {
