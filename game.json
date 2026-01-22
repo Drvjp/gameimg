@@ -16,7 +16,7 @@
     {
       "id": "cat_1768976897331",
       "name": "QUEST一体机资源",
-      "visible": false
+      "visible": true
     },
     {
       "id": "cat_1768976908172",
@@ -1463,6 +1463,32 @@
       "url": "https://pan.baidu.com/share/init?surl=Sh4G7o1ccVnzPTUd00CYyw&pwd=1tc0",
       "description": "Beat Saber 是您从未见过的沉浸式节奏体验！享受大量手工制作的关卡，并在脉动的音乐节拍中摇摆不定，周围环绕着未来主义的世界，当节拍向你飞来时，用你的军刀削减节拍——每个节拍都表明你需要使用哪把军刀以及你需要匹配的方向。\n\n玩 Beat Saber，您将成为跳舞的超级英雄！",
       "customOrder": 107
+    },
+    {
+      "id": "g_1769059680788",
+      "name": "微软飞行模拟VR《Microsoft Flight Simulator 2020》",
+      "image": "https://www.vrmoo.net/wp-content/uploads/thumb/2020/12/fill_w666_h412_g0_mark_microsoft-flight-simulator_compress17.webp",
+      "category": "cat_1768976908172",
+      "tags": [
+        "百度网盘"
+      ],
+      "badge": "PCVR",
+      "url": "https://pan.baidu.com/share/init?surl=nsTi6CfxiIUzk8ArarY96Q",
+      "description": "提取码：vrmo\n解压码：vrmoo.cn",
+      "customOrder": 108
+    },
+    {
+      "id": "g_1769060157502",
+      "name": "《前沿》Forefront",
+      "image": "https://www.vrmoo.net/wp-content/uploads/2025/11/10001-78.jpg",
+      "category": "cat_1768976897331",
+      "tags": [
+        "百度网盘"
+      ],
+      "badge": "VR",
+      "url": "https://pan.baidu.com/s/1B_CT6OylEbEYeT-V-6VDQQ?pwd=6666",
+      "description": "",
+      "customOrder": 109
     }
   ]
 }
