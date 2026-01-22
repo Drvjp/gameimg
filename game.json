@@ -6,12 +6,12 @@
     {
       "id": "sony",
       "name": "索尼",
-      "visible": false
+      "visible": true
     },
     {
       "id": "cat_1768964794901",
       "name": "SWITCH2",
-      "visible": false
+      "visible": true
     },
     {
       "id": "cat_1768976897331",
@@ -238,7 +238,7 @@
     {
       "id": "16",
       "name": "搬家1+2",
-      "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-04/c995d143ad4bd11373f0815c8be7b30f4bfbfbedaf0f.webp",
+      "image": "https://cdn2.steamgriddb.com/thumb/17e73ba31ee9fe873d8ab5753880b7be.jpg",
       "category": "sony",
       "tags": [
         "仅数字版"
@@ -266,7 +266,7 @@
     {
       "id": "18",
       "name": "刺客信条影",
-      "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-03/image-2025-03-20-11-38.png",
+      "image": "https://cdn2.steamgriddb.com/thumb/766320a20301b8b0938bf3a33a9d5f6f.jpg",
       "category": "sony",
       "tags": [
         "数字版&光盘"
@@ -322,7 +322,7 @@
     {
       "id": "22",
       "name": "负鼠闹翻天",
-      "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-07/image-2025-07-24-12-31.png",
+      "image": "https://cdn2.steamgriddb.com/thumb/1df2517e9f0539902ca8dadbc6a4cf5e.jpg",
       "category": "sony",
       "tags": [
         "仅数字版"
@@ -336,7 +336,7 @@
     {
       "id": "23",
       "name": "光与影33号远征队",
-      "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-04/image-2025-04-25-13-55.png",
+      "image": "https://cdn2.steamgriddb.com/thumb/e7fff0c2739cf86c8aa5559eefe74220.jpg",
       "category": "sony",
       "tags": [
         "仅数字版"
@@ -364,7 +364,7 @@
     {
       "id": "25",
       "name": "怪物猎人 荒野",
-      "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-02/49bbec039669447641577add31bd2e00-1920-1080.webp",
+      "image": "https://cdn2.steamgriddb.com/thumb/a8f61f2a33339f05688706e926a91626.jpg",
       "category": "sony",
       "tags": [
         "仅数字版"
@@ -378,7 +378,7 @@
     {
       "id": "26",
       "name": "荒野大镖客2",
-      "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-07/image-2024-12-11-20-44.png",
+      "image": "https://cdn2.steamgriddb.com/thumb/22774e7dbd2a3030e3e0c0b7381dee3e.jpg",
       "category": "sony",
       "tags": [
         "数字版&光盘"
@@ -392,7 +392,7 @@
     {
       "id": "27",
       "name": "皇牌空战7",
-      "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-02/image-2025-02-04-20-30.png",
+      "image": "https://cdn2.steamgriddb.com/thumb/baf99fb27c5bd0c67f034bc3e8c581af.jpg",
       "category": "sony",
       "tags": [
         "仅数字版"
@@ -504,7 +504,7 @@
     {
       "id": "35",
       "name": "明末 渊虚之羽",
-      "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-07/image-2025-07-29-14-45.png",
+      "image": "https://cdn2.steamgriddb.com/thumb/a629673d416cb03523eaf4501d5b202b.jpg",
       "category": "sony",
       "tags": [
         "仅数字版"
@@ -546,7 +546,7 @@
     {
       "id": "38",
       "name": "如龙8外传",
-      "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-02/eb8e3628-7e15-40a5-829c-4d6337e84184.jpg",
+      "image": "https://cdn2.steamgriddb.com/thumb/955168bed4ea3d5fc178b382a6c811c1.jpg",
       "category": "sony",
       "tags": [
         "仅数字版"
@@ -574,7 +574,7 @@
     {
       "id": "40",
       "name": "生化危机7",
-      "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-01/icon0.jpg",
+      "image": "https://cdn2.steamgriddb.com/thumb/68f891fe214e2bfa07c998ad5d0a390f.jpg",
       "category": "sony",
       "tags": [
         "仅数字版"
@@ -686,7 +686,7 @@
     {
       "id": "48",
       "name": "无主之地3",
-      "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-08/image-2025-08-02-16-14.png",
+      "image": "https://cdn2.steamgriddb.com/thumb/c039e6496e67fdb3d46e6d5877e01ed2.jpg",
       "category": "sony",
       "tags": [
         "仅数字版"
@@ -798,7 +798,7 @@
     {
       "id": "56",
       "name": "JOJO的奇妙冒险",
-      "image": "https://cloud.seatable.cn/workspace/46705/asset/41890b90-2fee-493b-9586-bd6cfb483941/images/2025-07/image-2025-07-24-12-20.png",
+      "image": "https://cdn2.steamgriddb.com/thumb/96c1e63f8cd4e6d63ac8061256031275.jpg",
       "category": "sony",
       "tags": [
         "仅数字版"
@@ -1265,6 +1265,19 @@
       "customOrder": 92
     },
     {
+      "id": "g_1769043881896",
+      "name": "饥荒",
+      "image": "https://cdn2.steamgriddb.com/thumb/75e68b29387d9ec13d2086f86c77b564.jpg",
+      "category": "sony",
+      "tags": [
+        "仅数字版"
+      ],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 93
+    },
+    {
       "id": "g_1768975718040",
       "name": "小小梦魇2",
       "image": "https://cdn2.steamgriddb.com/thumb/ce420da1dae0395f3d31b438a08e15db.jpg",
@@ -1398,6 +1411,32 @@
       "url": "https://pan.baidu.com/s/1V0uGk0KYk2OknUSYHNiRpA?pwd=vhj2#list/path=%2F",
       "description": "Valve 携 VR 大作《半衰期：爱莉克斯\\半条命》重磅回归《半衰期》系列。 这个战斗故事发生在《半衰期》和《半衰期2》之间，是与邪恶的外星种族联合军之间看似毫无胜算的较量。\n\n扮演爱莉克斯·凡斯，人类存活下去的唯一希望。 在黑山基地事件之后，联合军把仅存的人类圈禁在城市中，对地球的铁腕控制只增不减。 人群之中有两位地球上最出色的科学家：您和您的父亲， 伊莱·凡斯博士。\n\n反抗势力尚未稳固，身为发起成员的你们，仍继续从事着秘密科学活动——展开至关重要的研究，为那些为数不多英勇抵抗联合军的人类打造宝贵的工具。\n\n每一天，你们对敌人的了解都更为深入；每一天，你们都在为找到他们的弱点而努力。\n\nVR 中的游戏玩法\n\nValve《半衰期》世界的回归之作，从一开始就是为虚拟现实量身打造的。 VR 就是为了让《半衰期》的核心游戏玩法得以呈现而构建。\n\n全身心沉浸在极具深度的环境交互、解决谜题、探索世界和几可乱真的战斗之中吧。\n\n侧身绕过断壁残垣、猫腰避开藤壶怪，开出原本不可能成功的一枪。 在架子上四处翻找治疗用注射器以及霰弹枪子弹。 操控工具黑入外星人接口。 朝窗外扔出一个瓶子来引开敌人注意。 把脸上的猎头蟹扯下来扔出窗外。",
       "customOrder": 103
+    },
+    {
+      "id": "g_1769043513968",
+      "name": "一步一脚印",
+      "image": "https://cdn2.steamgriddb.com/thumb/706a5fd6f8206d284b9a86e76476845d.jpg",
+      "category": "sony",
+      "tags": [
+        "仅数字版"
+      ],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 104
+    },
+    {
+      "id": "g_1769044028370",
+      "name": "猛兽派对",
+      "image": "https://cdn2.steamgriddb.com/thumb/ef233800c77de72f8eb63a449fa67f01.jpg",
+      "category": "sony",
+      "tags": [
+        "仅数字"
+      ],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 105
     }
   ]
 }
