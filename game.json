@@ -6,17 +6,17 @@
     {
       "id": "sony",
       "name": "索尼",
-      "visible": true
+      "visible": false
     },
     {
       "id": "cat_1768964794901",
       "name": "SWITCH2",
-      "visible": true
+      "visible": false
     },
     {
       "id": "cat_1768976897331",
       "name": "QUEST一体机资源",
-      "visible": true
+      "visible": false
     },
     {
       "id": "cat_1768976908172",
@@ -1437,6 +1437,32 @@
       "url": "",
       "description": "",
       "customOrder": 105
+    },
+    {
+      "id": "g_1769051194118",
+      "name": "皮划艇 VR:幻影（Kayak VR: Mirage）",
+      "image": "https://www.vrmoo.net/wp-content/uploads/2022/07/header-16.jpg",
+      "category": "cat_1768976908172",
+      "tags": [
+        "百度网盘"
+      ],
+      "badge": "PCVR",
+      "url": "https://pan.baidu.com/share/init?surl=dKVBxSpv1IEp3qKjkRJrFQ&pwd=5qys",
+      "description": "Kayak VR: Mirage是一款专为虚拟现实打造的惊喜愉悦之旅，带你穿越众多充满特色的地方。操纵精确模拟的皮划艇，通过进度点，并以最快的速度完成比赛，或者使用自由漫游模式轻松地欣赏风景。",
+      "customOrder": 106
+    },
+    {
+      "id": "g_1769051339635",
+      "name": "光剑节奏（Beat Saber VR）",
+      "image": "https://www.vrmoo.net/wp-content/uploads/2023/03/BeatSaber_LP_Big-1.jpg",
+      "category": "cat_1768976908172",
+      "tags": [
+        "百度网盘"
+      ],
+      "badge": "PCVR",
+      "url": "https://pan.baidu.com/share/init?surl=Sh4G7o1ccVnzPTUd00CYyw&pwd=1tc0",
+      "description": "Beat Saber 是您从未见过的沉浸式节奏体验！享受大量手工制作的关卡，并在脉动的音乐节拍中摇摆不定，周围环绕着未来主义的世界，当节拍向你飞来时，用你的军刀削减节拍——每个节拍都表明你需要使用哪把军刀以及你需要匹配的方向。\n\n玩 Beat Saber，您将成为跳舞的超级英雄！",
+      "customOrder": 107
     }
   ]
 }
