@@ -6,7 +6,7 @@
     {
       "id": "sony",
       "name": "索尼",
-      "visible": false
+      "visible": true
     },
     {
       "id": "cat_1768964794901",
@@ -16,12 +16,12 @@
     {
       "id": "cat_1768976897331",
       "name": "QUEST一体机资源",
-      "visible": true
+      "visible": false
     },
     {
       "id": "cat_1768976908172",
       "name": "PCVR游戏资源",
-      "visible": true
+      "visible": false
     }
   ],
   "games": [
@@ -929,7 +929,7 @@
       "tags": [
         "仅数字版"
       ],
-      "badge": "新游戏",
+      "badge": "",
       "url": "",
       "description": "",
       "customOrder": 65,
@@ -943,7 +943,7 @@
       "tags": [
         "仅数字版"
       ],
-      "badge": "新游",
+      "badge": "",
       "url": "",
       "description": "",
       "customOrder": 66,
@@ -957,7 +957,7 @@
       "tags": [
         "仅数字版"
       ],
-      "badge": "新游",
+      "badge": "",
       "url": "",
       "description": "",
       "customOrder": 67,
@@ -985,7 +985,7 @@
       "tags": [
         "仅数字版"
       ],
-      "badge": "新游",
+      "badge": "",
       "url": "",
       "description": "",
       "customOrder": 69,
@@ -999,7 +999,7 @@
       "tags": [
         "仅数字版"
       ],
-      "badge": "新游",
+      "badge": "",
       "url": "",
       "description": "",
       "customOrder": 70,
@@ -1489,6 +1489,32 @@
       "url": "https://pan.baidu.com/s/1B_CT6OylEbEYeT-V-6VDQQ?pwd=6666",
       "description": "",
       "customOrder": 109
+    },
+    {
+      "id": "g_1769159918729",
+      "name": "UFC5终极版",
+      "image": "https://image.api.playstation.com/sgst/prod/00/PPSA03540_00/app/info/127/fi_bc1cf74c20d6cdf2d2761aca40eaa796576778e3e8351a7cb0eec31f00ec6f28/icon0.png",
+      "category": "sony",
+      "tags": [
+        "数字版&光盘"
+      ],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 110
+    },
+    {
+      "id": "g_1769160320348",
+      "name": "毛线小精灵1+2",
+      "image": "https://image.api.playstation.com/cdn/UP0006/CUSA10483_00/v6G4ZYb5Qsg7VW97UUWjxuPNxbds3ubqlIw7R452cAxZnfrS02gCFzLKnIiVjSp2.png?w=620&thumb=false",
+      "category": "sony",
+      "tags": [
+        "仅数字版"
+      ],
+      "badge": "",
+      "url": "",
+      "description": "",
+      "customOrder": 111
     }
   ]
 }
