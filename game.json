@@ -6,7 +6,7 @@
     {
       "id": "sony",
       "name": "索尼",
-      "visible": true
+      "visible": false
     },
     {
       "id": "cat_1768964794901",
@@ -16,7 +16,7 @@
     {
       "id": "cat_1768976897331",
       "name": "QUEST一体机资源",
-      "visible": false
+      "visible": true
     },
     {
       "id": "cat_1768976908172",
@@ -1515,6 +1515,19 @@
       "url": "",
       "description": "",
       "customOrder": 111
+    },
+    {
+      "id": "g_1769391330076",
+      "name": "《阿斯加德之怒 2》Asgards Wrath 2",
+      "image": "https://www.vrmoo.net/wp-content/uploads/2023/12/10001-17.jpg",
+      "category": "cat_1768976897331",
+      "tags": [
+        "百度网盘"
+      ],
+      "badge": "VR",
+      "url": "https://pan.baidu.com/share/init?surl=4wkB7zIicSn9W3O7fNYxdw&pwd=tqa2",
+      "description": "觉醒吧，宇宙守护者——现实的命运掌握在你的手中。 穿越众神居住的广阔领域，追捕威胁要破坏宇宙之线的骗子神洛基。 在 VR 体验过的规模最大、规模最宏大的动作角色扮演游戏之一中，与神明和怪物的战斗完全取决于你。 与传说中的埃及诸神一起，您将使用独特的武器和游戏风格，通过基于物理的本能战斗与致命的战士和令人敬畏的神话生物作战。 拥有独特的凡人英雄，并将忠诚的动物转化为您自己的战士追随者，探索广阔、自由漫游的生动世界，解决令人费解的神级难题。\n\n作为有史以来最受好评的 VR 游戏之一的续集，Asgard’s Wrath 2 是您期待已久的大型 VR 冒险游戏。\n\n*Asgard’s Wrath 1 需要支持 VR 的 PC。",
+      "customOrder": 112
     }
   ]
 }
