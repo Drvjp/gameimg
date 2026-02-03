@@ -6,7 +6,7 @@
     {
       "id": "sony",
       "name": "索尼",
-      "visible": false
+      "visible": true
     },
     {
       "id": "cat_1768964794901",
@@ -1611,7 +1611,7 @@
       "id": "g_1769492835193",
       "name": "《至死亡：解脱》In Death: Unchained",
       "image": "https://www.vrmoo.net/wp-content/uploads/2023/12/10004-55.jpg",
-      "category": "sony",
+      "category": "cat_1768976897331",
       "tags": [
         "百度网盘"
       ],
