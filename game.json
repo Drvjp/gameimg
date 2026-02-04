@@ -6,7 +6,7 @@
     {
       "id": "sony",
       "name": "索尼",
-      "visible": true
+      "visible": false
     },
     {
       "id": "cat_1768964794901",
@@ -16,7 +16,7 @@
     {
       "id": "cat_1768976897331",
       "name": "QUEST一体机资源",
-      "visible": true
+      "visible": false
     },
     {
       "id": "cat_1768976908172",
@@ -1711,6 +1711,123 @@
       "url": "https://pan.baidu.com/share/init?surl=L7D8tSCUHfM-CnUOrG1LYg&pwd=6pyb",
       "description": "本游戏由Arizona Sunshine®的开发团队制作，是一款史诗级VR动作FPS游戏，其核心玩法是通过紧张刺激的合作模式，将最多4名玩家带入后末世的VR世界，一起对抗受严寒扭曲并发生变异的残暴丧尸。\n\n在另一个时间线的20世纪80年代，你将进入已经化为废墟的洛杉矶。通过真实的体感动作来使用致命武器和毁灭性力量，逐步形成你自己的战斗风格。与世界各地的玩家联合起来一起对抗成群的丧尸和巨大的Boss，努力将城市恢复成比你的祖先看到的还要更好的地方。",
       "customOrder": 126
+    },
+    {
+      "id": "g_1770188510975",
+      "name": "潜水VR（Subside VR）",
+      "image": "https://www.vrmoo.net/wp-content/uploads/2024/09/header-8.jpg",
+      "category": "cat_1768976908172",
+      "tags": [
+        "百度网盘"
+      ],
+      "badge": "PCVR",
+      "url": "https://pan.baidu.com/share/init?surl=z0_xJ_7wFKNnZZXsWBBGOw&pwd=g26z",
+      "description": "Subside 是一款沉浸式的水上 VR 体验，有多个区域可供探索，还有栩栩如生的水生生物可供互动。\n\n这款游戏以无与伦比的真实感制作而成，旨在重现现实生活中在浅水中游泳和潜水的细微差别",
+      "customOrder": 127
+    },
+    {
+      "id": "g_1770188544137",
+      "name": "又一个渔夫的故事 (Another Fishermans Tale)",
+      "image": "https://www.vrmoo.net/wp-content/uploads/2023/05/10001-35-jpg.webp",
+      "category": "cat_1768976908172",
+      "tags": [
+        "百度网盘"
+      ],
+      "badge": "PCVR",
+      "url": "https://pan.baidu.com/share/init?surl=E9R7uprL5w-vcinetCwqDg&pwd=bnwe",
+      "description": "在《渔夫的故事》的续集《又一个渔夫的故事》中，踏上新的心灵冒险之旅，本游戏是饱受赞誉《渔夫的故事》的续集。\n\n去探索全新的烧脑VR谜题吧，与此同时你会沉浸在诗意的故事中。用你自己的身体解决谜题，分别控制你的四肢，并找到新的附件来推进游戏进度。在《渔夫的故事》原班人马制作的奇妙世界中，游历美丽且独特的地点，发现真相。",
+      "customOrder": 128
+    },
+    {
+      "id": "g_1770188568988",
+      "name": "渔夫的故事（A Fishermans Tale）",
+      "image": "https://www.vrmoo.net/wp-content/uploads/2021/04/header-20.jpg",
+      "category": "cat_1768976908172",
+      "tags": [
+        "百度网盘"
+      ],
+      "badge": "PCVR",
+      "url": "https://pan.baidu.com/share/init?surl=8XE5D-LdRd1WUvyRfcuNXQ&pwd=fyyw",
+      "description": "在《渔夫的故事》中扭曲现实。这是一款离奇古怪的VR益智冒险游戏，其中颠倒和翻转的不仅仅是文字游戏而已。\n\n你是鲍勃，一个住在小灯塔模型里面的小渔夫玩偶。暴风雨逼近，正当你走到灯塔的塔顶开灯时，你很快意识到外面的世界根本不是你想象的…",
+      "customOrder": 129
+    },
+    {
+      "id": "g_1770188583168",
+      "name": "玩具火车（Toy Trains）",
+      "image": "https://www.vrmoo.net/wp-content/uploads/2024/01/10001-24-jpg.webp",
+      "category": "cat_1768976908172",
+      "tags": [
+        "百度网盘"
+      ],
+      "badge": "PCVR",
+      "url": "https://pan.baidu.com/share/init?surl=bgdfg8h5HbNC8LwR0iQVlA&pwd=x97v",
+      "description": "打造专属于你自己的铁路，放松身心，重返童年。准备好了吗？快上车吧！\n\n《Toy Trains》是一款有趣的轨道建造游戏，还为你准备了暖心的怀旧故事。\n\n运用逻辑思维、开动想象力来建造轨道吧，打造属于你自己的小小世界，在轻松、舒适的氛围下推进游戏。 用现代的方式来重新体验轨道建造。每张地图都有多种解法，你需要保持敏锐，也需要挥洒创意！",
+      "customOrder": 130
+    },
+    {
+      "id": "g_1770188659289",
+      "name": "下坡路自行车VR（DownhillVR）",
+      "image": "https://www.vrmoo.net/wp-content/uploads/2023/07/header-16-jpg.webp",
+      "category": "cat_1768976908172",
+      "tags": [
+        "百度网盘"
+      ],
+      "badge": "PCVR",
+      "url": "https://pan.baidu.com/share/init?surl=QVnG8nKgrY3HHox2o20Vng&pwd=qyyg",
+      "description": "DownhillVR 是终极虚拟现实山地自行车视频游戏，将极限速降赛车的刺激感带入您的客厅。体验在充满挑战的赛道上加速的快感，并在令人惊叹的跳跃中呼吸新鲜空气，同时沉浸在令人惊叹的环境中。\n\n凭借直观的控制和多种游戏模式，DownhillVR 非常适合经验丰富的游戏玩家和虚拟现实新手。准备好体验前所未有的极限速降赛车的刺激吧。",
+      "customOrder": 131
+    },
+    {
+      "id": "g_1770188703981",
+      "name": "翼人计划VR（Project Wingman）",
+      "image": "https://www.vrmoo.net/wp-content/uploads/2021/04/header-4-2.jpg",
+      "category": "cat_1768976908172",
+      "tags": [
+        "百度网盘"
+      ],
+      "badge": "PCVR",
+      "url": "https://pan.baidu.com/share/init?surl=BtCouLv_dK2CEGNAuvRuyg&pwd=y6gk",
+      "description": "Project Wingman是一款战斗飞行动作游戏，专注于精致的游戏玩法、忠于现实的灵感以及引人入胜的单人游戏体验。非常适合不想要易于上手和游戏的模拟器体验，而想要具有挑战性的快节奏飞行动作游戏的玩家。",
+      "customOrder": 132
+    },
+    {
+      "id": "g_1770188764903",
+      "name": "战机：太平洋战争汉化中文版（Warplanes: Battles over Pacific）",
+      "image": "https://www.vrmoo.net/wp-content/uploads/2022/03/capsule_616x353-3.webp",
+      "category": "cat_1768976908172",
+      "tags": [
+        "百度网盘"
+      ],
+      "badge": "PCVR",
+      "url": "https://pan.baidu.com/share/init?surl=85IuFHKEBkwXIgwM9h3Z2g&pwd=vrmo",
+      "description": "战机：太平洋之战开启了航空史上的新篇章。成为二战飞行员，参与对抗日本帝国的战役，热门战机：WW1 Fighters 的续集将混战提升到了一个新的水平。",
+      "customOrder": 133
+    },
+    {
+      "id": "g_1770189473792",
+      "name": "山地滑翔2（Mount Wingsuit 2）",
+      "image": "https://www.vrmoo.net/wp-content/uploads/2022/08/header-35.webp",
+      "category": "cat_1768976908172",
+      "tags": [
+        "百度网盘"
+      ],
+      "badge": "PCVR",
+      "url": "https://pan.baidu.com/share/init?surl=3OEfe95eQmbD1MENcVI-4A&pwd=vrmo",
+      "description": "你准备好将你的翼装游戏提升到一个新的水平吗？Mount Wingsuit 2 拥有使原版变得出色的一切，以及成为最终的wingsuit VR 应用程序所需的一切。有一座全新的山，面向多人的新游戏模式，以及一个在离线和在线内容之间无缝转换的广阔开放世界。",
+      "customOrder": 134
+    },
+    {
+      "id": "g_1770189588958",
+      "name": "模拟飞行2 VR (Ultrawings 2)",
+      "image": "https://www.vrmoo.net/wp-content/uploads/2022/04/header-37.webp",
+      "category": "cat_1768976908172",
+      "tags": [
+        "百度网盘"
+      ],
+      "badge": "PCVR",
+      "url": "https://pan.baidu.com/share/init?surl=iwLSHeX29SmodR5EDQYmkA&pwd=nooi",
+      "description": "Ultrawings 2 是一款开放世界的空中冒险 VR游戏，您可以通过在广阔的世界中完成各种任务来购买新飞机和岛屿，从而赚取游戏内金钱。",
+      "customOrder": 135
     }
   ]
 }
